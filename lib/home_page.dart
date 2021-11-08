@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:read_on/eBook/main_page_ebook.dart';
+import 'package:read_on/eBook/nav_pages/home_ebook.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 import 'package:read_on/widgets/solid_button.dart';
@@ -15,33 +17,66 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final PublicController publicController = Get.put(PublicController());
+    final PublicController publicController = Get.find();
     return Scaffold(
-      backgroundColor: Colors.white,
-      body:Container(
+        backgroundColor: Colors.white, body: _bodyUI(publicController));
+  }
+
+  Container _bodyUI(PublicController publicController) => Container(
         alignment: Alignment.center,
         height: Get.height,
         width: Get.width,
         decoration: const BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/home_bg.png'),
-                fit: BoxFit.cover
-            )
-        ),
-        child: publicController.homeLoading.value==true
-            ?const Center(child: CircularProgressIndicator())
-            : Column(
+                image: AssetImage('assets/home_bg.png'), fit: BoxFit.cover)),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Image.asset(
+              "assets/logo_with_name.png",
+              height: publicController.size.value * .35,
+              width: publicController.size.value * .35,
+            ),
+            SizedBox(height: publicController.size.value * .04),
+
+            /// e-book button
             SolidColorButton(
-                child: Text('Quiz',style: Style.buttonTextStyle(publicController.size.value)),
-                onPressed:(){},
-                bgColor: CColor.themeColor)
+                contentPadding: EdgeInsets.symmetric(
+                    vertical: publicController.size.value * .035,
+                    horizontal: publicController.size.value * .16),
+                borderRadius: publicController.size.value * .025,
+                child: Text('ইবুক',
+                    style: Style.buttonTextStyle(publicController.size.value)),
+                onPressed: () {
+                  Get.to(() => const MainPage());
+                },
+                bgColor: CColor.themeColor),
+            SizedBox(height: publicController.size.value * .04),
+
+            /// course button
+            SolidColorButton(
+                contentPadding: EdgeInsets.symmetric(
+                    vertical: publicController.size.value * .035,
+                    horizontal: publicController.size.value * .16),
+                borderRadius: publicController.size.value * .025,
+                child: Text('কোর্স',
+                    style: Style.buttonTextStyle(publicController.size.value)),
+                onPressed: () {},
+                bgColor: CColor.themeColor),
+            SizedBox(height: publicController.size.value * .04),
+
+            /// quiz button
+            SolidColorButton(
+                contentPadding: EdgeInsets.symmetric(
+                    vertical: publicController.size.value * .035,
+                    horizontal: publicController.size.value * .16),
+                borderRadius: publicController.size.value * .025,
+                child: Text('কুইজ',
+                    style: Style.buttonTextStyle(publicController.size.value)),
+                onPressed: () {},
+                bgColor: CColor.themeColor),
           ],
         ),
-      ),
-    );
+      );
 }
-}
-

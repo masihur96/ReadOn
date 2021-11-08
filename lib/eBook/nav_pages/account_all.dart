@@ -5,12 +5,9 @@ class AccountPageAll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Account Page'),
-        ),
-      ),
+    return const Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(child: Text('Account')),
     );
   }
 }

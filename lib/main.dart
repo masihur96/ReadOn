@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:get/get.dart';
 import 'package:read_on/public_variables/color_variable.dart';
+import 'package:read_on/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home_page.dart';
 
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
           textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.red),
         canvasColor: Colors.transparent
       ),
-      home: const HomePage(),
+      home: const SplashScreen(),
     );
   }
 }

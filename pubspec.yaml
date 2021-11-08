@@ -14,6 +14,10 @@ dependencies:
   fluttertoast: ^8.0.8
   flutter_device_type: ^0.4.0
   shared_preferences: ^2.0.8
+  line_awesome_flutter: ^2.0.0
+  carousel_pro_nullsafety: ^1.0.2
+  expandable_text: ^2.2.0
+  flutter_custom_clippers: ^2.0.0
 
 dev_dependencies:
   flutter_test:
