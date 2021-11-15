@@ -27,16 +27,18 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     final PublicController publicController = Get.find();
     double size = publicController.size.value;
-    return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: _pageAppBar(size, publicController)),
-      body: Scaffold(
-        key: _scaffoldKey,
-        drawer: Drawer(child: CustomDrawer()),
-        body: _bodyUI(publicController),
+    return SafeArea(
+      child: Scaffold(
+        appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: _pageAppBar(size, publicController)),
+        body: Scaffold(
+          key: _scaffoldKey,
+          drawer: Drawer(child: CustomDrawer()),
+          body: _bodyUI(publicController),
+        ),
+        bottomNavigationBar: _pageBottomNavigationBar(),
       ),
-      bottomNavigationBar: _pageBottomNavigationBar(),
     );
   }
 
@@ -61,13 +63,14 @@ class _MainPageState extends State<MainPage> {
             color: Colors.white,
             size: publicController.size.value * .08,
           ),
+          SizedBox(width: size * .04),
           GestureDetector(
             onTap: () {
               Get.to(() => MyCartPage());
             },
             child: Container(
               width: size * .085,
-              height: size * .02,
+              height: size * .085,
               alignment: Alignment.center,
               child: Stack(
                 children: [
@@ -102,7 +105,6 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
           ),
-          SizedBox(width: size * .04)
         ],
         scaffoldKey: _scaffoldKey,
       );

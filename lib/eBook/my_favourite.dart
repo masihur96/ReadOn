@@ -19,12 +19,14 @@ class _MyFavouriteState extends State<MyFavourite> {
   Widget build(BuildContext context) {
     final PublicController publicController = Get.find();
     double size = publicController.size.value;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: _pageAppBar(publicController)),
-      body: _bodyUI(size),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: _pageAppBar(publicController)),
+        body: _bodyUI(size),
+      ),
     );
   }
 
@@ -71,9 +73,6 @@ class _MyFavouriteState extends State<MyFavourite> {
         color: Colors.white,
         size: publicController.size.value * .08,
       ),
-      SizedBox(
-        width: publicController.size.value * .04,
-      )
     ],
     scaffoldKey: _scaffoldKey,
   );

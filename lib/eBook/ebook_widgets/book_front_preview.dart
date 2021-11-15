@@ -5,11 +5,13 @@ import 'package:read_on/eBook/book_detail.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 
 class BookPreview extends StatefulWidget {
+  double bookImageWidth;
+  double bookImageHeight;
   String bookImage;
   String bookName;
   String writerName;
 
-  BookPreview({Key? key, required this.bookImage, required this.bookName, required this.writerName}) : super(key: key);
+  BookPreview({Key? key,required this.bookImageWidth, required this.bookImageHeight, required this.bookImage, required this.bookName, required this.writerName}) : super(key: key);
 
   @override
   State<BookPreview> createState() => _BookPreviewState();
@@ -20,13 +22,13 @@ class _BookPreviewState extends State<BookPreview> {
   String _bookName = '';
 
   _checkLength(){
-    if(widget.writerName.length > 10){
-      setState(() => _writerName = widget.writerName.substring(0,10) + '...');
+    if(widget.writerName.length > 13){
+      setState(() => _writerName = widget.writerName.substring(0,12) + '...');
     }else{
       setState(() => _writerName = widget.writerName);
     }
-    if(widget.bookName.length > 10) {
-      setState(() => _bookName = widget.bookName.substring(0,10) + '...');
+    if(widget.bookName.length > 13) {
+      setState(() => _bookName = widget.bookName.substring(0,12) + '...');
     }else{
       setState(() => _bookName = widget.bookName);
     }
@@ -42,40 +44,49 @@ class _BookPreviewState extends State<BookPreview> {
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
 
           /// book image
-          Container(
-            width: publicController.size.value * .25,
-            height: publicController.size.value * .45,
-            decoration: BoxDecoration(
-              borderRadius:
-              BorderRadius.circular(publicController.size.value * .05),
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0),
             ),
-            child: ClipRRect(
+            margin: EdgeInsets.zero,
+            child: Container(
+              width: widget.bookImageWidth,
+              height: widget.bookImageHeight,
+              decoration: BoxDecoration(
                 borderRadius:
-                BorderRadius.circular(publicController.size.value * .05),
-                child: Image.network(widget.bookImage)),
+                BorderRadius.circular(4.0),
+              ),
+              child: ClipRRect(
+                  borderRadius:
+                  BorderRadius.circular(4.0),
+                  child: Image.network(widget.bookImage, fit: BoxFit.cover,)),
+            ),
           ),
-          SizedBox(height: publicController.size.value*.02),
+          SizedBox(height: publicController.size.value*.01,),
 
           /// book name
           SizedBox(
-            width: publicController.size.value * .25,
+            width: publicController.size.value * .26,
             child: Text(
               _bookName,
+              textAlign: TextAlign.center,
               style: Style.bodyTextStyle(
-                  publicController.size.value * .035, Colors.black, FontWeight.bold),
+                  publicController.size.value * .032, Colors.black, FontWeight.bold),
             ),
           ),
 
           /// writer name
           SizedBox(
-            width: publicController.size.value * .25,
+            width: publicController.size.value * .26,
             child: Text(
               _writerName,
+              textAlign: TextAlign.center,
               style: Style.bodyTextStyle(
-                  publicController.size.value * .035, Colors.black, FontWeight.normal),
+                  publicController.size.value * .032, Colors.black, FontWeight.normal),
             ),
           ),
         ],

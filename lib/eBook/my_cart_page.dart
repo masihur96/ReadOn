@@ -20,11 +20,13 @@ class _MyCartPageState extends State<MyCartPage> {
   Widget build(BuildContext context) {
     final PublicController publicController = Get.find();
     double size = publicController.size.value;
-    return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: _pageAppBar(publicController)),
-      body: _bodyUI(size),
+    return SafeArea(
+      child: Scaffold(
+        appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: _pageAppBar(publicController)),
+        body: _bodyUI(size),
+      ),
     );
   }
 
@@ -150,7 +152,7 @@ class _MyCartPageState extends State<MyCartPage> {
                             horizontal: size * .16),
                         borderRadius: size * .025,
                         child: Text('কিনুন',
-                            style: Style.buttonTextStyle(size)),
+                            style: Style.buttonTextStyle(size*.05, Colors.white, FontWeight.w500)),
                         onPressed: () {
                         },
                         bgColor: CColor.themeColor),
@@ -172,9 +174,6 @@ class _MyCartPageState extends State<MyCartPage> {
             color: Colors.white,
             size: publicController.size.value * .08,
           ),
-          SizedBox(
-            width: publicController.size.value * .04,
-          )
         ],
     scaffoldKey: _scaffoldKey,
       );

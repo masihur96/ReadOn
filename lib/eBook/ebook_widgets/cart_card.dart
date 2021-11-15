@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -87,7 +88,7 @@ class CartCard extends StatelessWidget {
                         alignment: Alignment.center,
                         color: Colors.red,
                         child: Icon(
-                          LineAwesomeIcons.alternate_trash,
+                          CupertinoIcons.delete_simple,
                           color: Colors.white,
                           size: size * .08,
                         )),

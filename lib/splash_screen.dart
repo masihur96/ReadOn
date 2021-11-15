@@ -22,13 +22,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final  Size size = MediaQuery.of(context).size;
     final PublicController publicController = Get.put(PublicController());
     return Scaffold(
-      body: _bodyUI(publicController),
+      body: _bodyUI(publicController, size),
     );
   }
 
-  Container _bodyUI(PublicController publicController) => Container(
+  Container _bodyUI(PublicController publicController, Size size) => Container(
+    alignment: Alignment.center,
         height: Get.height,
         width: Get.width,
         decoration: const BoxDecoration(
@@ -36,11 +38,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 begin: Alignment.topCenter,
                 end: AlignmentDirectional.bottomCenter,
                 colors: [Colors.white, Colors.redAccent])),
-        child: Center(
-            child: Image.asset(
+        child: Image.asset(
           "assets/logo_with_name.png",
-          height: publicController.size.value*.4,
-          width: publicController.size.value*.4,
-        )),
+          height: size.width*.4,
+          width: size.width*.4,
+        ),
       );
 }

@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                     horizontal: publicController.size.value * .16),
                 borderRadius: publicController.size.value * .025,
                 child: Text('ইবুক',
-                    style: Style.buttonTextStyle(publicController.size.value)),
+                    style: Style.buttonTextStyle(publicController.size.value*.05, Colors.white, FontWeight.w500)),
                 onPressed: () {
                   Get.to(() => const MainPage());
                 },
@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                     horizontal: publicController.size.value * .16),
                 borderRadius: publicController.size.value * .025,
                 child: Text('কোর্স',
-                    style: Style.buttonTextStyle(publicController.size.value)),
+                    style: Style.buttonTextStyle(publicController.size.value*.05, Colors.white, FontWeight.w500)),
                 onPressed: () {},
                 bgColor: CColor.themeColor),
             SizedBox(height: publicController.size.value * .04),
@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                     horizontal: publicController.size.value * .16),
                 borderRadius: publicController.size.value * .025,
                 child: Text('কুইজ',
-                    style: Style.buttonTextStyle(publicController.size.value)),
+                    style: Style.buttonTextStyle(publicController.size.value*.05, Colors.white, FontWeight.w500)),
                 onPressed: () {},
                 bgColor: CColor.themeColor),
           ],

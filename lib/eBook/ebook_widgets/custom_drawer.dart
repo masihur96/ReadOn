@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/public_controller.dart';
+import 'package:read_on/eBook/my_cart_page.dart';
 import 'package:read_on/eBook/my_favourite.dart';
+import 'package:read_on/eBook/wallet_page.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 
@@ -203,9 +205,10 @@ class CustomDrawer extends StatelessWidget {
 
   Widget _drawerOption(double size, IconData iconData, String title) => GestureDetector(
     onTap: (){
-      if(title == 'পছন্দের বই'){
-        Navigator.push(Get.context!, MaterialPageRoute(builder: (context) => MyFavourite()));
-      }
+      if(title == 'পছন্দের বই') Get.to(() => MyFavourite());
+      if(title == 'আমার কার্ট') Get.to(() => MyCartPage());
+      if(title == 'কয়েন সংগ্রহ') Get.to(() => const WalletPage());
+      if(title == 'পয়েন্ট সংগ্রহ') Get.to(() => const WalletPage());
     },
     child: Padding(
       padding: EdgeInsets.fromLTRB(size*.15, size*.02, size*.04, size*.01),
@@ -215,21 +218,21 @@ class CustomDrawer extends StatelessWidget {
             children: [
               Icon(iconData, color: CColor.themeColor, size: size*.07,),
               Positioned(
-                top: 0,
-                right: -2,
+                top: -1,
+                right: -0.5,
                 child: iconData == LineAwesomeIcons.shopping_cart?
                 Container(
-                  width: size * .035,
+                  padding: EdgeInsets.all(size*.006),
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white,
+                    color: Colors.red,
                   ),
                   child: Center(
                     child: Text(
                       '2',
                       style: TextStyle(
-                          color: Colors.red,
-                          fontSize: size * .03,
+                          color: Colors.white,
+                          fontSize: size * .022,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
