@@ -16,6 +16,8 @@ class SolidColorButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
         color: bgColor,
+        shadowColor: Colors.black,
+        elevation: 3,
         borderRadius: BorderRadius.all(Radius.circular(borderRadius??4.0)),
         child: InkWell(
           onTap: onPressed,
