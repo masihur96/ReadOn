@@ -4,6 +4,7 @@ import 'package:read_on/eBook/main_page_ebook.dart';
 import 'package:read_on/eBook/nav_pages/home_ebook.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
+import 'package:read_on/registration_page.dart';
 import 'package:read_on/widgets/solid_button.dart';
 import 'controller/public_controller.dart';
 
@@ -62,7 +63,9 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: publicController.size.value * .025,
                 child: Text('কোর্স',
                     style: Style.buttonTextStyle(publicController.size.value*.05, Colors.white, FontWeight.w500)),
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => const RegistrationPage());
+                },
                 bgColor: CColor.themeColor),
             SizedBox(height: publicController.size.value * .04),
 
