@@ -49,17 +49,17 @@ class _BookDetailState extends State<BookDetail> {
                   child: Container(
                     width: size,
                     height: size,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       // color: Colors.grey.shade600,
-                      border: Border.all(color: Colors.blueGrey, width: 1.5),
-                      image: const DecorationImage(
+                     // border: Border.all(color: Colors.blueGrey, width: 1.5),
+                      image: DecorationImage(
                           fit: BoxFit.cover,
                           image: NetworkImage(
                               "https://1.bp.blogspot.com/-QoKjWWKcnC0/XWVnOba6kbI/AAAAAAAAXn4/fwXfr6wBflcYMrUlRSFxfB9K62_5SONAgCLcBGAs/s1600/Ekjon%2BMayaboti%2Bby%2BHumayun%2BAhmed%2B-%2BBangla%2BRomantic%2BNovel%2BPDF%2BBooks.jpg")),
                     ),
                     child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+                      filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 0.0),
                       child: Container(
                         decoration:
                             BoxDecoration(color: Colors.white.withOpacity(0.0)),

@@ -4,8 +4,10 @@ import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/eBook/money_return.dart';
 import 'package:read_on/eBook/profile_page.dart';
 import 'package:read_on/eBook/wallet_page.dart';
+import 'package:read_on/login_page.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AmarAccountOptions extends StatelessWidget {
   Widget child;
@@ -19,10 +21,16 @@ class AmarAccountOptions extends StatelessWidget {
     final PublicController publicController = Get.find();
     double size = publicController.size.value;
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         if(title == 'প্রোফাইল') Get.to(() => Profile());
         if(title == 'টাকা ফেরত') Get.to(() => const MoneyReturnPage());
         if(title == 'কয়েন  ও পয়েন্ট') Get.to(() => const WalletPage());
+        if(title == 'লগ আউট'){
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.remove('userAccessToken');
+          print('logged out and removed accessToken');
+          Get.offAll(() => LoginPage());
+        }
       },
       child: Card(
         elevation: 4,
