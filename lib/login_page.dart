@@ -74,6 +74,8 @@ class _LoginPageState extends State<LoginPage> {
                     top: 0,
                     child: Image.asset(
                       'assets/login_page_bg.png',
+                      width: size,
+                      fit: BoxFit.fill,
                     ),
                   ),
                   Positioned(
@@ -398,7 +400,7 @@ class _LoginPageState extends State<LoginPage> {
             Get.to(() => const HomePage());
             print('successfully logged in');
           }else{
-            Get.offAll(()=> HomePage());
+            Get.offAll(()=> const HomePage());
             print('successfully logged in');
           }
         }else{
