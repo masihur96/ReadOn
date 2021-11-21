@@ -13,18 +13,17 @@ class AccountPageAll extends StatelessWidget {
     final PublicController publicController = Get.find();
     double size = publicController.size.value;
     return  Scaffold(
-      backgroundColor: Color(0xffE9E9E9),
+      backgroundColor: Colors.white,
       body: _bodyUI(size),
     );
   }
 
-  Widget _bodyUI(double size) => Container(
+  Widget _bodyUI(double size) => SizedBox(
     width: Get.width,
     height: Get.height,
-    child: ListView(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset('assets/amar_account_bg.png', fit: BoxFit.cover,width: double.infinity, height: size*.7,),
-        SizedBox(height: size*.02),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: size*.1),
           child: Column(

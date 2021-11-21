@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'home_page.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,12 +13,14 @@ void main() async{
   if(_isPhone) {CColor.portraitMood;}
   else {CColor.landscapeMood;}
   pref.setBool('isPhone', _isPhone);
+  String? userAccessToken = pref.getString('userAccessToken');
 
-  runApp(const MyApp());
+  runApp(MyApp(userAccessToken: userAccessToken));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  String? userAccessToken;
+  MyApp({Key? key, required this.userAccessToken}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
           textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.red),
         canvasColor: Colors.transparent
       ),
-      home: const SplashScreen(),
+      home: SplashScreen(userAccessToken: userAccessToken),
     );
   }
 }

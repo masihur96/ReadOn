@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:read_on/eBook/main_page_ebook.dart';
-import 'package:read_on/eBook/nav_pages/home_ebook.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 import 'package:read_on/registration_page.dart';
