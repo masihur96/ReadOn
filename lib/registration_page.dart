@@ -77,6 +77,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 top: 0,
                 child: Image.asset(
                   'assets/login_page_bg.png',
+                  width: size,
+                  fit: BoxFit.fill,
                 ),
               ),
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:read_on/eBook/audio_book_detail.dart';
+import 'package:read_on/eBook/audio_player_page.dart';
 import 'package:read_on/eBook/main_page_ebook.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
@@ -63,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                 child: Text('কোর্স',
                     style: Style.buttonTextStyle(publicController.size.value*.05, Colors.white, FontWeight.w500)),
                 onPressed: () {
-                  Get.to(() => const RegistrationPage());
+                  Get.to(() =>  AudioPlayerPage());
                 },
                 bgColor: CColor.themeColor),
             SizedBox(height: publicController.size.value * .04),
@@ -76,7 +78,9 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: publicController.size.value * .025,
                 child: Text('কুইজ',
                     style: Style.buttonTextStyle(publicController.size.value*.05, Colors.white, FontWeight.w500)),
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() =>  AudioBookDetailPage());
+                },
                 bgColor: CColor.themeColor),
           ],
         ),
