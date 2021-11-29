@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/public_controller.dart';
+import 'package:read_on/eBook/coin_collection_page.dart';
 import 'package:read_on/eBook/my_cart_page.dart';
 import 'package:read_on/eBook/my_favourite.dart';
-import 'package:read_on/eBook/wallet_page.dart';
+import 'package:read_on/eBook/point_collection_page.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 
@@ -207,8 +208,8 @@ class CustomDrawer extends StatelessWidget {
     onTap: (){
       if(title == 'পছন্দের বই') Get.to(() => MyFavourite());
       if(title == 'আমার কার্ট') Get.to(() => MyCartPage());
-      if(title == 'কয়েন সংগ্রহ') Get.to(() => const WalletPage());
-      if(title == 'পয়েন্ট সংগ্রহ') Get.to(() => const WalletPage());
+      if(title == 'কয়েন সংগ্রহ') Get.to(() => const CoinCollectionPage());
+      if(title == 'পয়েন্ট সংগ্রহ') Get.to(() => const PointCollectionPage());
     },
     child: Padding(
       padding: EdgeInsets.fromLTRB(size*.15, size*.02, size*.04, size*.01),

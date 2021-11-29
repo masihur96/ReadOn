@@ -22,12 +22,12 @@ class _BookPreviewState extends State<BookPreview> {
   String _bookName = '';
 
   _checkLength(){
-    if(widget.writerName.length > 13){
+    if(widget.writerName.length > 15){
       setState(() => _writerName = widget.writerName.substring(0,12) + '...');
     }else{
       setState(() => _writerName = widget.writerName);
     }
-    if(widget.bookName.length > 13) {
+    if(widget.bookName.length > 15) {
       setState(() => _bookName = widget.bookName.substring(0,12) + '...');
     }else{
       setState(() => _bookName = widget.bookName);
