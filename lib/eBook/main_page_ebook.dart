@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:read_on/controller/ebook_api_controller.dart';
 import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/eBook/ebook_widgets/custom_drawer.dart';
 import 'package:read_on/eBook/my_cart_page.dart';
@@ -20,13 +21,23 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  int _count = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   int _navBarIndex = 0;
+
+  Future <void> _customInit(EbookApiController ebookApiController) async {
+    _count++;
+    ebookApiController.getSubjectCategoryNameList();
+    ebookApiController.getWriterList();
+    ebookApiController.getPublicationList();
+  }
 
   @override
   Widget build(BuildContext context) {
     final PublicController publicController = Get.find();
+    final EbookApiController ebookApiController = Get.put(EbookApiController());
     double size = publicController.size.value;
+    if(_count == 0) _customInit(ebookApiController);
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(

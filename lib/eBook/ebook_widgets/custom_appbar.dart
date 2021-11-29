@@ -52,7 +52,7 @@ class CustomAppBar extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.end,
-            style: Style.bodyTextStyle(size*.05, Colors.white, FontWeight.w500),
+            style: Style.buttonTextStyle(size*.05, Colors.white, FontWeight.w500),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,

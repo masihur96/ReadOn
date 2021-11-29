@@ -20,6 +20,8 @@ dependencies:
   flutter_custom_clippers: ^2.0.0
   font_awesome_flutter: ^9.2.0
   http: ^0.13.4
+  flutter_shimmer: ^2.1.2
+
 
 dev_dependencies:
   flutter_test:
@@ -37,7 +39,18 @@ flutter:
     - family: Kalpurush
       fonts:
         - asset: fonts/kalpurush.ttf
-
+    - family: NotoSansBengali
+      fonts:
+        - asset: fonts/NotoSansBengali-SemiBold.ttf
+    - family: Atma
+      fonts:
+        - asset: fonts/Atma-Regular.ttf
+    - family: HindSiliguri-Regular
+      fonts:
+        - asset: fonts/HindSiliguri-Regular.ttf
+    - family: HindSiliguri-Medium
+      fonts:
+        - asset: fonts/HindSiliguri-Medium.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -24,7 +24,6 @@ class _LibraryPageState extends State<LibraryPage>
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 3);
-    //_tabController!.addListener(_handleTabSelection);
   }
 
   void _handleTabSelection() {
@@ -87,7 +86,7 @@ class _LibraryPageState extends State<LibraryPage>
                 children: [
                    const BoighorWriterTabPage(),
                   BoighorSubjectTabPage(),
-                  BoighorPublicationTabPage()
+                  const BoighorPublicationTabPage()
                 ]
             ),
           )

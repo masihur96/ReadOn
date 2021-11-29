@@ -9,7 +9,6 @@ import 'package:read_on/eBook/ebook_widgets/custom_drawer.dart';
 import 'package:read_on/eBook/my_cart_page.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
-import 'package:read_on/widgets/gradient_button.dart';
 
 class WriterDetailPage extends StatefulWidget {
   const WriterDetailPage({Key? key}) : super(key: key);
