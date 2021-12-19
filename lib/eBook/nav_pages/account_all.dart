@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/eBook/ebook_widgets/amar_account_options.dart';
+import '../ebook_screens/subscriptiom_package_page.dart';
 import 'package:read_on/public_variables/color_variable.dart';
+import 'package:read_on/public_variables/style_variable.dart';
 
 class AccountPageAll extends StatelessWidget {
   const AccountPageAll({Key? key}) : super(key: key);
@@ -30,22 +32,27 @@ class AccountPageAll extends StatelessWidget {
             children: [
 
               /// subscription plan
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: size*.03),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                        colors: [CColor.themeColor,CColor.themeColorLite]
+              GestureDetector(
+                onTap: (){
+                  Get.to(() => const SubscriptionPackagePage());
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: size*.03),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                          colors: [CColor.themeColor,CColor.themeColorLite]
+                      ),
+                      borderRadius: BorderRadius.circular(size*.1)
+                  ),
+                  child: Text(
+                    'সাবস্ক্রিপশন প্লান ও প্যাকেজ',
+                    style: Style.buttonTextStyle(
+                        size*.05,
+                        Colors.white,
+                        FontWeight.w500
                     ),
-                    borderRadius: BorderRadius.circular(size*.1)
-                ),
-                child: Text(
-                  'সাবস্ক্রিপশন প্লান',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: size*.05,
-                      fontWeight: FontWeight.w500
                   ),
                 ),
               ),
@@ -76,7 +83,11 @@ class AccountPageAll extends StatelessWidget {
                             color: Colors.white
                         ),
                         alignment: Alignment.center,
-                        child: Text('ট', style: TextStyle(color: Colors.red, fontSize: size*.065, fontFamily: 'Kalpurush', fontWeight: FontWeight.bold),),
+                        child: Text('ট', style: Style.buttonTextStyle(
+                            size*.05,
+                            Colors.white,
+                            FontWeight.w500
+                        )),
                       ),
                       SizedBox(height: size*.008,),
                     ],

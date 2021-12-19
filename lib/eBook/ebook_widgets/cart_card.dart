@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/public_controller.dart';
+import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 
 class CartCard extends StatelessWidget {
@@ -11,6 +12,7 @@ class CartCard extends StatelessWidget {
   String writerName;
   String amount;
   String bookCopyType;
+  Widget? child;
 
   CartCard(
       {Key? key,
@@ -18,7 +20,8 @@ class CartCard extends StatelessWidget {
       required this.bookName,
       required this.writerName,
       required this.amount,
-      required this.bookCopyType})
+      required this.bookCopyType,
+      required this.child})
       : super(key: key);
 
   @override
@@ -28,26 +31,26 @@ class CartCard extends StatelessWidget {
     return Card(
       color: Colors.grey.shade100,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(size * .02),
+        borderRadius: BorderRadius.circular(4.0),
       ),
       child: Container(
         width: size,
-        padding: EdgeInsets.fromLTRB(size*.04, size*.01, size*.04, size*.02),
+        padding: EdgeInsets.all(size*.04),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: publicController.size.value * .22,
-              height: publicController.size.value * .42,
+              width: publicController.size.value * .24,
+              height: publicController.size.value * .35,
               decoration: BoxDecoration(
                 borderRadius:
-                    BorderRadius.circular(publicController.size.value * .05),
+                    BorderRadius.circular(4.0),
               ),
               child: ClipRRect(
                   borderRadius:
-                      BorderRadius.circular(publicController.size.value * .05),
-                  child: Image.network(bookImage)),
+                      BorderRadius.circular(4.0),
+                  child: Image.network(bookImage, fit: BoxFit.cover,)),
             ),
             SizedBox(
               width: size * .04,
@@ -61,39 +64,27 @@ class CartCard extends StatelessWidget {
                   height: size * .02,
                 ),
                 Text(bookName,
-                    style: Style.bodyTextStyle(
+                    style: Style.buttonTextStyle(
                         size * .045, Colors.black, FontWeight.bold)),
-                Text(
-                  writerName,
-                  style: Style.bodyTextStyle(
-                      size * .045, Colors.black, FontWeight.normal),
-                ),
-                Text(
-                  amount,
-                  style: Style.bodyTextStyle(
-                      size * .045, Colors.red, FontWeight.normal),
-                ),
+                // Text(
+                //   writerName,
+                //   style: Style.bodyTextStyle(
+                //       size * .04, Colors.black, FontWeight.normal),
+                // ),
                 Text(
                   bookCopyType,
                   style: Style.bodyTextStyle(
-                      size * .045, Colors.black, FontWeight.w500),
+                      size * .04, Colors.black, FontWeight.w500),
+                ),
+                Text(
+                  '৳ $amount/-',
+                  style: Style.bodyTextStyle(
+                      size * .04, Colors.red, FontWeight.normal),
                 ),
                 SizedBox(
                   height: size * .02,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                        alignment: Alignment.center,
-                        color: Colors.red,
-                        child: Icon(
-                          CupertinoIcons.delete_simple,
-                          color: Colors.white,
-                          size: size * .08,
-                        )),
-                  ],
-                )
+                child!
               ],
             )),
 

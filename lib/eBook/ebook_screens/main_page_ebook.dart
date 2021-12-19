@@ -3,15 +3,16 @@ import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/ebook_api_controller.dart';
 import 'package:read_on/controller/public_controller.dart';
+import 'package:read_on/controller/user_controller.dart';
 import 'package:read_on/eBook/ebook_widgets/custom_drawer.dart';
-import 'package:read_on/eBook/my_cart_page.dart';
+import 'my_cart_page.dart';
 import 'package:read_on/eBook/nav_pages/account_all.dart';
 import 'package:read_on/eBook/nav_pages/audio_book.dart';
 import 'package:read_on/eBook/nav_pages/home_ebook.dart';
 import 'package:read_on/eBook/nav_pages/library.dart';
 import 'package:read_on/eBook/nav_pages/my_book.dart';
 import 'package:read_on/public_variables/color_variable.dart';
-import 'ebook_widgets/custom_appbar.dart';
+import '../ebook_widgets/custom_appbar.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -25,24 +26,28 @@ class _MainPageState extends State<MainPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   int _navBarIndex = 0;
 
-  Future <void> _customInit(EbookApiController ebookApiController) async {
+  Future <void> _customInit(EbookApiController ebookApiController, UserController userController) async {
     _count++;
-    ebookApiController.getSubjectCategoryNameList();
-    ebookApiController.getWriterList();
-    ebookApiController.getPublicationList();
+    if(ebookApiController.subjectCategoryList.isEmpty) ebookApiController.getSubjectCategoryNameList();
+    if(ebookApiController.writeModel.value.data!.isEmpty) ebookApiController.getWriterList();
+    if(ebookApiController.publicationList.isEmpty) ebookApiController.getPublicationList();
+    await userController.getCurrentUserId();
+    ebookApiController.countNumberOfCarts(userController);
   }
 
   @override
   Widget build(BuildContext context) {
     final PublicController publicController = Get.find();
-    final EbookApiController ebookApiController = Get.put(EbookApiController());
+    final UserController userController = Get.find();
+    final EbookApiController ebookApiController = Get.find();
     double size = publicController.size.value;
-    if(_count == 0) _customInit(ebookApiController);
+    if(_count == 0) _customInit(ebookApiController, userController);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: PreferredSize(
             preferredSize: AppBar().preferredSize,
-            child: _pageAppBar(size, publicController)),
+            child: _pageAppBar(size, publicController, ebookApiController)),
         body: Scaffold(
           key: _scaffoldKey,
           drawer: Drawer(child: CustomDrawer()),
@@ -65,7 +70,7 @@ class _MainPageState extends State<MainPage> {
                   : const AccountPageAll();
 
   /// app bar
-  CustomAppBar _pageAppBar(double size, PublicController publicController) => CustomAppBar(
+  CustomAppBar _pageAppBar(double size, PublicController publicController, EbookApiController ebookApiController) => CustomAppBar(
         title: "ইবুক",
         iconData: LineAwesomeIcons.bars,
         action: [
@@ -94,19 +99,19 @@ class _MainPageState extends State<MainPage> {
                     top: 0,
                     right: 0,
                     child: Container(
-                      width: size * .035,
+                      padding: const EdgeInsets.all(2),
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white,
                       ),
 
-                      /// notification count
+                      /// cart count
                       child: Center(
                         child: Text(
-                          '2',
+                          ebookApiController.totalNumberOfCarts.toString(),
                           style: TextStyle(
                               color: Colors.red,
-                              fontSize: size * .03,
+                              fontSize: size * .02,
                               fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -131,16 +136,11 @@ class _MainPageState extends State<MainPage> {
             selectedItemColor: Colors.white,
             unselectedItemColor: Colors.grey.shade300,
             items: const [
-              BottomNavigationBarItem(
-                  icon: Icon(LineAwesomeIcons.home), label: 'হোম'),
-              BottomNavigationBarItem(
-                  icon: Icon(LineAwesomeIcons.book_reader), label: 'বইঘর'),
-              BottomNavigationBarItem(
-                  icon: Icon(LineAwesomeIcons.headphones), label: 'অডিও বই'),
-              BottomNavigationBarItem(
-                  icon: Icon(LineAwesomeIcons.book_open), label: 'আমার বই'),
-              BottomNavigationBarItem(
-                  icon: Icon(LineAwesomeIcons.user), label: 'প্রোফাইল'),
+              BottomNavigationBarItem(icon: Icon(LineAwesomeIcons.home), label: 'হোম'),
+              BottomNavigationBarItem(icon: Icon(LineAwesomeIcons.book_reader), label: 'বইঘর'),
+              BottomNavigationBarItem(icon: Icon(LineAwesomeIcons.headphones), label: 'অডিও বই'),
+              BottomNavigationBarItem(icon: Icon(LineAwesomeIcons.book_open), label: 'আমার বই'),
+              BottomNavigationBarItem(icon: Icon(LineAwesomeIcons.user), label: 'প্রোফাইল'),
             ]),
       );
 }

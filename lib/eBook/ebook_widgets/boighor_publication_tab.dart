@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/ebook_api_controller.dart';
@@ -19,14 +20,23 @@ class _BoighorPublicationTabPageState extends State<BoighorPublicationTabPage> {
   int _count = 0;
   int _tappedIndex = 0;
   int _publicationsLength = 0;
+  bool _loading = false;
+  int _bookListLength = 0;
 
   Future <void> _customInit(EbookApiController ebookApiController) async {
     _count++;
     setState(() {
       _publicationsLength = ebookApiController.publicationList.length > 9 ? 10 : ebookApiController.publicationList.length;
+      _loading = true;
+    });
+    await ebookApiController.getPublicationWiseBookList(ebookApiController.publicationList[0].id.toString()).then((value){
+      setState(() {
+        _loading = false;
+        _bookListLength = ebookApiController.publicationWiseBookList.length > 9 ? 9 : ebookApiController.publicationWiseBookList.length;
+      });
     });
     // ignore: avoid_print
-    print('publication length = $_publicationsLength');
+    print('publication length = $_publicationsLength booklist length = $_bookListLength');
   }
 
   @override
@@ -41,7 +51,6 @@ class _BoighorPublicationTabPageState extends State<BoighorPublicationTabPage> {
   }
 
   Widget _bodyUI(double size, EbookApiController ebookApiController) => SizedBox(
-
         width: Get.width,
         child: Column(
           children: [
@@ -164,7 +173,7 @@ class _BoighorPublicationTabPageState extends State<BoighorPublicationTabPage> {
                                 child: CircleAvatar(
                                   backgroundColor: Colors.grey.shade200,
                                   backgroundImage:  NetworkImage(
-                                    'http://${ebookApiController.domainName}/public//frontend/images/publicationImage/${ebookApiController.publicationList[index].publicationImage}',
+                                    '${ebookApiController.domainName}/public//frontend/images/publicationImage/${ebookApiController.publicationList[index].publicationImage}',
                                   ),
                                   radius: size * .065,
                                 ),
@@ -191,57 +200,86 @@ class _BoighorPublicationTabPageState extends State<BoighorPublicationTabPage> {
                     )
                 )
             ),
-            Expanded(
+            _loading
+                ? Expanded(
+              child: ListView.builder(
+                  itemCount: 3,
+                  itemBuilder: (context, index) => SizedBox(
+                    height: size * .38,
+                    child: const VideoShimmer(
+                      isRectBox: true,
+                      padding: EdgeInsets.zero,
+                      margin: EdgeInsets.zero,
+                    ),
+                  )),
+            )
+                : ebookApiController.publicationWiseBookList.isNotEmpty
+                ? Expanded(
               child: Padding(
                 padding: EdgeInsets.all(size * .02),
                 child: GridView.builder(
                     physics: const ClampingScrollPhysics(),
                     gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 3 / 5,
-                            mainAxisSpacing: 1),
-                    itemCount: 9,
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 3 / 5,
+                        mainAxisSpacing: 1),
+                    itemCount: _bookListLength,
                     itemBuilder: (context, index) {
                       return index != 8
                           ? BookPreview(
-                              bookImageWidth: size * .26,
-                              bookImageHeight: size * .4,
-                              bookImage:
-                                  "https://1.bp.blogspot.com/-QoKjWWKcnC0/XWVnOba6kbI/AAAAAAAAXn4/fwXfr6wBflcYMrUlRSFxfB9K62_5SONAgCLcBGAs/s1600/Ekjon%2BMayaboti%2Bby%2BHumayun%2BAhmed%2B-%2BBangla%2BRomantic%2BNovel%2BPDF%2BBooks.jpg",
-                              bookName: 'একজন মায়াবতী ',
-                              writerName: 'হুমায়ুন আহমেদ')
+                          bookImageWidth: size * .26,
+                          bookImageHeight: size * .4,
+                          bookImage:
+                          '${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${ebookApiController.publicationWiseBookList[index].bookThumbnail!}',
+                          bookName: ebookApiController
+                              .publicationWiseBookList[index].name!,
+                          writerName: ebookApiController
+                              .publicationWiseBookList[index].wname!,
+                        product: ebookApiController
+                            .publicationWiseBookList[index],
+                      )
                           : Padding(
-                              padding: EdgeInsets.all(size * .02),
-                              child: Container(
-                                width: size * .2,
-                                height: size * .3,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: CColor.themeColor, width: 2),
-                                  borderRadius: BorderRadius.circular(4.0),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      LineAwesomeIcons.angle_double_right,
-                                      color: CColor.themeColor,
-                                    ),
-                                    SizedBox(
-                                      height: size * .02,
-                                    ),
-                                    Text(
-                                      'আরও দেখুন',
-                                      style: Style.bodyTextStyle(size * .035,
-                                          CColor.themeColor, FontWeight.w500),
-                                    )
-                                  ],
-                                ),
+                        padding: EdgeInsets.all(size * .02),
+                        child: Container(
+                          width: size * .2,
+                          height: size * .3,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: CColor.themeColor,
+                                width: 2),
+                            borderRadius:
+                            BorderRadius.circular(4.0),
+                          ),
+                          child: Column(
+                            mainAxisAlignment:
+                            MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                LineAwesomeIcons
+                                    .angle_double_right,
+                                color: CColor.themeColor,
                               ),
-                            );
+                              SizedBox(
+                                height: size * .02,
+                              ),
+                              Text(
+                                'আরও দেখুন',
+                                style: Style.bodyTextStyle(
+                                    size * .035,
+                                    CColor.themeColor,
+                                    FontWeight.w500),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
                     }),
               ),
+            )
+                : Padding(
+              padding: EdgeInsets.only(top: size * .5),
+              child: const Text('কোন বই খুঁজে পাওয়া যায় নি!'),
             ),
           ],
         ),

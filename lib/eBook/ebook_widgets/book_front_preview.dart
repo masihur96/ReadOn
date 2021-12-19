@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:read_on/controller/public_controller.dart';
-import 'package:read_on/eBook/book_detail.dart';
+import '../ebook_screens/book_detail.dart';
+import 'package:read_on/eBook/ebook_model_classes/product.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 
 class BookPreview extends StatefulWidget {
@@ -10,8 +13,9 @@ class BookPreview extends StatefulWidget {
   String bookImage;
   String bookName;
   String writerName;
+  Product product;
 
-  BookPreview({Key? key,required this.bookImageWidth, required this.bookImageHeight, required this.bookImage, required this.bookName, required this.writerName}) : super(key: key);
+  BookPreview({Key? key,required this.bookImageWidth, required this.bookImageHeight, required this.bookImage, required this.bookName, required this.writerName, required this.product}) : super(key: key);
 
   @override
   State<BookPreview> createState() => _BookPreviewState();
@@ -40,7 +44,8 @@ class _BookPreviewState extends State<BookPreview> {
     _checkLength();
     return GestureDetector(
       onTap: () {
-        Get.to(() => const BookDetail());
+        print('tapped on book ${widget.product.name}');
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BookDetail(product: widget.product,)));
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -63,7 +68,13 @@ class _BookPreviewState extends State<BookPreview> {
               child: ClipRRect(
                   borderRadius:
                   BorderRadius.circular(4.0),
-                  child: Image.network(widget.bookImage, fit: BoxFit.cover,)),
+                  child: CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    imageUrl: widget.bookImage,
+                    placeholder: (context, url) => const CupertinoActivityIndicator(),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                  ),
+              ),
             ),
           ),
           SizedBox(height: publicController.size.value*.01,),

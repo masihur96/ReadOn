@@ -36,12 +36,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool _passwordObscureText = true;
   bool _confirmPasswordObscureText = true;
   bool _loading = false;
+  String? deviceId;
+  int _count = 0;
+
+  void _customInit(PublicController publicController) async {
+    _count++;
+    await publicController.getMacAddress().then((value) {
+      setState(() {
+        deviceId = publicController.deviceId;
+      });
+      print('device ID = $deviceId');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final PublicController publicController = Get.find();
     final UserController userController = Get.find();
     final double size = publicController.size.value;
+    if(_count == 0) _customInit(publicController);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -109,7 +122,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       CustomTextFormField(
                         size: size,
                         textEditingController: _nameController,
-                        hintText: 'Username',
+                        hintText: '$deviceId',
                         errorText: _nameErrorText,
                         obscureText: false,
                         suffix: null,
@@ -391,6 +404,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       'name': _nameController.text,
       'email': _emailController.text,
       'password': _passwordController.text,
+      'device1' : deviceId,
       'phone': _phoneNoController.text
     };
     bool isSuccessful = await userController.registerUser(userData);

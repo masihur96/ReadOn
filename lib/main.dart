@@ -15,14 +15,14 @@ void main() async{
   if(_isPhone) {CColor.portraitMood;}
   else {CColor.landscapeMood;}
   pref.setBool('isPhone', _isPhone);
-  String? userAccessToken = pref.getString('userAccessToken');
+  String? readOnUserId = pref.getString('readOnUserId');
 
-  runApp(MyApp(userAccessToken: userAccessToken));
+  runApp(MyApp(readOnUserId: readOnUserId));
 }
 
 class MyApp extends StatelessWidget {
-  String? userAccessToken;
-  MyApp({Key? key, required this.userAccessToken}) : super(key: key);
+  String? readOnUserId;
+  MyApp({Key? key, required this.readOnUserId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.red),
         canvasColor: Colors.transparent
       ),
-      home: SplashScreen(userAccessToken: userAccessToken),
+      home: SplashScreen(readOnUserId: readOnUserId),
     );
   }
 }
