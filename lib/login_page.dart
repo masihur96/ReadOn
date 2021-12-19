@@ -32,11 +32,25 @@ class _LoginPageState extends State<LoginPage> {
   bool _rememberLogin = false;
   bool _loading = false;
 
+  String? deviceId;
+  int _count = 0;
+
+  void _customInit(PublicController publicController) async {
+    _count++;
+    await publicController.getMacAddress().then((value) {
+      setState(() {
+        deviceId = publicController.deviceId;
+      });
+      print('device ID = $deviceId');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final PublicController publicController = Get.find();
     final UserController userController = Get.put(UserController());
     final double size = publicController.size.value;
+    if(_count == 0) _customInit(publicController);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -381,26 +395,30 @@ class _LoginPageState extends State<LoginPage> {
       if(email != ''){
         loginData = {
           'email' : email,
-          'password' : _passwordController.text
+          'password' : _passwordController.text,
+          'device1' : deviceId
         };
         print('valid email: $loginData');
       }else{
         loginData = {
           'phone' : phone,
-          'password' : _passwordController.text
+          'password' : _passwordController.text,
+          'device1' : deviceId
         };
         print('valid phone: $loginData');
       }
       await userController.login(loginData).then((userLoginModel) async{
         setState(() => _loading = false);
-        if(userLoginModel!.accessToken != null){
+        if(userLoginModel){
           if(_rememberLogin){
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setString('userAccessToken', userLoginModel.accessToken!);
+            prefs.setString('readOnUserId', userController.userLoginModel.value.userInfo![0].id.toString());
             Get.to(() => const HomePage());
+            // ignore: avoid_print
             print('successfully logged in');
           }else{
             Get.offAll(()=> const HomePage());
+            // ignore: avoid_print
             print('successfully logged in');
           }
         }else{

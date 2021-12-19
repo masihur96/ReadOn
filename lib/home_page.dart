@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:read_on/eBook/audio_book_detail.dart';
-import 'package:read_on/eBook/audio_player_page.dart';
-import 'package:read_on/eBook/main_page_ebook.dart';
+import 'eBook/ebook_screens/audio_book_detail.dart';
+import 'eBook/ebook_screens/audio_player_page.dart';
+import 'eBook/ebook_screens/main_page_ebook.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 import 'package:read_on/widgets/solid_button.dart';

@@ -157,23 +157,23 @@ class _AmarBoiState extends State<AmarBoi> {
               ),
             ),
             //SizedBox(height: size * .04),
-            Container(
-              height: size*.6,
-              padding: EdgeInsets.symmetric(horizontal: size*.04),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: 10,
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.only(right: size*.06),
-                    child: BookPreview(
-                      bookImageWidth: size*.26,
-                      bookImageHeight: size*.4,
-                      bookImage: widget.bookImage,
-                      bookName: widget.bookName,
-                      writerName: widget.writerName),
-                  )),
-            ),
+            // Container(
+            //   height: size*.6,
+            //   padding: EdgeInsets.symmetric(horizontal: size*.04),
+            //   child: ListView.builder(
+            //     scrollDirection: Axis.horizontal,
+            //       physics: const ClampingScrollPhysics(),
+            //       itemCount: 10,
+            //       itemBuilder: (context, index) => Padding(
+            //         padding: EdgeInsets.only(right: size*.06),
+            //         child: BookPreview(
+            //           bookImageWidth: size*.26,
+            //           bookImageHeight: size*.4,
+            //           bookImage: widget.bookImage,
+            //           bookName: widget.bookName,
+            //           writerName: widget.writerName,bookId: 1,),
+            //       )),
+            // ),
             SizedBox(height: size * .04),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: size * .04),
@@ -202,23 +202,25 @@ class _AmarBoiState extends State<AmarBoi> {
                 ],
               ),
             ),
-            Container(
-              height: size*.6,
-              padding: EdgeInsets.symmetric(horizontal: size*.04),
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: 10,
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.only(right: size*.06),
-                    child: BookPreview(
-                        bookImageWidth: size*.26,
-                        bookImageHeight: size*.4,
-                        bookImage: widget.bookImage,
-                        bookName: widget.bookName,
-                        writerName: widget.writerName),
-                  )),
-            )
+            // Container(
+            //   height: size*.6,
+            //   padding: EdgeInsets.symmetric(horizontal: size*.04),
+            //   child: ListView.builder(
+            //       scrollDirection: Axis.horizontal,
+            //       physics: const ClampingScrollPhysics(),
+            //       itemCount: 10,
+            //       itemBuilder: (context, index) => Padding(
+            //         padding: EdgeInsets.only(right: size*.06),
+            //         child: BookPreview(
+            //             bookImageWidth: size*.26,
+            //             bookImageHeight: size*.4,
+            //             bookImage: widget.bookImage,
+            //             bookName: widget.bookName,
+            //             writerName: widget.writerName,
+            //           bookId: 1,
+            //         ),
+            //       )),
+            // )
           ],
         ),
       ),
