@@ -2,11 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:get/get.dart';
+import 'package:read_on/eBook/reading_screen.dart/mina_reader.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async{
+  MinaReader.initReader();
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
   /// Set Device orientation

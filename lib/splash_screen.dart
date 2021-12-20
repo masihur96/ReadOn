@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:read_on/controller/ebook_api_controller.dart';
 import 'package:read_on/controller/public_controller.dart';
+import 'package:read_on/controller/reading_api_controller.dart';
 import 'package:read_on/controller/user_controller.dart';
 import 'package:read_on/home_page.dart';
 import 'package:read_on/login_page.dart';
@@ -34,6 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final Size size = MediaQuery.of(context).size;
     final PublicController publicController = Get.put(PublicController());
     final EbookApiController ebookApiController = Get.put(EbookApiController());
+    final ReadingApiController readingApiController = Get.put(ReadingApiController());
     final UserController userController = Get.put(UserController());
     return Scaffold(
       body: _bodyUI(publicController, size),

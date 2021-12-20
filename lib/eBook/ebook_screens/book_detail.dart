@@ -9,7 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/ebook_api_controller.dart';
 import 'package:read_on/controller/public_controller.dart';
+import 'package:read_on/controller/reading_api_controller.dart';
 import 'package:read_on/controller/user_controller.dart';
+import 'package:read_on/eBook/reading_screen.dart/reading_screen.dart';
 import 'package:read_on/widgets/custom_loading.dart';
 import 'category_wise_book_page.dart';
 import 'package:read_on/eBook/ebook_model_classes/product.dart';
@@ -46,8 +48,9 @@ class _BookDetailState extends State<BookDetail> {
   int totalReview = 0;
   String reviewDate = '';
 
-  void _customInit(EbookApiController ebookApiController) async {
+  void _customInit(EbookApiController ebookApiController,ReadingApiController readingApiController) async {
     _count++;
+    readingApiController.getChapterContent(widget.product.id!);
     setState(() {
       writterName = widget.product.wname!.length > 16
           ? widget.product.wname!.substring(0, 13) + '...'
@@ -64,6 +67,8 @@ class _BookDetailState extends State<BookDetail> {
     });
     print('product name: ${widget.product.name}, product id: ${widget.product
         .id}, writer: ${widget.product.wname}');
+
+
     await ebookApiController.getReviewList(widget.product.id!).then((value) {
       if (ebookApiController.reviewList.isNotEmpty) {
         setState(() => totalReview = ebookApiController.reviewList.length);
@@ -84,9 +89,10 @@ class _BookDetailState extends State<BookDetail> {
   Widget build(BuildContext context) {
     final PublicController publicController = Get.find();
     final EbookApiController ebookApiController = Get.find();
+    final ReadingApiController readingApiController = Get.find();
     final UserController userController = Get.find();
     double size = publicController.size.value;
-    if (_count == 0) _customInit(ebookApiController);
+    if (_count == 0) _customInit(ebookApiController,readingApiController);
     var dFormat =  DateFormat("yMMMd");
     if(ebookApiController.reviewList.isNotEmpty) {
       reviewDate = dFormat.format(ebookApiController.reviewList[0].createdAt!);
@@ -100,7 +106,7 @@ class _BookDetailState extends State<BookDetail> {
             child: _pageAppBar(size, publicController)),
         body: Stack(
           children: [
-            _bodyUI(size, ebookApiController, userController),
+            _bodyUI(size, ebookApiController, userController,readingApiController),
             Visibility(
               visible: _addedToCart? true: false,
               child: Container(
@@ -117,7 +123,7 @@ class _BookDetailState extends State<BookDetail> {
   }
 
   Widget _bodyUI(double size, EbookApiController ebookApiController,
-      UserController userController) =>
+      UserController userController,ReadingApiController readingApiController) =>
       ListView(
         children: [
           SizedBox(
@@ -186,18 +192,27 @@ class _BookDetailState extends State<BookDetail> {
                       Positioned(
                         bottom: 0,
                         right: 10,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.7),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(size * .015),
-                                  topRight: Radius.circular(size * .015))),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: size * .025, vertical: size * .008),
-                          child: Text(
-                            'একটু পড়ুন',
-                            style: Style.bodyTextStyle(
-                                size * .03, Colors.black, FontWeight.w500),
+                        child: InkWell(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (_)=>ReadingScreen()));
+
+                            setState(() {
+                              readingApiController.ektuPorun==true;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.7),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(size * .015),
+                                    topRight: Radius.circular(size * .015))),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size * .025, vertical: size * .008),
+                            child: Text(
+                              'একটু পড়ুন',
+                              style: Style.bodyTextStyle(
+                                  size * .03, Colors.black, FontWeight.w500),
+                            ),
                           ),
                         ),
                       )
