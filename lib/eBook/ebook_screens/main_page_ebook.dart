@@ -26,11 +26,15 @@ class _MainPageState extends State<MainPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   int _navBarIndex = 0;
 
-  Future <void> _customInit(EbookApiController ebookApiController, UserController userController) async {
+  Future<void> _customInit(EbookApiController ebookApiController,
+      UserController userController) async {
     _count++;
-    if(ebookApiController.subjectCategoryList.isEmpty) ebookApiController.getSubjectCategoryNameList();
-    if(ebookApiController.writeModel.value.data!.isEmpty) ebookApiController.getWriterList();
-    if(ebookApiController.publicationList.isEmpty) ebookApiController.getPublicationList();
+    if (ebookApiController.subjectCategoryList.isEmpty)
+      ebookApiController.getSubjectCategoryNameList();
+    if (ebookApiController.writeModel.value.data!.isEmpty)
+      ebookApiController.getWriterList();
+    if (ebookApiController.publicationList.isEmpty)
+      ebookApiController.getPublicationList();
     await userController.getCurrentUserId();
     ebookApiController.countNumberOfCarts(userController);
   }
@@ -41,7 +45,7 @@ class _MainPageState extends State<MainPage> {
     final UserController userController = Get.find();
     final EbookApiController ebookApiController = Get.find();
     double size = publicController.size.value;
-    if(_count == 0) _customInit(ebookApiController, userController);
+    if (_count == 0) _customInit(ebookApiController, userController);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -70,8 +74,18 @@ class _MainPageState extends State<MainPage> {
                   : const AccountPageAll();
 
   /// app bar
-  CustomAppBar _pageAppBar(double size, PublicController publicController, EbookApiController ebookApiController) => CustomAppBar(
-        title: "ইবুক",
+  CustomAppBar _pageAppBar(double size, PublicController publicController,
+          EbookApiController ebookApiController) =>
+      CustomAppBar(
+        title: _navBarIndex == 0
+            ? "হোম"
+            : _navBarIndex == 1
+                ? "বইঘর"
+                : _navBarIndex == 2
+                    ? "অডিও বই"
+                    : _navBarIndex == 3
+                        ? "আমার বই"
+                        : "একাউন্ট",
         iconData: LineAwesomeIcons.bars,
         action: [
           Icon(
@@ -136,11 +150,16 @@ class _MainPageState extends State<MainPage> {
             selectedItemColor: Colors.white,
             unselectedItemColor: Colors.grey.shade300,
             items: const [
-              BottomNavigationBarItem(icon: Icon(LineAwesomeIcons.home), label: 'হোম'),
-              BottomNavigationBarItem(icon: Icon(LineAwesomeIcons.book_reader), label: 'বইঘর'),
-              BottomNavigationBarItem(icon: Icon(LineAwesomeIcons.headphones), label: 'অডিও বই'),
-              BottomNavigationBarItem(icon: Icon(LineAwesomeIcons.book_open), label: 'আমার বই'),
-              BottomNavigationBarItem(icon: Icon(LineAwesomeIcons.user), label: 'প্রোফাইল'),
+              BottomNavigationBarItem(
+                  icon: Icon(LineAwesomeIcons.home), label: 'হোম'),
+              BottomNavigationBarItem(
+                  icon: Icon(LineAwesomeIcons.book_reader), label: 'বইঘর'),
+              BottomNavigationBarItem(
+                  icon: Icon(LineAwesomeIcons.headphones), label: 'অডিও বই'),
+              BottomNavigationBarItem(
+                  icon: Icon(LineAwesomeIcons.book_open), label: 'আমার বই'),
+              BottomNavigationBarItem(
+                  icon: Icon(LineAwesomeIcons.user), label: 'প্রোফাইল'),
             ]),
       );
 }

@@ -413,6 +413,12 @@ class _LoginPageState extends State<LoginPage> {
           if(_rememberLogin){
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setString('readOnUserId', userController.userLoginModel.value.userInfo![0].id.toString());
+            prefs.setString('readOnUserPassword', _passwordController.text);
+            if(email != ''){
+              prefs.setString('readOnUserEmail', email);
+            }else{
+              prefs.setString('readOnUserPhone', phone);
+            }
             Get.to(() => const HomePage());
             // ignore: avoid_print
             print('successfully logged in');

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:read_on/controller/user_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'eBook/ebook_screens/audio_book_detail.dart';
 import 'eBook/ebook_screens/audio_player_page.dart';
 import 'eBook/ebook_screens/main_page_ebook.dart';
@@ -16,9 +18,50 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  int _count = 0;
+  String deviceId = '';
+
+  void _customInit(UserController userController, PublicController publicController) async {
+    _count++;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await publicController.getMacAddress().then((value) {
+      setState(() {
+        deviceId = publicController.deviceId;
+      });
+      print('device ID = $deviceId');
+    });
+    String? readOnUserId = pref.getString('readOnUserId');
+    String? readOnUserPassword = pref.getString('readOnUserPassword');
+    String? readOnUserEmail = pref.getString('readOnUserEmail');
+    String? readOnUserPhone = pref.getString('readOnUserPhone');
+    Map loginData = {};
+    if(readOnUserId != null){
+      if(readOnUserEmail != null){
+        loginData = {
+          'email' : readOnUserEmail,
+          'password' : readOnUserPassword,
+          'device1' : deviceId
+        };
+        print('valid email: $loginData');
+      }else{
+        loginData = {
+          'phone' : readOnUserPhone,
+          'password' : readOnUserPassword,
+          'device1' : deviceId
+        };
+        print('valid phone: $loginData');
+      }
+    }
+    await userController.login(loginData);
+    print(userController.userLoginModel.value.userInfo![0].name);
+  }
+
   @override
   Widget build(BuildContext context) {
     final PublicController publicController = Get.find();
+    final UserController userController = Get.find();
+    if(_count == 0) _customInit(userController, publicController);
     return Scaffold(
         backgroundColor: Colors.white, body: _bodyUI(publicController));
   }

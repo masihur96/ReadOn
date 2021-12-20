@@ -1,4 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:read_on/controller/ebook_api_controller.dart';
+import 'package:read_on/controller/public_controller.dart';
+import 'package:read_on/eBook/ebook_model_classes/package_model.dart';
+import 'package:read_on/public_variables/color_variable.dart';
+import 'package:read_on/public_variables/style_variable.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class PackagePage extends StatefulWidget {
   @override
@@ -7,13 +16,129 @@ class PackagePage extends StatefulWidget {
 
 class _PackagePageState extends State<PackagePage> {
 
-   String content = 'আমাদের কিছুই নেই, অথচ সবটা সময়জুড়ে ভাবি, এই বুঝি নিঃস্ব হলাম। ” ৪৩৮ পৃষ্ঠার উপন্যাসের একেবারেই শেষের লাইনটি দিয়ে শুরু করলাম রিভিউ লেখা। কারণ এই একটি লাইন বা উক্তির মর্মার্থ যদি বীণাবালা বুঝতে পারতো তবে গোটা বইটাই সৃষ্টি হত না বোধহয়। “অন্দরমহলের বাতাসে-বাতাসে ভয়ানক দুর্যোগের আভাস। এই দুর্যোগ কালব্যধি গুটিবসন্তের চেয়েও ভয়ঙ্কর।” ক্ষমতা, প্রভাব-প্রতিপত্তির নেশা বড় নেশা। বর্তমান সময়ের তরুণ প্রজন্মের জনপ্রিয় লেখক সাদাত হোসাইনের দীর্ঘ কলেবরের বইগুলো পড়ার সাহস করে উঠতে পারিনি আগে। কারণ বড় কলেবরের বই দেখলেই ভয় লাগে আমার। কিন্তু এই অন্দরমহলের প্রথম পাতা খোলে কয়েক লাইন পড়তেই আমি পুরো বইটা পড়ার তীব্র ইচ্ছা বোধ করলাম। কারণ এরপর কি হবে? এই একটি প্রশ্নে পুরো বইতে আমার ভিতরের চোখ অসংখ্যবার লেখা দেখেলো।\r\n\r\n“গঙ্গামহল অথবা অন্দরমহলের গল্প” . “আমাদের কিছুই নেই, অথচ সবটা সময়জুড়ে ভাবি, এই বুঝি নিঃস্ব হলাম। ” ৪৩৮ পৃষ্ঠার উপন্যাসের একেবারেই শেষের লাইনটি দিয়ে শুরু করলাম রিভিউ লেখা। কারণ এই একটি লাইন বা উক্তির মর্মার্থ যদি বীণাবালা বুঝতে পারতো তবে গোটা বইটাই সৃষ্টি হত না বোধহয়। “অন্দরমহলের বাতাসে-বাতাসে ভয়ানক দুর্যোগের আভাস। এই দুর্যোগ কালব্যধি গুটিবসন্তের চেয়েও ভয়ঙ্কর।” ক্ষমতা, প্রভাব-প্রতিপত্তির নেশা বড় নেশা। বর্তমান সময়ের তরুণ প্রজন্মের জনপ্রিয় লেখক সাদাত হোসাইনের দীর্ঘ কলেবরের বইগুলো পড়ার সাহস করে উঠতে পারিনি আগে। কারণ বড় কলেবরের বই দেখলেই ভয় লাগে আমার। কিন্তু এই অন্দরমহলের প্রথম পাতা খোলে কয়েক লাইন পড়তেই আমি পুরো বইটা পড়ার তীব্র ইচ্ছা বোধ করলাম। কারণ এরপর কি হবে? এই একটি প্রশ্নে পুরো বইতে আমার ভিতরের চোখ অসংখ্যবার লেখা দেখেলো।';
+  int _count = 0;
+  bool _loading = false;
+
+  Future <void> _customInit(EbookApiController ebookApiController) async {
+    _count++;
+    setState(() => _loading = true);
+    await ebookApiController.getPackageList();
+    setState(() => _loading = false);
+    print('package list = ${ebookApiController.packageList.length}');
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child:  Center(child: Text(content)),
-    );
+    final EbookApiController ebookApiController = Get.find();
+    final PublicController publicController = Get.find();
+    double size = publicController.size.value;
+    if(_count == 0) _customInit(ebookApiController);
+    return _loading
+        ? Padding(
+      padding: EdgeInsets.all(size * .045),
+      child: ListView.builder(
+          shrinkWrap: true,
+          physics: const BouncingScrollPhysics(),
+          itemCount: 4,
+          itemBuilder: (context, index) {
+            return Column(
+              children: [
+                Shimmer(
+                  interval: const Duration(milliseconds: 500),
+                  color: Colors.grey,
+                  enabled: true,
+                  direction: const ShimmerDirection.fromLeftToRight(),
+                  colorOpacity: 0.5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: size,
+                      height: size * .4,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(size * .04)),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: size * .02,
+                )
+              ],
+            );
+          }),
+    ) : ebookApiController.packageList.isNotEmpty?  ListView.builder(
+      shrinkWrap: true,
+      physics: const BouncingScrollPhysics(),
+      itemCount: ebookApiController.packageList.length,
+      itemBuilder: (context, index){
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: size*.04),
+          child: _packageCard(size, ebookApiController, ebookApiController.packageList[index]),
+        );
+      },
+    ) : const Center(child: Text('কোন প্যাকেজ নেই!'));
   }
+
+  /// package card
+  Card _packageCard(double size, EbookApiController ebookApiController, PackageModel packageModel) =>
+      Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(size * .03),
+        ),
+        child: Container(
+          width: size,
+          decoration: BoxDecoration(
+              color: Colors.white10,
+              borderRadius: BorderRadius.circular(size * .03)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(size * .03), topRight: Radius.circular(size * .03)),
+                child: CachedNetworkImage(
+                  height: size*.4,
+                  width: size,
+                  fit: BoxFit.cover,
+                  imageUrl: "${ebookApiController.domainName}/public//frontend/images/package_thumbnail/${packageModel.thumbnail!}",
+                  placeholder: (context, url) => const CupertinoActivityIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
+              ),
+              SizedBox(height: size*.02,),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size*.04),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            packageModel.packageName!,
+                            textAlign: TextAlign.center,
+                            style: Style.headerTextStyle(size*.04, Colors.black, FontWeight.w500),
+                          ),
+                          Text(
+                            packageModel.bookDescription!,
+                            textAlign: TextAlign.center,
+                            style: Style.headerTextStyle(size*.035, Colors.black, FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      '৳ ১১৫/-',
+                      style: Style.bodyTextStyle(size*.07, CColor.themeColor, FontWeight.w500),
+                    )
+                  ],
+                ),
+              ),
+
+
+              SizedBox(height: size*.02,)
+            ],
+          ),
+        ),
+      );
 }
