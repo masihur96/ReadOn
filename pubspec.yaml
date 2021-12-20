@@ -28,6 +28,14 @@ dependencies:
   intl: ^0.17.0
 
 
+  #reading page
+  path:
+  equatable: ^2.0.2
+  flutter_bloc: ^7.0.0
+  flutter_screenutil: ^5.0.0+2
+  hive: ^2.0.4
+  hive_flutter: ^1.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
