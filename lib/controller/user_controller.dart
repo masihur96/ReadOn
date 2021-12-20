@@ -71,4 +71,19 @@ class UserController extends GetxController {
      return false;
     }
   }
+
+  /// subscribe a plan
+  Future <void> subscribe(Map subscriptionMap) async {
+    final String baseUrl = "$domainName/api/s_details";
+    try{
+      var response = await http.post(
+          Uri.parse(baseUrl),
+          body: subscriptionMap
+      );
+      var jsonData = jsonDecode(response.body);
+      print('message: ${jsonData['message']}');
+    }catch(error){
+      print('subscribing failed, error: $error');
+    }
+  }
 }

@@ -62,8 +62,8 @@ class _BookPreviewState extends State<BookPreview> {
               width: widget.bookImageWidth,
               height: widget.bookImageHeight,
               decoration: BoxDecoration(
-                borderRadius:
-                BorderRadius.circular(4.0),
+                borderRadius: BorderRadius.circular(4.0),
+                color: Colors.grey.shade50
               ),
               child: ClipRRect(
                   borderRadius:
@@ -71,9 +71,10 @@ class _BookPreviewState extends State<BookPreview> {
                   child: CachedNetworkImage(
                     fit: BoxFit.cover,
                     imageUrl: widget.bookImage,
-                    placeholder: (context, url) => const CupertinoActivityIndicator(),
+                    placeholder: (context, url) => Image.asset('assets/book_art.png', fit: BoxFit.contain,),
                     errorWidget: (context, url, error) => const Icon(Icons.error),
                   ),
+
               ),
             ),
           ),

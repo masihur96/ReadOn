@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:read_on/controller/user_controller.dart';
+import 'package:read_on/eBook/ebook_model_classes/audio_book_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/cart_model.dart';
+import 'package:read_on/eBook/ebook_model_classes/package_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/product.dart';
 import 'package:read_on/eBook/ebook_model_classes/home_page_book_list_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/publication_model.dart';
@@ -45,6 +47,8 @@ class EbookApiController extends GetxController {
   RxString promoCodeDiscount = ''.obs;
   RxInt totalNumberOfCarts = 0.obs;
   RxList<SiteSettingModel> siteSettingImageList = RxList<SiteSettingModel>([]);
+  RxList<PackageModel> packageList = RxList<PackageModel>([]);
+  RxList<AudioBookModel> audioBookList = RxList<AudioBookModel>([]);
 
   Future<void> getSubjectCategoryNameList() async {
     try {
@@ -373,10 +377,8 @@ class EbookApiController extends GetxController {
           Uri.parse(baseUrl),
         body: body
       );
-      print(response.body);
-      // var jsonData = jsonDecode(response.body);
-      // print('Updating cart quantity : ${jsonData['msg']}');
-
+      var jsonData = jsonDecode(response.body);
+      print('Updating cart quantity : ${jsonData['msg']}');
     }catch(error){
       print('Updating cart quantity error: $error');
     }
@@ -393,4 +395,29 @@ class EbookApiController extends GetxController {
       print('getting site setting images error: $error');
     }
  }
+
+  /// package list get
+  Future <void> getPackageList() async {
+    final String baseUrl = "$domainName/api/pac";
+    try{
+      http.Response response = await http.get(Uri.parse(baseUrl));
+      packageList.value = packageModelFromJson(response.body);
+      update();
+    }catch(error){
+      print('Fetching package list error: $error');
+    }
+  }
+
+  /// all audio books
+  Future <void> getAllAudioBooks() async {
+    final String baseUrl = "$domainName/api/allaudio";
+    try{
+      http.Response response = await http.get(Uri.parse(baseUrl));
+      audioBookList.value = audioBookModelFromJson(response.body);
+      update();
+    }catch(error){
+      print('Getting all audio books error: $error');
+    }
+  }
+
 }

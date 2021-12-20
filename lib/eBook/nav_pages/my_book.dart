@@ -26,14 +26,14 @@ class _MyBookPageState extends State<MyBookPage> {
       child: Column(
         children: [
           TabBar(
-              labelColor: Colors.white,
-              labelStyle: Style.bodyTextStyle(
+              labelColor: CColor.themeColor,
+              labelStyle: Style.buttonTextStyle(
                   size * .05, Colors.white, FontWeight.w500),
-              unselectedLabelColor: CColor.themeColor,
-              indicator: BoxDecoration(color: Colors.grey.shade500),
+              unselectedLabelColor: Colors.black,
+
               tabs: const [
-                Tab(child: Text('আমার বই')),
-                Tab(child: Text('আমার অডিও')),
+                Tab(child: Text('ইবুক')),
+                Tab(child: Text('অডিও')),
               ]),
           Expanded(
             child: TabBarView(children: [
