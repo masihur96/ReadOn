@@ -51,6 +51,8 @@ class _BookDetailState extends State<BookDetail> {
   void _customInit(EbookApiController ebookApiController,ReadingApiController readingApiController) async {
     _count++;
     readingApiController.getChapterContent(widget.product.id!);
+    readingApiController.updateBookName(widget.product.name!);
+
     setState(() {
       writterName = widget.product.wname!.length > 16
           ? widget.product.wname!.substring(0, 13) + '...'
@@ -604,9 +606,7 @@ class _BookDetailState extends State<BookDetail> {
                     /// reviewer profile picture
                     const CircleAvatar(
                       backgroundColor: Colors.white,
-                      backgroundImage: NetworkImage(
-                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnELq88FqJJ3fRj93adsIGYvhO-TiVlgimVQ&usqp=CAU'),
-                    ),
+                      backgroundImage: NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnELq88FqJJ3fRj93adsIGYvhO-TiVlgimVQ&usqp=CAU'),),
                     SizedBox(width: size * .04),
                     Expanded(
                       child: Column(

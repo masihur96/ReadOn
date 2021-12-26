@@ -1,4 +1,7 @@
 
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:read_on/eBook/ebook_model_classes/product.dart';
@@ -6,6 +9,73 @@ import 'package:read_on/eBook/ebook_model_classes/reading_model.dart';
 
 
 class ReadingApiController extends GetxController {
+
+  RxDouble redingFontSize=20.0.obs ;
+  RxString selectedFont=''.obs;
+  RxDouble colorOpacity=0.0.obs;
+  RxBool isScreenFit =false.obs;
+
+  RxString bookName=''.obs;
+
+
+  var bgColor = Color(0xff1a237e).obs;
+
+  updateBookName(String val){
+
+    bookName.value = val ;
+
+    update();
+
+    print(bgColor);
+  }
+
+  updateScreenFitMode(bool val){
+
+    isScreenFit.value = val ;
+
+    update();
+
+    print(bgColor);
+  }
+
+  updateColorMode(Color val){
+
+    bgColor.value = val ;
+
+    update();
+
+     print(bgColor);
+  }
+
+
+  updateSize(double val){
+
+    redingFontSize.value = val ;
+
+    update();
+  }
+  updateFont(String val){
+
+    selectedFont.value = val ;
+
+    update();
+    // print(selectedFont);
+  }
+
+  updateColorOpacity(double val){
+
+    colorOpacity.value = val ;
+
+    update();
+
+  //  print(colorOpacity);
+  }
+
+
+
+
+
+
   // @override
   // void onInit() {
   //   super.onInit();
@@ -16,7 +86,6 @@ class ReadingApiController extends GetxController {
 
   RxList<ReadingModel> ContentList = RxList<ReadingModel>([]);
 
-  String? bookIndex ='48';
   int? contentIndex = 0;
 
   bool ektuPorun =false;

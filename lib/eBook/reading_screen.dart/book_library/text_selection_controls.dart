@@ -28,13 +28,13 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
   ];
 
   static var defaultColorButtons = [
-    HighlightMenuButton(colorIntValue: colors[0].value, label: "Red"),
-    HighlightMenuButton(colorIntValue: colors[1].value, label: "Yellow"),
-    HighlightMenuButton(colorIntValue: colors[2].value, label: "Blue Light"),
-    HighlightMenuButton(colorIntValue: colors[3].value, label: "Orange"),
-    HighlightMenuButton(colorIntValue: colors[4].value, label: "Green"),
-    HighlightMenuButton(colorIntValue: colors[5].value, label: "Purple"),
-    HighlightMenuButton(colorIntValue: colors[6].value, label: "Pink"),
+    HighlightMenuButton(colorIntValue: colors[0].value, label: ""),
+    HighlightMenuButton(colorIntValue: colors[1].value, label: ""),
+    HighlightMenuButton(colorIntValue: colors[2].value, label: ""),
+    HighlightMenuButton(colorIntValue: colors[3].value, label: ""),
+    HighlightMenuButton(colorIntValue: colors[4].value, label: ""),
+    HighlightMenuButton(colorIntValue: colors[5].value, label: ""),
+    HighlightMenuButton(colorIntValue: colors[6].value, label: ""),
   ];
   MyMaterialTextSelectionControls(
       {required this.onTapped, required this.currentTextSelection});
