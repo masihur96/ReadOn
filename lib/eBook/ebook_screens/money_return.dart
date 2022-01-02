@@ -114,7 +114,6 @@ class _MoneyReturnPageState extends State<MoneyReturnPage> {
     ),
   );
 
-
   TextFormField _customTextFormField(double size, TextEditingController controller, String hintText, bool enabled, Widget? suffixIcon) => TextFormField(
     controller: controller,
     autofocus: false,
