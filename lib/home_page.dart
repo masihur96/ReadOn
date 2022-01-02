@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:read_on/controller/sqlite_database_helper.dart';
 import 'package:read_on/controller/user_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'eBook/ebook_screens/audio_book_detail.dart';
@@ -61,6 +62,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final PublicController publicController = Get.find();
     final UserController userController = Get.find();
+    final DatabaseHelper databaseHelper = Get.put(DatabaseHelper());
     if(_count == 0) _customInit(userController, publicController);
     return Scaffold(
         backgroundColor: Colors.white, body: _bodyUI(publicController));

@@ -8,7 +8,6 @@ import 'package:read_on/eBook/ebook_model_classes/subscription_model.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/language_convert.dart';
 import 'package:read_on/public_variables/style_variable.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 
 class SubscriptionPlanPage extends StatefulWidget {
   const SubscriptionPlanPage({Key? key}) : super(key: key);
@@ -37,38 +36,7 @@ class _SubscriptionPlanPageState extends State<SubscriptionPlanPage> {
     double size = publicController.size.value;
     return Scaffold(
       body: _loading
-          ? Padding(
-        padding: EdgeInsets.all(size * .045),
-        child: ListView.builder(
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            itemCount: 4,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Shimmer(
-                    interval: const Duration(milliseconds: 500),
-                    color: Colors.grey,
-                    enabled: true,
-                    direction: const ShimmerDirection.fromLeftToRight(),
-                    colorOpacity: 0.5,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: size,
-                        height: size * .4,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(size * .04)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: size * .02,
-                  )
-                ],
-              );
-            }),
-      )
+          ? SizedBox()
 
           : ebookApiController.subscriptionList.isNotEmpty
           ? Padding(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/ebook_api_controller.dart';
@@ -8,6 +7,7 @@ import 'package:read_on/eBook/ebook_widgets/book_front_preview.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 import 'package:read_on/widgets/custom_loading.dart';
+import 'package:shimmer/shimmer.dart';
 
 class BoighorSubjectTabPage extends StatefulWidget {
   @override
@@ -29,7 +29,9 @@ class _BoighorSubjectTabPageState extends State<BoighorSubjectTabPage> {
         .then((value) {
       setState(() {
         _loading = false;
-        _bookListLength = ebookApiController.categoryWiseBookList.length > 9 ? 9 : ebookApiController.categoryWiseBookList.length;
+        _bookListLength = ebookApiController.categoryWiseBookList.length > 9
+            ? 9
+            : ebookApiController.categoryWiseBookList.length;
       });
     });
   }
@@ -65,15 +67,24 @@ class _BoighorSubjectTabPageState extends State<BoighorSubjectTabPage> {
                         onTap: () async {
                           setState(() {
                             _tappedIndex = index;
-                            _categoryId = ebookApiController.subjectCategoryList[index].id;
+                            _categoryId = ebookApiController
+                                .subjectCategoryList[index].id;
                             _loading = true;
                           });
-                          await ebookApiController.getCategoryWiseBooks(ebookApiController.subjectCategoryList[index].id!);
-                          setState(() => _bookListLength = ebookApiController.categoryWiseBookList.length > 9 ? 9 : ebookApiController.categoryWiseBookList.length);
-                          await ebookApiController.getSubjectSubCategoryOfCategory(_categoryId!);
+                          await ebookApiController.getCategoryWiseBooks(
+                              ebookApiController
+                                  .subjectCategoryList[index].id!);
+                          setState(() => _bookListLength =
+                              ebookApiController.categoryWiseBookList.length > 9
+                                  ? 9
+                                  : ebookApiController
+                                      .categoryWiseBookList.length);
+                          await ebookApiController
+                              .getSubjectSubCategoryOfCategory(_categoryId!);
                           setState(() => _loading = false);
                           // ignore: avoid_print
-                          print('sub category length = ${ebookApiController.subjectSubcategoryListOfCategory.length}\n');
+                          print(
+                              'sub category length = ${ebookApiController.subjectSubcategoryListOfCategory.length}\n');
                         },
                         child: Container(
                           padding: EdgeInsets.fromLTRB(
@@ -91,16 +102,49 @@ class _BoighorSubjectTabPageState extends State<BoighorSubjectTabPage> {
                         )))),
             _loading
                 ? Expanded(
-                    child: ListView.builder(
-                        itemCount: 3,
-                        itemBuilder: (context, index) => SizedBox(
-                              height: size * .38,
-                              child: const VideoShimmer(
-                                isRectBox: true,
-                                padding: EdgeInsets.zero,
-                                margin: EdgeInsets.zero,
-                              ),
-                            )),
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      enabled: true,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size * .02, vertical: size * .04),
+                        child: GridView.builder(
+                            itemCount: 9,
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 9 / 15,
+                                crossAxisSpacing: 0.7,
+                            ),
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Container(
+                                    width: size * .26,
+                                    height: size * .36,
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(size * .01),
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(height: size * .02),
+                                  Container(
+                                    width: size * .26,
+                                    height: size * .03,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(height: size * .02),
+                                  Container(
+                                    width: size * .2,
+                                    height: size * .03,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              );
+                            }),
+                      ),
+                    ),
                   )
                 : ebookApiController.categoryWiseBookList.isNotEmpty
                     ? Expanded(
@@ -108,17 +152,17 @@ class _BoighorSubjectTabPageState extends State<BoighorSubjectTabPage> {
                           padding: EdgeInsets.all(size * .02),
                           child: GridView.builder(
                               physics: const ClampingScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3,
-                                      childAspectRatio: 3 / 5,
-                                      mainAxisSpacing: 1),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 9 / 14,
+                                  crossAxisSpacing: 0.7,
+                                  mainAxisSpacing: 5),
                               itemCount: _bookListLength,
                               itemBuilder: (context, index) {
                                 return index != 8
                                     ? BookPreview(
                                         bookImageWidth: size * .26,
-                                        bookImageHeight: size * .4,
+                                        bookImageHeight: size * .36,
                                         bookImage:
                                             '${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${ebookApiController.categoryWiseBookList[index].bookThumbnail!}',
                                         bookName: ebookApiController

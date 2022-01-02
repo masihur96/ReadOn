@@ -37,13 +37,7 @@ class _MyBookPageState extends State<MyBookPage> {
               ]),
           Expanded(
             child: TabBarView(children: [
-              AmarBoi(
-                bookImage:
-                    "https://1.bp.blogspot.com/-QoKjWWKcnC0/XWVnOba6kbI/AAAAAAAAXn4/fwXfr6wBflcYMrUlRSFxfB9K62_5SONAgCLcBGAs/s1600/Ekjon%2BMayaboti%2Bby%2BHumayun%2BAhmed%2B-%2BBangla%2BRomantic%2BNovel%2BPDF%2BBooks.jpg",
-                bookName: 'একজন মায়াবতী',
-                writerName: 'হুমায়ুন আহমেদ',
-                bookCompletePercentage: "৩৩",
-              ),
+               const AmarBoi(),
               AmarAudio()
             ]),
           )

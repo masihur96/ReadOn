@@ -63,7 +63,7 @@ class EbookHomePageListPreview extends StatelessWidget {
                 padding: EdgeInsets.only(right: size * .03),
                 child: BookPreview(
                     bookImageWidth: size * .26,
-                    bookImageHeight: size * .38,
+                    bookImageHeight: size * .36,
                     bookImage: "${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${bookList[index].bookThumbnail!}",
                     bookName: bookList[index].name!,
                     writerName: bookList[index].wname!,
