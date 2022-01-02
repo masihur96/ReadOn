@@ -69,6 +69,30 @@ flutter:
     - family: HindSiliguri-Medium
       fonts:
         - asset: fonts/HindSiliguri-Medium.ttf
+    - family: AdorshoLipi
+      fonts:
+        - asset: fonts/AdorshoLipi.ttf
+          weight: 300
+    - family: Galada
+      fonts:
+        - asset: fonts/Galada-Regular.ttf
+          weight: 300
+    - family: Hind_Siliguri
+      fonts:
+        - asset: fonts/Hind_Siliguri-Regular_GhOgZt6.ttf
+          weight: 300
+    - family: Kalpurush
+      fonts:
+        - asset: fonts/Kalpurush.ttf
+          weight: 300
+    - family: SLIPI_N
+      fonts:
+        - asset: fonts/SLIPI_N.TTF
+          weight: 300
+    - family: SolaimanLipi_29-05-06
+      fonts:
+        - asset: fonts/SolaimanLipi_29-05-06.ttf
+          weight: 300
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

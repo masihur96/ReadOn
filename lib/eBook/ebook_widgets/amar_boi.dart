@@ -210,7 +210,7 @@ class _AmarBoiState extends State<AmarBoi> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: size*.04,vertical: size*.02),
+                padding: EdgeInsets.symmetric(horizontal: size*.03,vertical: size*.02),
                 child: Column(
                   children: [
                     const Icon(
@@ -231,7 +231,7 @@ class _AmarBoiState extends State<AmarBoi> {
                 ),
               ),
               SizedBox(
-                width: size * .1,
+                width: size * .04,
               ),
               GestureDetector(
                 onTap: () async {
@@ -241,7 +241,7 @@ class _AmarBoiState extends State<AmarBoi> {
                   setState(() =>  _loading = false);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: size*.04,vertical: size*.02),
+                  padding: EdgeInsets.symmetric(horizontal: size*.03,vertical: size*.02),
                   child: Column(
                     children: [
                       Icon(
@@ -311,7 +311,6 @@ class _AmarBoiState extends State<AmarBoi> {
   }
 
   String base64Encode(bytes) => base64.encode(bytes);
-
   Uint8List base64Decode(String source) => base64.decode(source);
 
 }
