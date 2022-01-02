@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/controller/user_controller.dart';
+import 'package:read_on/eBook/ebook_screens/edit_profile.dart';
 import 'package:read_on/eBook/ebook_widgets/custom_appbar.dart';
-import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 
 class Profile extends StatefulWidget {
@@ -23,11 +24,8 @@ class _ProfileState extends State<Profile> {
   TextEditingController _subjectController = TextEditingController();
   TextEditingController _guardianMobileNoController = TextEditingController();
   TextEditingController _genderController = TextEditingController();
-  bool _nameFieldEnabled = false;
-  bool _nameFieldAutofocus = false;
-  bool _emailFieldEnabled = false;
-  bool _phoneFieldEnabled = false;
   int _count = 0;
+  bool _textFieldEnability = false;
 
   void _customInit(UserController userController) async {
     _count++;
@@ -56,7 +54,7 @@ class _ProfileState extends State<Profile> {
         backgroundColor: Colors.white,
         appBar: PreferredSize(
             preferredSize: AppBar().preferredSize,
-            child: _pageAppBar(publicController)),
+            child: _pageAppBar(size, publicController)),
         body: _bodyUI(size),
       ),
     );
@@ -125,13 +123,29 @@ class _ProfileState extends State<Profile> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: size * .06),
-                child: _customTextFormField(
-                  size,
-                  _nameController,
-                  'নাম',
-                  _nameFieldEnabled,
-                  const Icon(Icons.edit, color: Color(0xff7F7F7F)), false
-                ),
+                child: _customTextFormField(size, _nameController, 'নাম'),
+              ),
+              SizedBox(
+                height: size * .04,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size * .06),
+                child: _customTextFormField(size, _emailController, 'ইমেইল'),
+              ),
+              SizedBox(
+                height: size * .04,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size * .06),
+                child:
+                    _customTextFormField(size, _mobileNoController, 'মোবাইল'),
+              ),
+              SizedBox(
+                height: size * .04,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size * .06),
+                child: _customTextFormField(size, _birthDateController, 'জন্ম'),
               ),
               SizedBox(
                 height: size * .04,
@@ -139,13 +153,14 @@ class _ProfileState extends State<Profile> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: size * .06),
                 child: _customTextFormField(
-                  size,
-                  _emailController,
-                  'ইমেইল',
-                  _emailFieldEnabled,
-                  const Icon(Icons.edit, color: Color(0xff7F7F7F)),
-                    false
-                ),
+                    size, _birthDateController, 'স্কুল/কলেজ/বিশ্ববিদ্যালয়'),
+              ),
+              SizedBox(
+                height: size * .04,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size * .06),
+                child: _customTextFormField(size, _classController, 'শ্রেণি'),
               ),
               SizedBox(
                 height: size * .04,
@@ -153,81 +168,22 @@ class _ProfileState extends State<Profile> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: size * .06),
                 child: _customTextFormField(
-                  size,
-                  _mobileNoController,
-                  'মোবাইল',
-                  _phoneFieldEnabled,
-                  const Icon(Icons.edit, color: Color(0xff7F7F7F)),
-                    false
-                ),
+                    size, _subjectController, 'বিভাগ/বিষয়'),
               ),
               SizedBox(
                 height: size * .04,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: size * .06),
-                child: _customTextFormField(
-                    size,
-                    _birthDateController,
-                    'জন্ম',
-                    false,
-                    Icon(
-                      LineAwesomeIcons.calendar,
-                      color: CColor.themeColor,
-                      size: size * .1,
-                    ), false),
+                child: _customTextFormField(size, _guardianMobileNoController,
+                    'অভিভাবকের মোবাইল নম্বর'),
               ),
               SizedBox(
                 height: size * .04,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: size * .06),
-                child: _customTextFormField(
-                    size,
-                    _birthDateController,
-                    'স্কুল/কলেজ/বিশ্ববিদ্যালয়',
-                    true,
-                    const Icon(Icons.edit, color: Color(0xff7F7F7F)), false),
-              ),
-              SizedBox(
-                height: size * .04,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size * .06),
-                child: _customTextFormField(size, _classController, 'শ্রেণি',
-                    true, const Icon(Icons.edit, color: Color(0xff7F7F7F)), false),
-              ),
-              SizedBox(
-                height: size * .04,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size * .06),
-                child: _customTextFormField(
-                    size,
-                    _subjectController,
-                    'বিভাগ/বিষয়',
-                    true,
-                    const Icon(Icons.edit, color: Color(0xff7F7F7F)), false),
-              ),
-              SizedBox(
-                height: size * .04,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size * .06),
-                child: _customTextFormField(
-                    size,
-                    _guardianMobileNoController,
-                    'অভিভাবকের মোবাইল নম্বর',
-                    true,
-                    const Icon(Icons.edit, color: Color(0xff7F7F7F)), false),
-              ),
-              SizedBox(
-                height: size * .04,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size * .06),
-                child: _customTextFormField(size, _genderController, 'লিঙ্গ',
-                    true, const Icon(Icons.edit, color: Color(0xff7F7F7F)), false),
+                child: _customTextFormField(size, _genderController, 'লিঙ্গ'),
               ),
               SizedBox(
                 height: size * .15,
@@ -237,74 +193,46 @@ class _ProfileState extends State<Profile> {
         ),
       );
 
-  CustomAppBar _pageAppBar(PublicController publicController) => CustomAppBar(
+  CustomAppBar _pageAppBar(double size, PublicController publicController) =>
+      CustomAppBar(
         title: "প্রোফাইল",
         iconData: LineAwesomeIcons.arrow_left,
-        action: const [SizedBox()],
+        action: [
+          InkWell(
+              onTap: () {
+                Get.to(() => EditProfile());
+              },
+              child: const Icon(
+                FontAwesomeIcons.pencilAlt,
+                color: Colors.white,
+              ))
+        ],
         scaffoldKey: _scaffoldKey,
       );
 
+  /// profile info field demo
   Widget _customTextFormField(
-          double size,
-          TextEditingController controller,
-          String hintText,
-          bool enabled,
-          Widget prefixIcon,
-      bool autoFocus
-      ) =>
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(size * .03),
-          border: Border.all(color: Colors.black)
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                controller: controller,
-                textAlign: TextAlign.center,
-                autofocus: autoFocus,
-                enabled: enabled,
-                style: Style.bodyTextStyle(size * .045, Colors.black, FontWeight.normal),
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(
-                        vertical: size * .02, horizontal: size * .04),
-                    hintText: hintText,
-                    hintStyle: Style.bodyTextStyle(
-                        size * .04, const Color(0xff7F7F7F), FontWeight.normal),
-                    border: InputBorder.none,
-                    // border: OutlineInputBorder(
-                    //     borderRadius: BorderRadius.circular(size * .03),
-                    //     borderSide: const BorderSide(color: Colors.black)),
-                    // enabledBorder: OutlineInputBorder(
-                    //     borderRadius: BorderRadius.circular(size * .03),
-                    //     borderSide: const BorderSide(color: Colors.black)),
-                    // focusedBorder: OutlineInputBorder(
-                    //     borderRadius: BorderRadius.circular(size * .03),
-                    //     borderSide: const BorderSide(color: Colors.black)),
-                    // disabledBorder: OutlineInputBorder(
-                    //     borderRadius: BorderRadius.circular(size * .03),
-                    //     borderSide: const BorderSide(color: Colors.black)),
-                    //suffixIcon: prefixIcon
-                ),
+          double size, TextEditingController controller, String hintText) =>
+      Row(
+        children: [
+          Expanded(
+            child: TextFormField(
+              controller: controller,
+              enabled: _textFieldEnability,
+              style: Style.bodyTextStyle(
+                  size * .045, Colors.black, FontWeight.normal),
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(
+                    vertical: size * .02, horizontal: size * .04),
+                labelText: hintText,
+                labelStyle: Style.bodyTextStyle(
+                    size * .04, const Color(0xff7F7F7F), FontWeight.normal),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(size * .03),
+                    borderSide: const BorderSide(color: Colors.black)),
               ),
             ),
-            GestureDetector(
-              onTap: (){
-                print('ta');
-                if(hintText == "নাম") {
-                  setState(() {
-                    _nameFieldEnabled = true;
-                    _nameFieldAutofocus = true;
-                  });
-                }
-              },
-              child: Padding(
-                padding: EdgeInsets.all(size*.02),
-                child: Icon(Icons.edit),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
 }

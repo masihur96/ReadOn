@@ -28,9 +28,11 @@ class EbookApiController extends GetxController {
     getPublicationList();
   }
 
-  final String domainName = 'http://readon.glamworlditltd.com';
-  RxList<SubjectCategoryModel> subjectCategoryList = RxList<SubjectCategoryModel>([]);
-  RxList<SubjectSubcategoryModel> subjectSubcategoryListOfCategory = RxList<SubjectSubcategoryModel>([]);
+  final String domainName = 'https://readon.genextbd.net';
+  RxList<SubjectCategoryModel> subjectCategoryList =
+      RxList<SubjectCategoryModel>([]);
+  RxList<SubjectSubcategoryModel> subjectSubcategoryListOfCategory =
+      RxList<SubjectSubcategoryModel>([]);
   Rx<WriterModel> writeModel = WriterModel().obs;
   RxList<PublicationModel> publicationList = RxList<PublicationModel>([]);
   RxList<Product> bookList = RxList<Product>([]);
@@ -48,7 +50,8 @@ class EbookApiController extends GetxController {
   RxInt totalNumberOfCarts = 0.obs;
   RxList<SiteSettingModel> siteSettingImageList = RxList<SiteSettingModel>([]);
   RxList<PackageModel> packageList = RxList<PackageModel>([]);
-  RxList<AudioBookModel> audioBookList = RxList<AudioBookModel>([]);
+  Rx<AudioBookModel> audioBookModel = AudioBookModel().obs;
+  RxList<Product> singleBook = RxList<Product>([]);
 
   Future<void> getSubjectCategoryNameList() async {
     try {
@@ -77,7 +80,8 @@ class EbookApiController extends GetxController {
 
   Future<void> getWriterList() async {
     try {
-      http.Response response = await http.get(Uri.parse('$domainName/api/writer_list'));
+      http.Response response =
+          await http.get(Uri.parse('$domainName/api/writer_list'));
       writeModel.value = writerModelFromJson(response.body);
       update();
     } catch (error) {
@@ -215,8 +219,8 @@ class EbookApiController extends GetxController {
           homePageBookListModelFromJson(response.body);
       update();
     } on SocketException {
-      getHomePageCategoryBooks();
-      showToast('ইন্টারনেট সংযোগ নেই!');
+      // ignore: avoid_print
+      print("no internet connection!");
     } catch (error) {
       // ignore: avoid_print
       print('getting home page category book list for home page error: $error');
@@ -231,6 +235,7 @@ class EbookApiController extends GetxController {
       subscriptionList.value = subscriptionModelFromJson(response.body);
       update();
     } catch (error) {
+      // ignore: avoid_print
       print('Fetching all subscription list error: $error');
     }
   }
@@ -247,7 +252,8 @@ class EbookApiController extends GetxController {
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         // ignore: avoid_print
-        print('cart list result = ${jsonData['result']} and message = ${jsonData['message']}');
+        print(
+            'cart list result = ${jsonData['result']} and message = ${jsonData['message']}');
       } else {
         showToast('বইটি কার্ট লিস্টে যোগ হয় নি। আবার চেষ্টা করুন।');
       }
@@ -265,56 +271,62 @@ class EbookApiController extends GetxController {
       cartModel.value = cartModelFromJson(response.body);
       update();
     } catch (error) {
+      // ignore: avoid_print
       print('getting ebook cart list error: $error');
     }
   }
 
   ///show hard copy cart list
   Future<void> getHardCopyCartList(UserController userController) async {
-    String baseUrl = '$domainName/api/hardCopycartsdata/${userController.userId}';
+    String baseUrl =
+        '$domainName/api/hardCopycartsdata/${userController.userId}';
     try {
       http.Response response = await http.get(Uri.parse(baseUrl));
       cartModel.value = cartModelFromJson(response.body);
       update();
     } catch (error) {
+      // ignore: avoid_print
       print('getting hard copy cart list error: $error');
     }
   }
 
   /// delete cart
-  Future <void> deleteCart(String cartId) async {
+  Future<void> deleteCart(String cartId) async {
     final String baseUrl = '$domainName/api/cartdlt/$cartId';
-    try{
+    try {
       http.Response response = await http.get(Uri.parse(baseUrl));
       print(response.body);
       var jsondata = jsonDecode(response.body);
       print('msg: ${jsondata['msg']}');
-    }catch(error){
+    } catch (error) {
       print('deleting cart error: $error');
     }
   }
 
   /// getting promo code discount
-  Future <void> getPromoCodeDiscount(String promoCode) async {
+  Future<void> getPromoCodeDiscount(String promoCode) async {
     final String baseUrl = '$domainName/api/promocode?code=$promoCode';
     promoCodeDiscount.value = '0';
-    try{
-      var response = await http.post(Uri.parse(baseUrl),);
-      if(response.statusCode == 200){
+    try {
+      var response = await http.post(
+        Uri.parse(baseUrl),
+      );
+      if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
-        if(jsonData['msg'] == 'success'){
+        if (jsonData['msg'] == 'success') {
           promoCodeDiscount.value = jsonData['amount'];
-          showToast('অভিনন্দন! আপনি ${promoCodeDiscount.value}% ডিসকাউন্ট পেয়েছেন।');
+          showToast(
+              'অভিনন্দন! আপনি ${promoCodeDiscount.value}% ডিসকাউন্ট পেয়েছেন।');
           update();
-        }else{
+        } else {
           // ignore: avoid_print
           print('wrong promoCode or no discount!, ${jsonData['msg']}');
           showToast('আপনি কোনো ডিসকাউন্ট পান নি।');
         }
-      }else{
+      } else {
         print('statuscode for promoCode = ${response.statusCode}');
       }
-    }catch(error){
+    } catch (error) {
       print('getting promoCode discount error, $error');
     }
   }
@@ -323,8 +335,7 @@ class EbookApiController extends GetxController {
   Future<void> postReviewOnBook(Map reviewMap) async {
     String baseUrl = '$domainName/api/review';
     try {
-      var response = await http.post(Uri.parse(baseUrl),
-          body: reviewMap);
+      var response = await http.post(Uri.parse(baseUrl), body: reviewMap);
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         showToast('রিভিউ দেওয়া সফল হয়েছে!');
@@ -332,29 +343,31 @@ class EbookApiController extends GetxController {
       } else {
         print('response failed!, statusCode = ${response.statusCode}');
       }
-    }on SocketException{
+    } on SocketException {
+      // ignore: avoid_print
       print('no internet');
-    }
-    catch (error) {
+    } catch (error) {
+      // ignore: avoid_print
       print('Giving review on book error, $error');
     }
   }
 
   /// get review list
- Future <void> getReviewList(String bookId) async {
+  Future<void> getReviewList(String bookId) async {
     final String baseUrl = '$domainName/api/getreview/$bookId';
-    try{
+    try {
       http.Response response = await http.get(Uri.parse(baseUrl));
       reviewList.value = reviewModelFromJson(response.body);
       update();
-    }catch(error){
+    } catch (error) {
+      // ignore: avoid_print
       print('Fetching review list failed, error: $error');
     }
- }
+  }
 
- /// number of carts
- Future <void> countNumberOfCarts(UserController userController) async {
-    try{
+  /// number of carts
+  Future<void> countNumberOfCarts(UserController userController) async {
+    try {
       await getHardCopyCartList(userController).then((value) async {
         totalNumberOfCarts.value += cartModel.value.data!.length;
         await getEbookCartList(userController).then((value) {
@@ -362,62 +375,70 @@ class EbookApiController extends GetxController {
         });
       });
       print('total number of cart = $totalNumberOfCarts');
-    }catch(error){
+    } catch (error) {
       print('Counting total number of carts error: $error');
     }
- }
+  }
 
- /// update cart quantity
- Future <void> updateCartQuantity(Map cartQuantityMap) async {
+  /// update cart quantity
+  Future<void> updateCartQuantity(Map cartQuantityMap) async {
     final String baseUrl = "$domainName/api/cartsqty";
     var body = jsonEncode(cartQuantityMap);
     print(body);
-    try{
-      var response = await http.put(
-          Uri.parse(baseUrl),
-        body: body
-      );
+    try {
+      var response = await http.put(Uri.parse(baseUrl), body: body);
       var jsonData = jsonDecode(response.body);
       print('Updating cart quantity : ${jsonData['msg']}');
-    }catch(error){
+    } catch (error) {
       print('Updating cart quantity error: $error');
     }
- }
+  }
 
- /// home page - site_setting
- Future<void> getSiteSettings() async {
+  /// home page - site_setting
+  Future<void> getSiteSettings() async {
     final String baseUrl = "$domainName/api/site_setting";
-    try{
+    try {
       http.Response response = await http.get(Uri.parse(baseUrl));
       siteSettingImageList.value = siteSettingModelFromJson(response.body);
       update();
-    }catch(error){
+    } catch (error) {
       print('getting site setting images error: $error');
     }
- }
+  }
 
   /// package list get
-  Future <void> getPackageList() async {
+  Future<void> getPackageList() async {
     final String baseUrl = "$domainName/api/pac";
-    try{
+    try {
       http.Response response = await http.get(Uri.parse(baseUrl));
       packageList.value = packageModelFromJson(response.body);
       update();
-    }catch(error){
+    } catch (error) {
       print('Fetching package list error: $error');
     }
   }
 
   /// all audio books
-  Future <void> getAllAudioBooks() async {
-    final String baseUrl = "$domainName/api/allaudio";
-    try{
+  Future<void> getAllAudioBooks() async {
+    final String baseUrl = "$domainName/api/audio_book_list";
+    try {
       http.Response response = await http.get(Uri.parse(baseUrl));
-      audioBookList.value = audioBookModelFromJson(response.body);
+      audioBookModel.value = audioBookModelFromJson(response.body);
       update();
-    }catch(error){
+    } catch (error) {
       print('Getting all audio books error: $error');
     }
   }
 
+  /// sigle book info
+  Future<void> getSingleBookInfo(String bookId) async {
+    final String baseUrl = "$domainName/api/bookinfo/$bookId";
+    try {
+      http.Response response = await http.get(Uri.parse(baseUrl));
+      singleBook.value = productFromJson(response.body);
+      update();
+    } catch (error) {
+      print("Getting single book info error: $error");
+    }
+  }
 }

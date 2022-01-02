@@ -163,6 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                                   setState(() {
                                     _rememberLogin = value!;
                                   });
+                                  // ignore: avoid_print
                                   print(_rememberLogin);
                                 },
                               ),
@@ -210,6 +211,7 @@ class _LoginPageState extends State<LoginPage> {
               child: GradientButton(
                   onPressed: () {
                     _login(userController);
+                    // Get.to(() => const HomePage());
                   },
                   borderRadius: size * .01,
                   height: size * .12,
@@ -305,7 +307,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                       text: 'Sign up',
                       style: Style.bodyTextStyle(
-                          size * .04, Colors.black, FontWeight.w500)),
+                          size * .04, CColor.themeColor, FontWeight.w500)),
                 ])),
             SizedBox(
               height: size * .08,
