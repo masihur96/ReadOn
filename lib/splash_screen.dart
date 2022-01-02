@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 3)).then((value) {
       if (widget.readOnUserId == null) {
-        Get.offAll(() => LoginPage());
+        Get.offAll(() => HomePage());
       } else {
         Get.offAll(() => const HomePage());
       }

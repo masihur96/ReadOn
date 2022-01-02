@@ -14,19 +14,23 @@ class ReadingApiController extends GetxController {
   RxString selectedFont=''.obs;
   RxDouble colorOpacity=0.0.obs;
   RxBool isScreenFit =false.obs;
-
   RxString bookName=''.obs;
+  RxInt fontCircleColor=1.obs;
 
 
-  var bgColor = Color(0xff1a237e).obs;
+  RxInt bgCircleColor = 1.obs;
+
+
+  var  readerBloc;
 
   updateBookName(String val){
-
     bookName.value = val ;
-
     update();
-
-    print(bgColor);
+  }
+  updateFontCircleColor(int val){
+    fontCircleColor.value = val ;
+    update();
+    print(fontCircleColor);
   }
 
   updateScreenFitMode(bool val){
@@ -35,16 +39,16 @@ class ReadingApiController extends GetxController {
 
     update();
 
-    print(bgColor);
+
   }
 
-  updateColorMode(Color val){
+  updateColorMode(int val){
 
-    bgColor.value = val ;
+    bgCircleColor.value = val ;
 
     update();
 
-     print(bgColor);
+     print(bgCircleColor);
   }
 
 
@@ -59,7 +63,7 @@ class ReadingApiController extends GetxController {
     selectedFont.value = val ;
 
     update();
-    // print(selectedFont);
+    print(selectedFont);
   }
 
   updateColorOpacity(double val){
@@ -82,7 +86,7 @@ class ReadingApiController extends GetxController {
   //
   //   getChapterContent();
   // }
-  final String domainName = 'http://readon.glamworlditltd.com';
+  final String domainName = 'http://readon.genextbd.net';
 
   RxList<ReadingModel> ContentList = RxList<ReadingModel>([]);
 
@@ -90,8 +94,12 @@ class ReadingApiController extends GetxController {
 
   bool ektuPorun =false;
 
+
+  String? bookId ;
   /// books content List
   Future<void> getChapterContent(String bookID ) async {
+
+    bookId = bookID;
     String baseUrl = '$domainName/api/booksdetails/$bookID';
 
     try {

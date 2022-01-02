@@ -20,11 +20,10 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
   static final List<Color> colors = [
     Color(0xCCDF7270),
     Color(0xCCDCD56D),
-    Color(0xCC7085E0),
     Color(0xCCC59462),
     Color(0xCC5DB963),
     Color(0xCC757CEA),
-    Color(0xCCDD6F97),
+
   ];
 
   static var defaultColorButtons = [
@@ -33,8 +32,8 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
     HighlightMenuButton(colorIntValue: colors[2].value, label: ""),
     HighlightMenuButton(colorIntValue: colors[3].value, label: ""),
     HighlightMenuButton(colorIntValue: colors[4].value, label: ""),
-    HighlightMenuButton(colorIntValue: colors[5].value, label: ""),
-    HighlightMenuButton(colorIntValue: colors[6].value, label: ""),
+
+
   ];
   MyMaterialTextSelectionControls(
       {required this.onTapped, required this.currentTextSelection});
@@ -73,7 +72,7 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
     );
 
     print("building againnn");
-    return buildTextSelectionToolbar(anchorAbove, anchorBelow);
+    return buildTextSelectionToolbar(anchorAbove,anchorBelow);
 
     // return MyTextSelectionToolbar(
     //   anchorAbove: anchorAbove,
@@ -132,17 +131,20 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
               child: Icon(
                 Icons.format_bold,
                 size: iconSize,
-              ));
+              ),);
         }
         if (c.type == highlight_type.italic) {
           return InkWell(
               onTap: () {
-                this.onTapped(c);
+               onTapped(c);
+
+               print(c);
               },
               child: Icon(
                 Icons.format_italic,
                 size: iconSize,
-              ));
+              )
+          );
         } else {
           return InkWell(
               onTap: () {
@@ -176,8 +178,13 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
               child: Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ...buildMenuItems(),
+
+
+
                     ],
                   ),
                   // Row(
