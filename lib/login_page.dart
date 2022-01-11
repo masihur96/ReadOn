@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
     final PublicController publicController = Get.find();
     final UserController userController = Get.put(UserController());
     final double size = publicController.size.value;
-    if(_count == 0) _customInit(publicController);
+    if (_count == 0) _customInit(publicController);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             _bodyUI(size, userController),
             Visibility(
-              visible: _loading? true: false,
+              visible: _loading ? true : false,
               child: Container(
                 width: Get.width,
                 height: Get.height,
@@ -72,10 +72,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _bodyUI(double size, UserController userController) => SingleChildScrollView(
+  Widget _bodyUI(double size, UserController userController) =>
+      SingleChildScrollView(
         child: Column(
           children: [
-
             /// email or phone input field
             SizedBox(
               width: Get.width,
@@ -211,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
               child: GradientButton(
                   onPressed: () {
                     _login(userController);
-                    // Get.to(() => const HomePage());
+                    //Get.to(() => const HomePage());
                   },
                   borderRadius: size * .01,
                   height: size * .12,
@@ -367,10 +367,12 @@ class _LoginPageState extends State<LoginPage> {
     String phone = '';
     Map loginData = {};
     if (_phoneEmailController.text == '') {
-      setState(() => _phoneEmailErrorText = 'আপনার মোবাইল নম্বর বা ইমেইল লিখুন');
+      setState(
+          () => _phoneEmailErrorText = 'আপনার মোবাইল নম্বর বা ইমেইল লিখুন');
       return;
-    }else{
-      if (_phoneEmailController.text.contains('@') && _phoneEmailController.text.contains('.com')) {
+    } else {
+      if (_phoneEmailController.text.contains('@') &&
+          _phoneEmailController.text.contains('.com')) {
         email = _phoneEmailController.text;
         phone = '';
         setState(() => setState(() => _phoneEmailErrorText = null));
@@ -378,63 +380,65 @@ class _LoginPageState extends State<LoginPage> {
         phone = _phoneEmailController.text;
         email = '';
         if (phone.length != 11 || !phone.contains('01')) {
-          setState(() => setState(() => _phoneEmailErrorText = 'কমপক্ষে ১১ ডিজিটের মোবাইল নম্বর লিখুন অথবা ইমেইল লিখুন'));
+          setState(() => setState(() => _phoneEmailErrorText =
+              'কমপক্ষে ১১ ডিজিটের মোবাইল নম্বর লিখুন অথবা ইমেইল লিখুন'));
           return;
         } else {
           setState(() => setState(() => _phoneEmailErrorText = null));
         }
       }
     }
-    if(_passwordController.text == '' || _passwordController.text.length <8){
-      setState(() => setState(() => _passwordErrorText = 'কমপক্ষে ৮ ডিজিটের পাসওয়ার্ড দিন'));
+    if (_passwordController.text == '' || _passwordController.text.length < 8) {
+      setState(() => setState(
+          () => _passwordErrorText = 'কমপক্ষে ৮ ডিজিটের পাসওয়ার্ড দিন'));
       return;
-    }
-    else {
+    } else {
       setState(() => setState(() {
-        _passwordErrorText = null;
-        _loading = true;
-      }));
-      if(email != ''){
+            _passwordErrorText = null;
+            _loading = true;
+          }));
+      if (email != '') {
         loginData = {
-          'email' : email,
-          'password' : _passwordController.text,
-          'device1' : deviceId
+          'email': email,
+          'password': _passwordController.text,
+          'device1': deviceId
         };
         print('valid email: $loginData');
-      }else{
+      } else {
         loginData = {
-          'phone' : phone,
-          'password' : _passwordController.text,
-          'device1' : deviceId
+          'phone': phone,
+          'password': _passwordController.text,
+          'device1': deviceId
         };
         print('valid phone: $loginData');
       }
-      await userController.login(loginData).then((userLoginModel) async{
+      await userController.login(loginData).then((userLoginModel) async {
         setState(() => _loading = false);
-        if(userLoginModel){
-          if(_rememberLogin){
+        if (userLoginModel) {
+          if (_rememberLogin) {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setString('readOnUserId', userController.userLoginModel.value.userInfo![0].id.toString());
+            prefs.setString('readOnUserId',
+                userController.userLoginModel.value.userInfo![0].id.toString());
             prefs.setString('readOnUserPassword', _passwordController.text);
-            if(email != ''){
+            if (email != '') {
               prefs.setString('readOnUserEmail', email);
-            }else{
+            } else {
               prefs.setString('readOnUserPhone', phone);
             }
             Get.to(() => const HomePage());
             // ignore: avoid_print
             print('successfully logged in');
-          }else{
-            Get.offAll(()=> const HomePage());
+          } else {
+            Get.offAll(() => const HomePage());
             // ignore: avoid_print
             print('successfully logged in');
           }
-        }else{
-          showToast('Login failed! Try again.');
+        } else {
+          showToast('User may not registered or something went wrong');
+          // ignore: avoid_print
           print('Invalid email, phone or password');
         }
       });
     }
-
   }
 }

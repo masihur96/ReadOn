@@ -6,7 +6,9 @@ import 'package:read_on/controller/ebook_api_controller.dart';
 import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/eBook/ebook_model_classes/package_model.dart';
 import 'package:read_on/public_variables/color_variable.dart';
+import 'package:read_on/public_variables/language_convert.dart';
 import 'package:read_on/public_variables/style_variable.dart';
+import 'package:read_on/widgets/gradient_button.dart';
 
 class PackagePage extends StatefulWidget {
   @override
@@ -14,11 +16,10 @@ class PackagePage extends StatefulWidget {
 }
 
 class _PackagePageState extends State<PackagePage> {
-
   int _count = 0;
   bool _loading = false;
 
-  Future <void> _customInit(EbookApiController ebookApiController) async {
+  Future<void> _customInit(EbookApiController ebookApiController) async {
     _count++;
     setState(() => _loading = true);
     await ebookApiController.getPackageList();
@@ -31,23 +32,28 @@ class _PackagePageState extends State<PackagePage> {
     final EbookApiController ebookApiController = Get.find();
     final PublicController publicController = Get.find();
     double size = publicController.size.value;
-    if(_count == 0) _customInit(ebookApiController);
+    if (_count == 0) _customInit(ebookApiController);
     return _loading
-        ? SizedBox() : ebookApiController.packageList.isNotEmpty?  ListView.builder(
-      shrinkWrap: true,
-      physics: const BouncingScrollPhysics(),
-      itemCount: ebookApiController.packageList.length,
-      itemBuilder: (context, index){
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: size*.04),
-          child: _packageCard(size, ebookApiController, ebookApiController.packageList[index]),
-        );
-      },
-    ) : const Center(child: Text('কোন প্যাকেজ নেই!'));
+        ? SizedBox()
+        : ebookApiController.packageList.isNotEmpty
+            ? ListView.builder(
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                itemCount: ebookApiController.packageList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: size * .04),
+                    child: _packageCard(size, ebookApiController,
+                        ebookApiController.packageList[index]),
+                  );
+                },
+              )
+            : const Center(child: Text('কোন প্যাকেজ নেই!'));
   }
 
   /// package card
-  Card _packageCard(double size, EbookApiController ebookApiController, PackageModel packageModel) =>
+  Card _packageCard(double size, EbookApiController ebookApiController,
+          PackageModel packageModel) =>
       Card(
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -62,19 +68,25 @@ class _PackagePageState extends State<PackagePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(size * .03), topRight: Radius.circular(size * .03)),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(size * .03),
+                    topRight: Radius.circular(size * .03)),
                 child: CachedNetworkImage(
-                  height: size*.4,
+                  height: size * .4,
                   width: size,
                   fit: BoxFit.cover,
-                  imageUrl: "${ebookApiController.domainName}/public//frontend/images/package_thumbnail/${packageModel.thumbnail!}",
-                  placeholder: (context, url) => const CupertinoActivityIndicator(),
+                  imageUrl:
+                      "${ebookApiController.domainName}/public//frontend/images/package_thumbnail/${packageModel.thumbnail!}",
+                  placeholder: (context, url) =>
+                      const CupertinoActivityIndicator(),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
-              SizedBox(height: size*.02,),
+              SizedBox(
+                height: size * .02,
+              ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: size*.04),
+                padding: EdgeInsets.symmetric(horizontal: size * .04),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -85,26 +97,63 @@ class _PackagePageState extends State<PackagePage> {
                           Text(
                             packageModel.packageName!,
                             textAlign: TextAlign.center,
-                            style: Style.headerTextStyle(size*.04, Colors.black, FontWeight.w500),
+                            style: Style.headerTextStyle(
+                                size * .04, Colors.black, FontWeight.w500),
                           ),
                           Text(
                             packageModel.bookDescription!,
                             textAlign: TextAlign.center,
-                            style: Style.headerTextStyle(size*.035, Colors.black, FontWeight.w500),
+                            style: Style.headerTextStyle(
+                                size * .035, Colors.black, FontWeight.w500),
                           ),
                         ],
                       ),
                     ),
-                    Text(
-                      '৳ ১১৫/-',
-                      style: Style.bodyTextStyle(size*.07, CColor.themeColor, FontWeight.w500),
+                    Container(
+                      alignment: Alignment.center,
+                      child: GradientButton(
+                          child: Text(
+                            'কিনুন',
+                            style: Style.buttonTextStyle(
+                                size * .04, Colors.white, FontWeight.w500),
+                          ),
+                          onPressed: () {},
+                          borderRadius: size * .01,
+                          height: size * .1,
+                          width: size * .2,
+                          gradientColors: const [
+                            CColor.themeColor,
+                            CColor.themeColorLite
+                          ]),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: size * .02,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size * .04),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "ইবুক ",
+                          style: Style.buttonTextStyle(
+                              size * .04, Colors.black, FontWeight.w500),
+                        ),
+                        Text(
+                          "৳${enToBnNumberConvert(packageModel.sellingPriceEbook!)}",
+                          style: Style.buttonTextStyle(
+                              size * .04, Colors.black, FontWeight.w500),
+                        ),
+                      ],
                     )
                   ],
                 ),
               ),
-
-
-              SizedBox(height: size*.02,)
             ],
           ),
         ),

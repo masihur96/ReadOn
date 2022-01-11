@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:read_on/controller/user_controller.dart';
 import 'package:read_on/eBook/ebook_model_classes/audio_book_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/cart_model.dart';
+import 'package:read_on/eBook/ebook_model_classes/my_purchased_book_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/package_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/product.dart';
 import 'package:read_on/eBook/ebook_model_classes/home_page_book_list_model.dart';
@@ -14,6 +15,7 @@ import 'package:read_on/eBook/ebook_model_classes/site_setting_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/subject_category_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/subject_subcategory_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/subscription_model.dart';
+import 'package:read_on/eBook/ebook_model_classes/todays_attraction.dart';
 import 'package:read_on/eBook/ebook_model_classes/writter_model.dart';
 import 'package:read_on/public_variables/toast.dart';
 
@@ -52,6 +54,9 @@ class EbookApiController extends GetxController {
   RxList<PackageModel> packageList = RxList<PackageModel>([]);
   Rx<AudioBookModel> audioBookModel = AudioBookModel().obs;
   RxList<Product> singleBook = RxList<Product>([]);
+  Rx<TodaysAttractionModel>? todaysAttractionModel =
+      TodaysAttractionModel().obs;
+  Rx<MyPurchasedBookModel> myPurchasedBookModel = MyPurchasedBookModel().obs;
 
   Future<void> getSubjectCategoryNameList() async {
     try {
@@ -439,6 +444,65 @@ class EbookApiController extends GetxController {
       update();
     } catch (error) {
       print("Getting single book info error: $error");
+    }
+  }
+
+  /// today's attraction
+  Future<void> getTodaysAttraction() async {
+    final String baseUrl = "$domainName/api/todayAttraction";
+    try {
+      http.Response response = await http.get(Uri.parse(baseUrl));
+      todaysAttractionModel!.value =
+          todaysAttractionModelFromJson(response.body);
+      update();
+    } catch (error) {
+      print("Fetching todays attraction error: $error");
+    }
+  }
+
+  /// order hard copy
+  Future<void> orderHardCopyBooks(Map<String, dynamic> dataMap) async {
+    final String baseUrl = "$domainName/api/order";
+    print(dataMap);
+    var response = await http.post(Uri.parse(baseUrl), body: dataMap);
+    if (response.statusCode == 200) {
+      showToast("আপনার অর্ডারটি সম্পন্ন হয়েছে।");
+    }
+    print(response.body);
+    // var jsonData = jsonEncode(dataMap);
+    // try {
+    //   var response = await http.post(Uri.parse(baseUrl), body: dataMap);
+    //   if (response.statusCode == 200) {
+    //     showToast("আপনার অর্ডারটি সম্পন্ন হয়েছে।");
+    //   }
+    //   print(response.body);
+    // } catch (error) {
+    //   // ignore: avoid_print
+    //   print("Order of hard copy books error: $error");
+    // }
+  }
+
+  /// get purchased Ebook
+  Future<void> purchaseBooks(Map purchaseBookMap) async {
+    final String baseUrl = "$domainName/api/ebookorder";
+    try {
+      var response = await http.post(Uri.parse(baseUrl), body: purchaseBookMap);
+      print(response.body);
+      print("statusCode = ${response.statusCode}");
+    } catch (error) {
+      print("purchasing book error: $error");
+    }
+  }
+
+  /// my purchased book
+  Future<void> getMyPurchasedBooks(UserController userController) async {
+    final String baseUrl = "$domainName/api/ebookbuy/${userController.userId}";
+    try {
+      http.Response response = await http.get(Uri.parse(baseUrl));
+      myPurchasedBookModel.value = myPurchasedBookModelFromJson(response.body);
+      update();
+    } catch (error) {
+      print("getting my purchased books error: $error");
     }
   }
 }

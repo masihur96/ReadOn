@@ -27,6 +27,7 @@ class _HardCopyCartTabState extends State<HardCopyCartTab> {
   double totalAmount = 0;
   double promoCodeDiscount = 0;
   bool _workingLoading = false;
+  List<String> bookIdList = [];
   final TextEditingController _promoCodeController = TextEditingController();
 
   void _customInit(UserController userController,
@@ -39,8 +40,10 @@ class _HardCopyCartTabState extends State<HardCopyCartTab> {
         _loading = false;
       });
       for (int i = 0; i < _cartList.length; i++) {
-        setState(
-            () => totalAmount += double.parse(_cartList[i].cartSubTotalPrice!));
+        setState(() {
+          bookIdList.add(_cartList[i].cartId!);
+          totalAmount += double.parse(_cartList[i].cartSubTotalPrice!);
+        });
       }
     });
 
@@ -74,220 +77,257 @@ class _HardCopyCartTabState extends State<HardCopyCartTab> {
     );
   }
 
-  Widget _bodyUI(double size, EbookApiController ebookApiController) =>
-      _loading
-          ? Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Expanded(
-              child: Shimmer.fromColors(
-                  baseColor: Colors.grey.shade300,
-                  highlightColor: Colors.grey.shade100,
-                  enabled: true,
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.all(size*.04),
-                      child: Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: size*.24,
-                                height: size*.35,
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: size*.04,),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: size*.4,
-                                      height: size*.06,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(height: size*.02,),
-                                    Container(
-                                      width: size*.25,
-                                      height: size*.06,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(height: size*.02,),
-                                    Container(
-                                      width: size*.3,
-                                      height: size*.04,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(height: size*.03,),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: size*.05,
-                                              height: size*.05,
-                                              decoration: const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            SizedBox(width: size*.02,),
-                                            Container(
-                                              width: size*.05,
-                                              height: size*.05,
-                                              color: Colors.white,
-                                            ),
-                                            SizedBox(width: size*.02,),
-                                            Container(
-                                              width: size*.05,
-                                              height: size*.05,
-                                              decoration: const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Container(
-                                          width: size*.07,
-                                          height: size*.07,
-                                          color: Colors.white,
-                                        ),
-
-                                      ],
-                                    ),
-                                    SizedBox(height: size*.02,),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(height: size*.04,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: size*.24,
-                                height: size*.35,
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: size*.04,),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: size*.4,
-                                      height: size*.06,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(height: size*.02,),
-                                    Container(
-                                      width: size*.25,
-                                      height: size*.06,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(height: size*.02,),
-                                    Container(
-                                      width: size*.3,
-                                      height: size*.04,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(height: size*.03,),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: size*.05,
-                                              height: size*.05,
-                                              decoration: const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            SizedBox(width: size*.02,),
-                                            Container(
-                                              width: size*.05,
-                                              height: size*.05,
-                                              color: Colors.white,
-                                            ),
-                                            SizedBox(width: size*.02,),
-                                            Container(
-                                              width: size*.05,
-                                              height: size*.05,
-                                              decoration: const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Container(
-                                          width: size*.07,
-                                          height: size*.07,
-                                          color: Colors.white,
-                                        ),
-
-                                      ],
-                                    ),
-                                    SizedBox(height: size*.02,),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(height: size*.04,),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  height: size*.12,
+  Widget _bodyUI(double size, EbookApiController ebookApiController) => _loading
+      ? Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Expanded(
+                child: Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    enabled: true,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.all(size * .04),
+                        child: Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: size * .24,
+                                  height: size * .35,
                                   color: Colors.white,
                                 ),
-                              ),
-                              SizedBox(width: size*.02,),
-                              Container(
-                                width: size*.25,
-                                height: size*.12,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: size*.04,),
-                          Container(
-                            width: size,
-                            height: size*.4,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(size * .08),
-                                  topRight: Radius.circular(size * .08),
-                                  bottomRight:
-                                  Radius.circular(size * .06),
-                                  bottomLeft:
-                                  Radius.circular(size * .05)),
+                                SizedBox(
+                                  width: size * .04,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: size * .4,
+                                        height: size * .06,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        height: size * .02,
+                                      ),
+                                      Container(
+                                        width: size * .25,
+                                        height: size * .06,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        height: size * .02,
+                                      ),
+                                      Container(
+                                        width: size * .3,
+                                        height: size * .04,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        height: size * .03,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: size * .05,
+                                                height: size * .05,
+                                                decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: size * .02,
+                                              ),
+                                              Container(
+                                                width: size * .05,
+                                                height: size * .05,
+                                                color: Colors.white,
+                                              ),
+                                              SizedBox(
+                                                width: size * .02,
+                                              ),
+                                              Container(
+                                                width: size * .05,
+                                                height: size * .05,
+                                                decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Container(
+                                            width: size * .07,
+                                            height: size * .07,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: size * .02,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
+                            SizedBox(
+                              height: size * .04,
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: size * .24,
+                                  height: size * .35,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: size * .04,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: size * .4,
+                                        height: size * .06,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        height: size * .02,
+                                      ),
+                                      Container(
+                                        width: size * .25,
+                                        height: size * .06,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        height: size * .02,
+                                      ),
+                                      Container(
+                                        width: size * .3,
+                                        height: size * .04,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        height: size * .03,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: size * .05,
+                                                height: size * .05,
+                                                decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: size * .02,
+                                              ),
+                                              Container(
+                                                width: size * .05,
+                                                height: size * .05,
+                                                color: Colors.white,
+                                              ),
+                                              SizedBox(
+                                                width: size * .02,
+                                              ),
+                                              Container(
+                                                width: size * .05,
+                                                height: size * .05,
+                                                decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Container(
+                                            width: size * .07,
+                                            height: size * .07,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: size * .02,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: size * .04,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    height: size * .12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: size * .02,
+                                ),
+                                Container(
+                                  width: size * .25,
+                                  height: size * .12,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: size * .04,
+                            ),
+                            Container(
+                              width: size,
+                              height: size * .4,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(size * .08),
+                                    topRight: Radius.circular(size * .08),
+                                    bottomRight: Radius.circular(size * .06),
+                                    bottomLeft: Radius.circular(size * .05)),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  )),
-            ),
-          ],
-        ),
-      )
-          : _cartList.isNotEmpty? SingleChildScrollView(
-            child: Column(
+                    )),
+              ),
+            ],
+          ),
+        )
+      : _cartList.isNotEmpty
+          ? SingleChildScrollView(
+              child: Column(
                 children: [
                   ListView.builder(
-                      itemCount: 1,
+                      itemCount:
+                          ebookApiController.cartModel.value.data!.length,
                       shrinkWrap: true,
                       physics: const ClampingScrollPhysics(),
                       itemBuilder: (context, index) => CartCard(
@@ -542,7 +582,13 @@ class _HardCopyCartTabState extends State<HardCopyCartTab> {
                                 style: Style.buttonTextStyle(
                                     size * .05, Colors.white, FontWeight.w500)),
                             onPressed: () {
-                              Get.to(() => const OrderPage());
+                              Get.to(
+                                () => OrderPage(
+                                  amount: (totalAmount - promoCodeDiscount)
+                                      .toStringAsFixed(2),
+                                  bookIdList: bookIdList,
+                                ),
+                              );
                             },
                             bgColor: CColor.themeColor),
                       ],
@@ -553,7 +599,8 @@ class _HardCopyCartTabState extends State<HardCopyCartTab> {
                   ),
                 ],
               ),
-          ) : Center(child: Text('কার্ট লিস্টে কোন বই নেই!'));
+            )
+          : const Center(child: Text('কার্ট লিস্টে কোন বই নেই!'));
 
   Widget _costDetailPreview(double size, String title, String value) => Padding(
         padding: EdgeInsets.symmetric(vertical: size * .01),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro_nullsafety/carousel_pro_nullsafety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:read_on/controller/ebook_api_controller.dart';
 import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/eBook/ebook_widgets/ebook_home_page_list_preview.dart';
+import 'package:read_on/public_variables/language_convert.dart';
 import 'package:shimmer/shimmer.dart';
 import '../ebook_screens/writter_detail_page.dart';
 import 'package:read_on/public_variables/color_variable.dart';
@@ -31,6 +33,7 @@ class _HomePageEbookState extends State<HomePageEbook> {
     await ebookApiController.getSiteSettings();
     await ebookApiController.getHomePageCategoryBooks();
     await ebookApiController.getWriterList();
+    await ebookApiController.getTodaysAttraction();
     setState(() {
       _writerListLength = ebookApiController.writeModel.value.data!.length > 10
           ? 10
@@ -54,8 +57,8 @@ class _HomePageEbookState extends State<HomePageEbook> {
     return _loading
         ? Container(
             width: double.infinity,
-            padding:
-                 EdgeInsets.symmetric(horizontal: size*.03, vertical: size*.03),
+            padding: EdgeInsets.symmetric(
+                horizontal: size * .03, vertical: size * .03),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
@@ -383,179 +386,219 @@ class _HomePageEbookState extends State<HomePageEbook> {
                   SizedBox(height: size * .02),
 
                   /// today's attraction
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.symmetric(horizontal: size * .03),
-                    child: Text(
-                      'আজকের আকর্ষণ',
-                      style: Style.headerTextStyle(
-                          size * .05, Colors.black, FontWeight.normal),
-                    ),
-                  ),
+                  ebookApiController.todaysAttractionModel != null
+                      ? Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.symmetric(horizontal: size * .03),
+                          child: Text(
+                            'আজকের আকর্ষণ',
+                            style: Style.headerTextStyle(
+                                size * .05, Colors.black, FontWeight.normal),
+                          ),
+                        )
+                      : const SizedBox(),
                   SizedBox(height: size * .02),
-                  Container(
-                    width: size,
-                    decoration:
-                        BoxDecoration(color: Colors.red.withOpacity(0.05)),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: size * .03, vertical: size * .045),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          // crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4.0),
-                              ),
-                              margin: EdgeInsets.zero,
-                              child: Container(
-                                width: size * .35,
-                                height: size * .55,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4.0),
-                                ),
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(4.0),
-                                    child: Image.network(
-                                      'https://1.bp.blogspot.com/-QoKjWWKcnC0/XWVnOba6kbI/AAAAAAAAXn4/fwXfr6wBflcYMrUlRSFxfB9K62_5SONAgCLcBGAs/s1600/Ekjon%2BMayaboti%2Bby%2BHumayun%2BAhmed%2B-%2BBangla%2BRomantic%2BNovel%2BPDF%2BBooks.jpg',
-                                      fit: BoxFit.cover,
-                                    )),
-                              ),
-                            ),
-                            SizedBox(
-                              width: size * .05,
-                            ),
-                            Expanded(
-                              child: Column(
+                  ebookApiController.todaysAttractionModel != null
+                      ? Container(
+                          width: size,
+                          decoration: BoxDecoration(
+                              color: Colors.red.withOpacity(0.05)),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: size * .03, vertical: size * .045),
+                          child: Column(
+                            children: [
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                // crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'একজন মায়াবতী',
-                                    style: Style.headerTextStyle(size * .05,
-                                        Colors.black, FontWeight.w500),
-                                  ),
-                                  Text(
-                                    'হুমায়ুন আহমেদ',
-                                    style: Style.headerTextStyle(
-                                        size * .045,
-                                        Colors.grey.shade600,
-                                        FontWeight.normal),
-                                  ),
-                                  SizedBox(
-                                    height: size * .03,
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4.0),
+                                    ),
+                                    margin: EdgeInsets.zero,
+                                    child: Container(
+                                      width: size * .35,
+                                      height: size * .55,
+                                      decoration: BoxDecoration(
                                         borderRadius:
-                                            BorderRadius.circular(size * .4),
-                                        color: Colors.grey.shade300,
-                                        border: Border.all(
-                                            color: Colors.grey.shade300,
-                                            width: size * .005)),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: size * .005,
-                                        horizontal: size * .04),
-                                    child: Text(
-                                      'উপন্যাস',
-                                      style: Style.bodyTextStyle(size * .035,
-                                          Colors.black, FontWeight.normal),
+                                            BorderRadius.circular(4.0),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(4.0),
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          imageUrl:
+                                              "${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${ebookApiController.todaysAttractionModel!.value.data![0].productList![0].bookThumbnail!}",
+                                          placeholder: (context, url) =>
+                                              Image.asset(
+                                            'assets/book_art.png',
+                                            fit: BoxFit.contain,
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
-                                    height: size * .03,
+                                    width: size * .05,
                                   ),
-                                  RichText(
-                                    text: TextSpan(
-                                        style: Style.bodyTextStyle(
-                                            size * .045,
-                                            Colors.grey.shade600,
-                                            FontWeight.normal),
-                                        children: [
-                                          TextSpan(
-                                            text: '৳',
-                                            style: Style.bodyTextStyle(
-                                                size * .07,
-                                                CColor.themeColor,
-                                                FontWeight.w500),
-                                          ),
-                                          TextSpan(
-                                            text: '৩০ ',
-                                            style: Style.headerTextStyle(
-                                                size * .07,
-                                                CColor.themeColor,
-                                                FontWeight.normal),
-                                          ),
-                                          TextSpan(
-                                            text: '৳৫৫',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                decoration:
-                                                    TextDecoration.lineThrough,
-                                                fontSize: size * .04),
-                                          ),
-                                          TextSpan(
-                                            text: ' (\$0.99)',
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          ebookApiController
+                                              .todaysAttractionModel!
+                                              .value
+                                              .data![0]
+                                              .productList![0]
+                                              .name!,
+                                          style: Style.headerTextStyle(
+                                              size * .05,
+                                              Colors.black,
+                                              FontWeight.w500),
+                                        ),
+                                        Text(
+                                          ebookApiController
+                                              .todaysAttractionModel!
+                                              .value
+                                              .data![0]
+                                              .productList![0]
+                                              .wname!,
+                                          style: Style.headerTextStyle(
+                                              size * .045,
+                                              Colors.grey.shade600,
+                                              FontWeight.normal),
+                                        ),
+                                        SizedBox(
+                                          height: size * .03,
+                                        ),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      size * .4),
+                                              color: Colors.grey.shade300,
+                                              border: Border.all(
+                                                  color: Colors.grey.shade300,
+                                                  width: size * .005)),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: size * .005,
+                                              horizontal: size * .04),
+                                          child: Text(
+                                            ebookApiController
+                                                .todaysAttractionModel!
+                                                .value
+                                                .data![0]
+                                                .productList![0]
+                                                .categoryName!,
                                             style: Style.bodyTextStyle(
                                                 size * .035,
                                                 Colors.black,
                                                 FontWeight.normal),
                                           ),
-                                        ]),
-                                  ),
-                                  SizedBox(
-                                    height: size * .03,
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: GradientButton(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              'পড়ুন',
-                                              style: Style.buttonTextStyle(
-                                                  size * .04,
-                                                  Colors.white,
-                                                  FontWeight.w500),
-                                            ),
-                                            SizedBox(
-                                              width: size * .04,
-                                            ),
-                                            const Icon(
-                                              Icons.double_arrow_outlined,
-                                            ),
-                                          ],
                                         ),
-                                        onPressed: () {},
-                                        borderRadius: size * .01,
-                                        height: size * .1,
-                                        width: size * .25,
-                                        gradientColors: const [
-                                          CColor.themeColor,
-                                          CColor.themeColorLite
-                                        ]),
-                                  ),
+                                        SizedBox(
+                                          height: size * .03,
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                              style: Style.bodyTextStyle(
+                                                  size * .045,
+                                                  Colors.grey.shade600,
+                                                  FontWeight.normal),
+                                              children: [
+                                                TextSpan(
+                                                  text: '৳',
+                                                  style: Style.bodyTextStyle(
+                                                      size * .07,
+                                                      CColor.themeColor,
+                                                      FontWeight.w500),
+                                                ),
+                                                TextSpan(
+                                                  text: '৩০ ',
+                                                  style: Style.headerTextStyle(
+                                                      size * .07,
+                                                      CColor.themeColor,
+                                                      FontWeight.normal),
+                                                ),
+                                                TextSpan(
+                                                  text:
+                                                      '৳${enToBnNumberConvert(ebookApiController.todaysAttractionModel!.value.data![0].productList![0].sellingPriceEbook!)}',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      decoration: TextDecoration
+                                                          .lineThrough,
+                                                      fontSize: size * .04),
+                                                ),
+                                                TextSpan(
+                                                  text: ' (\$0.99)',
+                                                  style: Style.bodyTextStyle(
+                                                      size * .035,
+                                                      Colors.black,
+                                                      FontWeight.normal),
+                                                ),
+                                              ]),
+                                        ),
+                                        SizedBox(
+                                          height: size * .03,
+                                        ),
+                                        Container(
+                                          alignment: Alignment.centerRight,
+                                          child: GradientButton(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    'পড়ুন',
+                                                    style:
+                                                        Style.buttonTextStyle(
+                                                            size * .04,
+                                                            Colors.white,
+                                                            FontWeight.w500),
+                                                  ),
+                                                  SizedBox(
+                                                    width: size * .04,
+                                                  ),
+                                                  const Icon(
+                                                    Icons.double_arrow_outlined,
+                                                  ),
+                                                ],
+                                              ),
+                                              onPressed: () {},
+                                              borderRadius: size * .01,
+                                              height: size * .1,
+                                              width: size * .25,
+                                              gradientColors: const [
+                                                CColor.themeColor,
+                                                CColor.themeColorLite
+                                              ]),
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: size * .03,
-                        ),
-                        Text(
-                          'বইটি মানব প্রকৃতি এবং সম্পর্কের বেড়াজাল নিয়ে শব্দের রং তুলিতে আঁকা জীবনের গল্প। জটিল মানব মনের জটিল ভাবাবেগ তুলে ধরা হয়েছে গল্পটিতে। আধুনিক ধারার লোক দেখানো আর চাটুকারিতা ছাপিয়ে ভালোবাসাকে একটা নতুন মাত্রা দেওয়া হয়েছে। যে ভালোবাসা ধরা যায় না,ছোঁয়া যায় না। শুধু অন্তর দিয়ে অনুভব করতে হয়।',
-                          maxLines: 3,
-                          style: Style.bodyTextStyle(size * .04,
-                              Colors.grey.shade800, FontWeight.normal),
+                              SizedBox(
+                                height: size * .03,
+                              ),
+                              Text(
+                                ebookApiController.todaysAttractionModel!.value
+                                    .data![0].productList![0].bookDescription!,
+                                maxLines: 3,
+                                style: Style.bodyTextStyle(size * .04,
+                                    Colors.grey.shade800, FontWeight.normal),
+                              )
+                            ],
+                          ),
                         )
-                      ],
-                    ),
-                  ),
+                      : const SizedBox(),
                   SizedBox(height: size * .03),
 
                   /// special offers
