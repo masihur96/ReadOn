@@ -15,7 +15,15 @@ class BookPreview extends StatefulWidget {
   String writerName;
   Product product;
 
-  BookPreview({Key? key,required this.bookImageWidth, required this.bookImageHeight, required this.bookImage, required this.bookName, required this.writerName, required this.product}) : super(key: key);
+  BookPreview(
+      {Key? key,
+      required this.bookImageWidth,
+      required this.bookImageHeight,
+      required this.bookImage,
+      required this.bookName,
+      required this.writerName,
+      required this.product})
+      : super(key: key);
 
   @override
   State<BookPreview> createState() => _BookPreviewState();
@@ -25,15 +33,15 @@ class _BookPreviewState extends State<BookPreview> {
   String _writerName = '';
   String _bookName = '';
 
-  _checkLength(){
-    if(widget.writerName.length > 15){
-      setState(() => _writerName = widget.writerName.substring(0,12) + '...');
-    }else{
+  _checkLength() {
+    if (widget.writerName.length > 15) {
+      setState(() => _writerName = widget.writerName.substring(0, 12) + '...');
+    } else {
       setState(() => _writerName = widget.writerName);
     }
-    if(widget.bookName.length > 15) {
-      setState(() => _bookName = widget.bookName.substring(0,12) + '...');
-    }else{
+    if (widget.bookName.length > 15) {
+      setState(() => _bookName = widget.bookName.substring(0, 12) + '...');
+    } else {
       setState(() => _bookName = widget.bookName);
     }
   }
@@ -45,13 +53,17 @@ class _BookPreviewState extends State<BookPreview> {
     return GestureDetector(
       onTap: () {
         print('tapped on book ${widget.product.name}');
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BookDetail(product: widget.product,)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BookDetail(
+                      product: widget.product,
+                    )));
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-
           /// book image
           Card(
             shape: RoundedRectangleBorder(
@@ -62,23 +74,25 @@ class _BookPreviewState extends State<BookPreview> {
               width: widget.bookImageWidth,
               height: widget.bookImageHeight,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4.0),
-                color: Colors.grey.shade50
-              ),
+                  borderRadius: BorderRadius.circular(4.0),
+                  color: Colors.grey.shade50),
               child: ClipRRect(
-                  borderRadius:
-                  BorderRadius.circular(4.0),
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    imageUrl: widget.bookImage,
-                    placeholder: (context, url) => Image.asset('assets/book_art.png', fit: BoxFit.contain,),
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                borderRadius: BorderRadius.circular(4.0),
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: widget.bookImage,
+                  placeholder: (context, url) => Image.asset(
+                    'assets/book_art.png',
+                    fit: BoxFit.contain,
                   ),
-
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
               ),
             ),
           ),
-          SizedBox(height: publicController.size.value*.01,),
+          SizedBox(
+            height: publicController.size.value * .01,
+          ),
 
           /// book name
           SizedBox(
@@ -86,8 +100,8 @@ class _BookPreviewState extends State<BookPreview> {
             child: Text(
               _bookName,
               textAlign: TextAlign.center,
-              style: Style.bodyTextStyle(
-                  publicController.size.value * .032, Colors.black, FontWeight.bold),
+              style: Style.bodyTextStyle(publicController.size.value * .032,
+                  Colors.black, FontWeight.bold),
             ),
           ),
 
@@ -97,8 +111,8 @@ class _BookPreviewState extends State<BookPreview> {
             child: Text(
               _writerName,
               textAlign: TextAlign.center,
-              style: Style.bodyTextStyle(
-                  publicController.size.value * .032, Colors.black, FontWeight.normal),
+              style: Style.bodyTextStyle(publicController.size.value * .032,
+                  Colors.black, FontWeight.normal),
             ),
           ),
         ],

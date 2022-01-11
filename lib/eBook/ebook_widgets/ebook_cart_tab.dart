@@ -18,6 +18,7 @@ import 'package:read_on/public_variables/style_variable.dart';
 import 'package:read_on/widgets/custom_loading.dart';
 import 'package:read_on/widgets/solid_button.dart';
 import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
 class EBookCartTab extends StatefulWidget {
   const EBookCartTab({Key? key}) : super(key: key);
@@ -63,7 +64,7 @@ class _EBookCartTabState extends State<EBookCartTab> {
     return Scaffold(
       body: Stack(
         children: [
-          _bodyUI(size, ebookApiController, databaseHelper),
+          _bodyUI(size, ebookApiController, databaseHelper, userController),
           Visibility(
             visible: _cartDeleteLoading == true || _promoCodeLoading == true
                 ? true
@@ -81,7 +82,7 @@ class _EBookCartTabState extends State<EBookCartTab> {
   }
 
   Widget _bodyUI(double size, EbookApiController ebookApiController,
-          DatabaseHelper databaseHelper) =>
+          DatabaseHelper databaseHelper, UserController userController) =>
       _loading
           ? Container(
               width: double.infinity,
@@ -548,8 +549,9 @@ class _EBookCartTabState extends State<EBookCartTab> {
                                 child: Text('কিনুন',
                                     style: Style.buttonTextStyle(size * .05,
                                         Colors.white, FontWeight.w500)),
-                                onPressed: ()  {
-                                  Get.to(() => const OrderPage());
+                                onPressed: () {
+                                  purchaseEbook(
+                                      userController, ebookApiController);
                                 },
                                 bgColor: CColor.themeColor),
                           ],
@@ -561,7 +563,7 @@ class _EBookCartTabState extends State<EBookCartTab> {
                     ],
                   ),
                 )
-              : Center(
+              : const Center(
                   child: Text('কার্ট লিস্টে কোন বই নেই!'),
                 );
 
@@ -571,6 +573,22 @@ class _EBookCartTabState extends State<EBookCartTab> {
   //   // var image = await DefaultCacheManager().getSingleFile();
   //
   // }
+
+  /// buy e-books function
+  void purchaseEbook(UserController userController,
+      EbookApiController ebookApiController) async {
+    String randomNumber = const Uuid().v4();
+    String orderNumber = randomNumber.substring(30);
+
+    Map purchaseMap = {
+      'user_id': userController.userId,
+      'order_number': orderNumber,
+      'total_price': (totalAmount - promoCodeDiscount).toStringAsFixed(2),
+      'cart_id': ebookApiController.cartModel.value.data![0].cartId
+    };
+
+    await ebookApiController.purchaseBooks(purchaseMap);
+  }
 
   Widget _costDetailPreview(double size, String title, String value) => Padding(
         padding: EdgeInsets.symmetric(vertical: size * .01),

@@ -31,6 +31,10 @@ dependencies:
   dio: ^4.0.4
   image_gallery_saver: ^1.7.1
   custom_pointed_popup: ^0.0.4
+  image_picker: ^0.8.4+4
+  image_cropper: ^1.4.1
+  uuid: ^3.0.5
+  flutter_sslcommerz: ^2.1.0-nullsafety.0
 
 
   #reading page

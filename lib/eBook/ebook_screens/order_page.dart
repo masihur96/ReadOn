@@ -1,16 +1,38 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_sslcommerz/model/SSLCAdditionalInitializer.dart';
+import 'package:flutter_sslcommerz/model/SSLCCustomerInfoInitializer.dart';
+import 'package:flutter_sslcommerz/model/SSLCEMITransactionInitializer.dart';
+import 'package:flutter_sslcommerz/model/SSLCSdkType.dart';
+import 'package:flutter_sslcommerz/model/SSLCShipmentInfoInitializer.dart';
+import 'package:flutter_sslcommerz/model/SSLCTransactionInfoModel.dart';
+import 'package:flutter_sslcommerz/model/SSLCommerzInitialization.dart';
+import 'package:flutter_sslcommerz/model/SSLCurrencyType.dart';
+import 'package:flutter_sslcommerz/model/sslproductinitilizer/General.dart';
+import 'package:flutter_sslcommerz/model/sslproductinitilizer/SSLCProductInitializer.dart';
+import 'package:flutter_sslcommerz/sslcommerz.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:read_on/controller/ebook_api_controller.dart';
 import 'package:read_on/controller/public_controller.dart';
+import 'package:read_on/controller/user_controller.dart';
 import 'package:read_on/eBook/ebook_widgets/custom_appbar.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/language_convert.dart';
 import 'package:read_on/public_variables/style_variable.dart';
+import 'package:read_on/public_variables/toast.dart';
+import 'package:read_on/widgets/custom_loading.dart';
 import 'package:read_on/widgets/solid_button.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:uuid/uuid.dart';
 
 class OrderPage extends StatefulWidget {
-  const OrderPage({Key? key}) : super(key: key);
+  String amount;
+  List<String> bookIdList;
+
+  OrderPage({Key? key, required this.amount, required this.bookIdList})
+      : super(key: key);
 
   @override
   _OrderPageState createState() => _OrderPageState();
@@ -18,10 +40,17 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final TextEditingController _postOfficeController = TextEditingController();
+  final TextEditingController _villageController = TextEditingController();
+  final TextEditingController _districtController = TextEditingController();
   bool _loading = false;
+  bool _orderingBookLoading = false;
   int _count = 0;
   List<String> _divisionList = [];
   int _radioButtonValue = 1;
+  double _deliveryCharge = 0;
+  String _selectedDivision = "";
+  dynamic formData = {};
 
   void _customInit(PublicController publicController) async {
     setState(() {
@@ -38,30 +67,36 @@ class _OrderPageState extends State<OrderPage> {
         });
       }
     });
-
-    // ignore: avoid_print
-    print("Division list = $_divisionList");
     setState(() => _loading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     final PublicController publicController = Get.find();
+    final UserController userController = Get.find();
+    final EbookApiController ebookApiController = Get.find();
     final double size = publicController.size.value;
     if (_count == 0) _customInit(publicController);
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.grey.shade50,
         appBar: PreferredSize(
             preferredSize: AppBar().preferredSize,
             child: _pageAppBar(publicController)),
-        body: _bodyUI(size, publicController),
+        body:
+            _bodyUI(size, publicController, userController, ebookApiController),
       ),
     );
   }
 
-  Widget _bodyUI(double size, PublicController publicController) => Padding(
+  Widget _bodyUI(
+          double size,
+          PublicController publicController,
+          UserController userController,
+          EbookApiController ebookApiController) =>
+      Padding(
         padding: EdgeInsets.all(size * .04),
         child: _loading
             ? SizedBox(
@@ -173,8 +208,10 @@ class _OrderPageState extends State<OrderPage> {
                                 SizedBox(
                                   width: size,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Row(
                                         children: [
@@ -188,14 +225,18 @@ class _OrderPageState extends State<OrderPage> {
                                           Column(
                                             children: [
                                               Container(
-                                                margin: EdgeInsets.only(left: size*.02),
+                                                margin: EdgeInsets.only(
+                                                    left: size * .02),
                                                 width: size * .25,
                                                 height: size * .04,
                                                 color: Colors.white,
                                               ),
-                                              SizedBox(height: size*.01,),
+                                              SizedBox(
+                                                height: size * .01,
+                                              ),
                                               Container(
-                                                margin: EdgeInsets.only(left: size*.02),
+                                                margin: EdgeInsets.only(
+                                                    left: size * .02),
                                                 width: size * .2,
                                                 height: size * .04,
                                                 color: Colors.white,
@@ -214,7 +255,8 @@ class _OrderPageState extends State<OrderPage> {
                                                 color: Colors.white),
                                           ),
                                           Container(
-                                            margin: EdgeInsets.only(left: size*.02),
+                                            margin: EdgeInsets.only(
+                                                left: size * .02),
                                             width: size * .25,
                                             height: size * .04,
                                             color: Colors.white,
@@ -229,10 +271,11 @@ class _OrderPageState extends State<OrderPage> {
                                 ),
                                 Container(
                                   width: size,
-                                  height: size*.4,
+                                  height: size * .4,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(size * .03),
+                                    borderRadius:
+                                        BorderRadius.circular(size * .03),
                                   ),
                                 ),
                                 SizedBox(
@@ -332,10 +375,9 @@ class _OrderPageState extends State<OrderPage> {
                             }
                           },
                           onChanged: (value) {
-                            //Do something when changing the item if you want.
-                          },
-                          onSaved: (value) {
-                            //selectedValue = value.toString();
+                            setState(() {
+                              _selectedDivision = value.toString();
+                            });
                           },
                         ),
                       ),
@@ -344,16 +386,18 @@ class _OrderPageState extends State<OrderPage> {
                   SizedBox(
                     height: size * .04,
                   ),
-                  _customField(size, 'জেলা', "জেলার নাম লিখুন"),
+                  _customField(
+                      size, 'জেলা', "জেলার নাম লিখুন", _districtController),
                   SizedBox(
                     height: size * .04,
                   ),
-                  _customField(size, 'উপজেলা/থানা', "উপজেলা/থানার নাম লিখুন"),
+                  _customField(size, 'উপজেলা/থানা', "উপজেলা/থানার নাম লিখুন",
+                      _postOfficeController),
                   SizedBox(
                     height: size * .04,
                   ),
                   _customField(size, 'গ্রাম/মহল্লা/রাস্তা/বাড়ি নম্বর',
-                      "গ্রাম/মহল্লা/রাস্তা/বাড়ি নম্বর"),
+                      "গ্রাম/মহল্লা/রাস্তা/বাড়ি নম্বর", _villageController),
                   SizedBox(
                     height: size * .1,
                   ),
@@ -441,8 +485,9 @@ class _OrderPageState extends State<OrderPage> {
                       child: Column(
                         children: [
                           /// cart cost details
-                          _costDetailPreview(size, 'মোট', "১০০০"),
-                          _costDetailPreview(size, 'ডেলিভারি চার্জ', "১০"),
+                          _costDetailPreview(
+                              size, 'মোট', enToBnNumberConvert(widget.amount)),
+                          _costDetailPreview(size, 'ডেলিভারি চার্জ', "০"),
                           Padding(
                             padding:
                                 EdgeInsets.symmetric(horizontal: size * .05),
@@ -451,7 +496,12 @@ class _OrderPageState extends State<OrderPage> {
                               color: Colors.grey,
                             ),
                           ),
-                          _costDetailPreview(size, 'সর্বমোট', "১০১০"),
+                          _costDetailPreview(
+                              size,
+                              'সর্বমোট',
+                              enToBnNumberConvert((double.parse(widget.amount) -
+                                      _deliveryCharge)
+                                  .toStringAsFixed(2))),
                         ],
                       ),
                     ),
@@ -461,19 +511,112 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                   Align(
                     alignment: Alignment.center,
-                    child: SolidColorButton(
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: size * .02, horizontal: size * .1),
-                        borderRadius: size * .025,
-                        child: Text('অর্ডার করুন',
-                            style: Style.buttonTextStyle(
-                                size * .04, Colors.white, FontWeight.w500)),
-                        onPressed: () {},
-                        bgColor: CColor.themeColor),
+                    child: _orderingBookLoading
+                        ? const CustomLoading()
+                        : SolidColorButton(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: size * .02, horizontal: size * .1),
+                            borderRadius: size * .025,
+                            child: Text('অর্ডার করুন',
+                                style: Style.buttonTextStyle(
+                                    size * .04, Colors.white, FontWeight.w500)),
+                            onPressed: () async {
+                              // await _paySSLCommerz();
+                              setState(() => _orderingBookLoading = true);
+                              placeOrder(userController, ebookApiController);
+                              setState(() => _orderingBookLoading = false);
+                            },
+                            bgColor: CColor.themeColor),
                   ),
                 ],
               ),
       );
+
+  /// place order function
+  void placeOrder(UserController userController,
+      EbookApiController ebookApiController) async {
+    String randomNumber = const Uuid().v4();
+    String orderNumber = randomNumber.substring(30);
+    String shippingAddress =
+        "${_villageController.text}, ${_postOfficeController.text}, ${_districtController.text}, $_selectedDivision";
+    Map<String, dynamic> orderMap = {
+      'user_id': userController.userId,
+      'order_number': orderNumber,
+      'shipping_address': shippingAddress,
+      'total_price':
+          (double.parse(widget.amount) - _deliveryCharge).toStringAsFixed(2),
+      'book_id': widget.bookIdList
+    };
+    await ebookApiController.orderHardCopyBooks(orderMap);
+  }
+
+  /// ssl commerz
+  Future<void> _paySSLCommerz() async {
+    Sslcommerz sslcommerz = Sslcommerz(
+        initializer: SSLCommerzInitialization(
+            //Use the ipn if you have valid one, or it will fail the transaction.
+            //ipn_url: "www.ipnurl.com",
+            multi_card_name: '',
+            currency: SSLCurrencyType.BDT,
+            product_category: "Food",
+            sdkType: SSLCSdkType.LIVE,
+            store_id: "demotest",
+            store_passwd: "qwerty",
+            total_amount: 400,
+            tran_id: DateTime.now().millisecondsSinceEpoch.toString()));
+    sslcommerz
+        .addEMITransactionInitializer(
+            sslcemiTransactionInitializer: SSLCEMITransactionInitializer(
+                emi_options: 1, emi_max_list_options: 3, emi_selected_inst: 2))
+        .addShipmentInfoInitializer(
+            sslcShipmentInfoInitializer: SSLCShipmentInfoInitializer(
+                shipmentMethod: "yes",
+                numOfItems: 2,
+                shipmentDetails: ShipmentDetails(
+                    shipAddress1:
+                        "${_villageController.text}, ${_postOfficeController.text}, ${_districtController.text}, $_selectedDivision",
+                    shipCity: _villageController.text,
+                    shipCountry: "Bangladesh",
+                    shipName: "From hub",
+                    shipPostCode: '')))
+        .addCustomerInfoInitializer(
+            customerInfoInitializer: SSLCCustomerInfoInitializer(
+                customerState: "Uttara",
+                customerName: "Mak bro",
+                customerEmail: "makbro@gmail.com",
+                customerAddress1: "Uttara",
+                customerCity: "Dhaka",
+                customerPostCode: '1230',
+                customerCountry: "Bangladesh",
+                customerPhone: "01610000016"))
+        .addProductInitializer(
+            sslcProductInitializer:
+                // ** ssl product initializer for general product STARTS**
+                SSLCProductInitializer(
+                    productName: "T-Shirt",
+                    productCategory: "All",
+                    general: General(
+                        general: "General Purpose",
+                        productProfile: "Product Profile")))
+        .addAdditionalInitializer(
+            sslcAdditionalInitializer:
+                SSLCAdditionalInitializer(valueA: "SSL_VERIFYPEER_FALSE"));
+    var result = await sslcommerz.payNow();
+    if (result is PlatformException) {
+      print("the response is: " +
+          result.message.toString() +
+          " code: " +
+          result.code);
+    } else {
+      SSLCTransactionInfoModel model = result;
+      //print('Payment Status: ${model.status}');
+      //showSuccessMgs('"Transaction Status: ${model.status}"');
+      if (model.status == 'VALID') {
+      } else {
+        showToast('Transaction failed');
+      }
+    }
+  }
 
   /// app bar
   CustomAppBar _pageAppBar(PublicController publicController) => CustomAppBar(
@@ -484,7 +627,9 @@ class _OrderPageState extends State<OrderPage> {
       );
 
   /// custom field
-  Widget _customField(double size, String title, String hint) => Row(
+  Widget _customField(double size, String title, String hint,
+          TextEditingController textEditingController) =>
+      Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -499,6 +644,7 @@ class _OrderPageState extends State<OrderPage> {
             width: size * .5,
             height: size * .1,
             child: TextFormField(
+              controller: textEditingController,
               keyboardType: TextInputType.text,
               cursorColor: Colors.black,
               decoration: InputDecoration(

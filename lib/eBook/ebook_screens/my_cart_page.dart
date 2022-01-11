@@ -8,7 +8,6 @@ import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 import '../ebook_widgets/custom_appbar.dart';
 
-
 class MyCartPage extends StatefulWidget {
   const MyCartPage({Key? key}) : super(key: key);
 
@@ -34,20 +33,21 @@ class _MyCartPageState extends State<MyCartPage> {
   }
 
   /// page body
-  Container _bodyUI(double size) =>
-      Container(
-          width: Get.width,
-          height: Get.height,
-          color: Colors.white,
+  Container _bodyUI(double size) => Container(
+        width: Get.width,
+        height: Get.height,
+        color: Colors.white,
         child: DefaultTabController(
           length: 2,
           child: Column(
-            children:  [
+            children: [
               TabBar(
-                labelColor: CColor.themeColor,
-                unselectedLabelColor: Colors.black,
-                labelStyle: Style.bodyTextStyle(size*.04, CColor.themeColor, FontWeight.w500),
-                  unselectedLabelStyle: Style.bodyTextStyle(size*.04, Colors.black, FontWeight.normal),
+                  labelColor: CColor.themeColor,
+                  unselectedLabelColor: Colors.black,
+                  labelStyle: Style.bodyTextStyle(
+                      size * .04, CColor.themeColor, FontWeight.w500),
+                  unselectedLabelStyle: Style.bodyTextStyle(
+                      size * .04, Colors.black, FontWeight.normal),
                   tabs: const [
                     Tab(
                       text: 'ইবুক',
@@ -55,13 +55,10 @@ class _MyCartPageState extends State<MyCartPage> {
                     Tab(
                       text: 'হার্ড কপি',
                     )
-                  ]
-              ),
+                  ]),
               Expanded(
-                child: TabBarView(children: [
-                  EBookCartTab(),
-                  HardCopyCartTab()
-                ]),
+                child: TabBarView(
+                    children: [const EBookCartTab(), HardCopyCartTab()]),
               )
             ],
           ),
@@ -81,5 +78,4 @@ class _MyCartPageState extends State<MyCartPage> {
         ],
         scaffoldKey: _scaffoldKey,
       );
-
 }
