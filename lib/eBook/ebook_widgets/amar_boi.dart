@@ -42,7 +42,7 @@ class _AmarBoiState extends State<AmarBoi> {
   String? source;
   Uint8List? decodeBytes;
   bool _loading = false;
-  List<Bookdatum> myBookList = [];
+  List<Datum> myBookList = [];
   List<String> _downloadedBookIdList = [];
   CustomPointedPopup? customPointedPopup;
 
@@ -54,10 +54,9 @@ class _AmarBoiState extends State<AmarBoi> {
     await databaseHelper.getMyBookList();
 
     print(
-        "my book list length = ${ebookApiController.myPurchasedBookModel.value.data![0].bookdata!.length}");
+        "my book list length = ${ebookApiController.myPurchasedBookModel.value.data!.length}");
     setState(() {
-      myBookList =
-          ebookApiController.myPurchasedBookModel.value.data![0].bookdata!;
+      myBookList = ebookApiController.myPurchasedBookModel.value.data!;
       for (int i = 0; i < databaseHelper.myBookList.length; i++) {
         _downloadedBookIdList.add(databaseHelper.myBookList[i].bookId);
       }
@@ -130,25 +129,30 @@ class _AmarBoiState extends State<AmarBoi> {
               itemCount: myBookList.length,
               itemBuilder: (context, index) {
                 final GlobalKey widgetKey = GlobalKey();
-                bool isDownloaded =
-                    _downloadedBookIdList.contains(myBookList[index].bookId)
-                        ? true
-                        : false;
+                bool isDownloaded = _downloadedBookIdList
+                        .contains(myBookList[index].bookdata![0].wname)
+                    ? true
+                    : false;
                 return GestureDetector(
                   onTap: () {
                     if (_downloadedBookIdList
-                        .contains(myBookList[index].bookId)) {
+                        .contains(myBookList[index].bookdata![0].id)) {
                       getCustomPointedPopup(
                               context, size, databaseHelper, index)!
                           .show(
                         widgetKey: widgetKey,
                       );
                     } else {
+                      print("bookdetam: ${myBookList[index].bookdata![0].id!}");
                       showDownloadDialog(
                           context,
                           publicController,
-                          () => downloadBook(myBookList[index], databaseHelper,
-                              ebookApiController, context, publicController));
+                          () => downloadBook(
+                              myBookList[index].bookdata![0],
+                              databaseHelper,
+                              ebookApiController,
+                              context,
+                              publicController));
                     }
                   },
                   child: Column(
@@ -176,7 +180,7 @@ class _AmarBoiState extends State<AmarBoi> {
                                 child: CachedNetworkImage(
                                   fit: BoxFit.cover,
                                   imageUrl:
-                                      "${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${myBookList[index].bookThumbnil!}",
+                                      "${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${myBookList[index].bookdata![0].bookThumbnil!}",
                                   placeholder: (context, url) => Image.asset(
                                     'assets/book_art.png',
                                     fit: BoxFit.contain,
@@ -224,9 +228,9 @@ class _AmarBoiState extends State<AmarBoi> {
                       SizedBox(
                         width: publicController.size.value * .26,
                         child: Text(
-                            myBookList[index].bookname!.length < 18
-                                ? myBookList[index].bookname!
-                                : "${myBookList[index].bookname!.substring(0, 15)}...",
+                            myBookList[index].bookdata![0].bookname!.length < 18
+                                ? myBookList[index].bookdata![0].bookname!
+                                : "${myBookList[index].bookdata![0].bookname!.substring(0, 15)}...",
                             maxLines: 1,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -239,9 +243,9 @@ class _AmarBoiState extends State<AmarBoi> {
                       SizedBox(
                         width: publicController.size.value * .26,
                         child: Text(
-                            myBookList[index].wname!.length < 18
-                                ? myBookList[index].wname!
-                                : "${myBookList[index].wname!.substring(0, 15)}...",
+                            myBookList[index].bookdata![0].wname!.length < 18
+                                ? myBookList[index].bookdata![0].wname!
+                                : "${myBookList[index].bookdata![0].wname!.substring(0, 15)}...",
                             maxLines: 1,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -276,7 +280,8 @@ class _AmarBoiState extends State<AmarBoi> {
               InkWell(
                 onTap: () {
                   customPointedPopup!.dismiss();
-                  Get.to(StoryPreview(bookId: myBookList[index].bookId!));
+                  Get.to(
+                      StoryPreview(bookId: myBookList[index].bookdata![0].id!));
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
@@ -310,7 +315,7 @@ class _AmarBoiState extends State<AmarBoi> {
                   print("deleting clicked!");
                   setState(() => _loading = true);
                   await databaseHelper.deleteDownloadedBooks(
-                      myBookList[index].bookId!, index);
+                      myBookList[index].bookdata![0].id!, index);
                   setState(() => _loading = false);
                   customPointedPopup!.dismiss();
                 },
@@ -353,12 +358,13 @@ class _AmarBoiState extends State<AmarBoi> {
     Navigator.pop(context);
     showDownloadingProgressDialog(
         context, publicController, bookdatum.bookname!);
+    print("${bookdatum.id!} is got");
     await downloadImage(bookdatum.bookThumbnil!, ebookApiController);
     MyBookInfoModel bookInfoModel = MyBookInfoModel(
-        bookdatum.bookId!, bookdatum.bookname!, bookdatum.wname!, source);
+        bookdatum.id!, bookdatum.bookname!, bookdatum.wname!, source);
     await databaseHelper.insertPurchasedBook(bookInfoModel);
     setState(() {
-      _downloadedBookIdList.add(bookdatum.bookId!);
+      _downloadedBookIdList.add(bookdatum.id!);
     });
     Navigator.pop(context);
     showToast("ইবুক ডাউনলোড সম্পন্ন হয়েছে। অফলাইনেও বইটি পড়তে পারবেন।");
