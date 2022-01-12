@@ -65,7 +65,7 @@ void showDownloadDialog(BuildContext context, PublicController publicController,
                           child: Material(
                             color: Colors.white,
                             child: InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 Navigator.pop(context);
                               },
                               child: Container(

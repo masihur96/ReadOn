@@ -58,7 +58,14 @@ class _AmarBoiState extends State<AmarBoi> {
     setState(() {
       myBookList = ebookApiController.myPurchasedBookModel.value.data!;
       for (int i = 0; i < databaseHelper.myBookList.length; i++) {
+        print(" api id = ${myBookList[i].bookdata![0].id}");
+      }
+      for (int i = 0; i < databaseHelper.myBookList.length; i++) {
         _downloadedBookIdList.add(databaseHelper.myBookList[i].bookId);
+      }
+      print("downloaded book id list length = ${_downloadedBookIdList.length}");
+      for (int i = 0; i < databaseHelper.myBookList.length; i++) {
+        print("id = ${_downloadedBookIdList[i]}");
       }
       _loading = false;
     });
