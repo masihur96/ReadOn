@@ -47,82 +47,94 @@ class Datum {
 class Bookdatum {
   Bookdatum({
     this.id,
-    this.userId,
-    this.bookId,
-    this.quantity,
-    this.bookType,
-    this.audioStatus,
-    this.subTotalPrice,
+    this.name,
+    this.publicationId,
+    this.categoryId,
+    this.subCategoryId,
+    this.sellingPriceEbook,
+    this.sellingPriceHardcopy,
+    this.bookDescription,
+    this.bookThumbnail,
+    this.writerId,
+    this.offerInPersent,
+    this.status,
     this.createdAt,
     this.updatedAt,
     this.bookname,
     this.bookThumbnil,
     this.wname,
-    this.writerId,
     this.categoryName,
     this.categoryStatus,
-    this.publicationId,
     this.publicationName,
     this.publicationImage,
   });
 
   String? id;
-  String? userId;
-  String? bookId;
-  String? quantity;
-  String? bookType;
-  String? audioStatus;
-  String? subTotalPrice;
+  String? name;
+  String? publicationId;
+  String? categoryId;
+  dynamic subCategoryId;
+  String? sellingPriceEbook;
+  String? sellingPriceHardcopy;
+  String? bookDescription;
+  String? bookThumbnail;
+  String? writerId;
+  String? offerInPersent;
+  String? status;
   DateTime? createdAt;
   DateTime? updatedAt;
   String? bookname;
   String? bookThumbnil;
   String? wname;
-  String? writerId;
   String? categoryName;
   String? categoryStatus;
-  String? publicationId;
   String? publicationName;
   String? publicationImage;
 
   factory Bookdatum.fromJson(Map<String, dynamic> json) => Bookdatum(
         id: json["id"],
-        userId: json["user_id"],
-        bookId: json["book_id"],
-        quantity: json["quantity"],
-        bookType: json["book_type"],
-        audioStatus: json["audio_status"],
-        subTotalPrice: json["sub_total_price"],
+        name: json["name"],
+        publicationId: json["publication_id"],
+        categoryId: json["category_id"],
+        subCategoryId: json["sub_category_id"],
+        sellingPriceEbook: json["selling_price_ebook"],
+        sellingPriceHardcopy: json["selling_price_hardcopy"],
+        bookDescription: json["book_description"],
+        bookThumbnail: json["book_thumbnail"],
+        writerId: json["writer_id"],
+        offerInPersent: json["offer_in_persent"],
+        status: json["status"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         bookname: json["bookname"],
         bookThumbnil: json["bookThumbnil"],
         wname: json["wname"],
-        writerId: json["writer_id"],
         categoryName: json["category_name"],
         categoryStatus: json["category_status"],
-        publicationId: json["publication_id"],
         publicationName: json["publication_name"],
         publicationImage: json["publication_image"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "user_id": userId,
-        "book_id": bookId,
-        "quantity": quantity,
-        "book_type": bookType,
-        "audio_status": audioStatus,
-        "sub_total_price": subTotalPrice,
+        "name": name,
+        "publication_id": publicationId,
+        "category_id": categoryId,
+        "sub_category_id": subCategoryId,
+        "selling_price_ebook": sellingPriceEbook,
+        "selling_price_hardcopy": sellingPriceHardcopy,
+        "book_description": bookDescription,
+        "book_thumbnail": bookThumbnail,
+        "writer_id": writerId,
+        "offer_in_persent": offerInPersent,
+        "status": status,
         "created_at": createdAt!.toIso8601String(),
         "updated_at": updatedAt!.toIso8601String(),
         "bookname": bookname,
         "bookThumbnil": bookThumbnil,
         "wname": wname,
-        "writer_id": writerId,
         "category_name": categoryName,
         "category_status": categoryStatus,
-        "publication_id": publicationId,
         "publication_name": publicationName,
         "publication_image": publicationImage,
       };

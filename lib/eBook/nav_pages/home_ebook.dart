@@ -735,9 +735,19 @@ class _HomePageEbookState extends State<HomePageEbook> {
                                                     : Colors.white,
                                                 width: size * .005)),
                                         child: CircleAvatar(
-                                          backgroundImage: const NetworkImage(
-                                            'https://m.media-amazon.com/images/M/MV5BNTM5YmQ5ZGYtMzRiMC00ZmVkLWIzMGItYjkwMTRkZWIyMTk1XkEyXkFqcGdeQXVyNDI3NjcxMDA@._V1_.jpg',
-                                          ),
+                                          backgroundColor: Colors.grey.shade200,
+                                          backgroundImage: ebookApiController
+                                                      .writeModel
+                                                      .value
+                                                      .data![index]
+                                                      .writer![0]
+                                                      .image ==
+                                                  null
+                                              ? const AssetImage(
+                                                  "assets/default_profile_image.png")
+                                              : NetworkImage(
+                                                  "${ebookApiController.domainName}/public//frontend/images/writerImage//${ebookApiController.writeModel.value.data![index].writer![0].image!}",
+                                                ) as ImageProvider,
                                           radius: size * .12,
                                         ),
                                       ),
