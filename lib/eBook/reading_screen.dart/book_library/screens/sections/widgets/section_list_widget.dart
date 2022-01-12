@@ -9,13 +9,12 @@ import 'package:read_on/eBook/reading_screen.dart/book_library/screens/sections/
 
 class SectionList extends StatelessWidget {
   final Book book;
-   SectionList(this.book, {Key? key}) : super(key: key);
+  SectionList(this.book, {Key? key}) : super(key: key);
   int count = 0;
-  customInit(BuildContext context){
+  customInit(BuildContext context) {
     count++;
-    BlocProvider.of<SectionBloc>(context).add(SectionTapped(
-        book: book, sectionIndex: 0, title: 'title' ?? ''));
-
+    BlocProvider.of<SectionBloc>(context)
+        .add(SectionTapped(book: book, sectionIndex: 0, title: ''));
   }
 
   @override
@@ -33,8 +32,8 @@ class SectionList extends StatelessWidget {
           return ListTile(
             title: Text(title!),
             onTap: () {
-              BlocProvider.of<SectionBloc>(context).add(SectionTapped(
-                  book: book, sectionIndex: index, title: title ?? ''));
+              BlocProvider.of<SectionBloc>(context).add(
+                  SectionTapped(book: book, sectionIndex: index, title: ''));
             },
           );
         },
