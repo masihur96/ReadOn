@@ -17,6 +17,7 @@ void main() async {
   /// Set Device orientation
   /// Set Device orientation
   /// Set Device orientation
+
   final bool _isPhone = Device.get().isPhone;
   SharedPreferences pref = await SharedPreferences.getInstance();
   if (_isPhone) {
