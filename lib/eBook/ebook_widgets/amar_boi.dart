@@ -19,11 +19,9 @@ import 'package:read_on/controller/sqlite_database_helper.dart';
 import 'package:read_on/controller/user_controller.dart';
 import 'package:read_on/eBook/ebook_model_classes/my_purchased_book_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/sqlite_database_models/my_book_info_model.dart';
-import 'package:read_on/eBook/ebook_screens/downloads_page.dart';
 import 'package:read_on/eBook/ebook_screens/story_preview.dart';
 import 'package:read_on/eBook/ebook_widgets/download_dialog.dart';
 import 'package:read_on/eBook/ebook_widgets/downloading_progress_dialog.dart';
-import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/toast.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -137,7 +135,7 @@ class _AmarBoiState extends State<AmarBoi> {
               itemBuilder: (context, index) {
                 final GlobalKey widgetKey = GlobalKey();
                 bool isDownloaded = _downloadedBookIdList
-                        .contains(myBookList[index].bookdata![0].wname)
+                        .contains(myBookList[index].bookdata![0].id)
                     ? true
                     : false;
                 return GestureDetector(
