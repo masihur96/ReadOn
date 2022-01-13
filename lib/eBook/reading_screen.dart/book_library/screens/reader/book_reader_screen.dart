@@ -140,8 +140,6 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                   Get.back();
                   Get.back();
                 }
-
-
                 return true;
               },
               child: SafeArea(
