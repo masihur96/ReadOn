@@ -16,6 +16,7 @@ import 'package:read_on/eBook/ebook_model_classes/subject_category_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/subject_subcategory_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/subscription_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/todays_attraction.dart';
+import 'package:read_on/eBook/ebook_model_classes/writer_detail_model.dart';
 import 'package:read_on/eBook/ebook_model_classes/writter_model.dart';
 import 'package:read_on/public_variables/toast.dart';
 
@@ -57,6 +58,7 @@ class EbookApiController extends GetxController {
   Rx<TodaysAttractionModel>? todaysAttractionModel =
       TodaysAttractionModel().obs;
   Rx<MyPurchasedBookModel> myPurchasedBookModel = MyPurchasedBookModel().obs;
+  RxList<WriterDetailModel> writerDetailModel = <WriterDetailModel>[].obs;
 
   Future<void> getSubjectCategoryNameList() async {
     try {
@@ -503,6 +505,19 @@ class EbookApiController extends GetxController {
       update();
     } catch (error) {
       print("getting my purchased books error: $error");
+    }
+  }
+
+  /// writer details
+  Future<void> getWriterDetails(String writerId) async {
+    final String baseUrl = "$domainName/api/writerProfile/$writerId";
+    try {
+      http.Response response = await http.get(Uri.parse(baseUrl));
+      writerDetailModel.value = writerDetailModelFromJson(response.body);
+      update();
+    } catch (error) {
+      // ignore: avoid_print
+      print("Fetching specific writer details error: $error");
     }
   }
 }

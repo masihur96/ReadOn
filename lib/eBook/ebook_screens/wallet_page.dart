@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/public_controller.dart';
-import 'package:read_on/eBook/ebook_widgets/custom_appbar.dart';
+import '../../widgets/custom_appbar.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 import 'package:read_on/widgets/solid_button.dart';
 

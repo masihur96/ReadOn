@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/public_controller.dart';
@@ -33,7 +34,7 @@ class CustomAppBar extends StatelessWidget {
         children: [
           InkWell(
             onTap: (){
-              if(iconData == LineAwesomeIcons.bars){
+              if(iconData == LineAwesomeIcons.bars || iconData == FontAwesomeIcons.bars){
                 if (scaffoldKey.currentState!.isDrawerOpen == false) {
                   scaffoldKey.currentState!.openDrawer();
                 } else {
@@ -46,7 +47,7 @@ class CustomAppBar extends StatelessWidget {
             },
             child: Icon(
               iconData,
-              color: Colors.white70,
+              color: Colors.white,
             ),
           ),
           Text(

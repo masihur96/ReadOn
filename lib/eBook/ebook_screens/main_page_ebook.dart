@@ -12,7 +12,7 @@ import 'package:read_on/eBook/nav_pages/home_ebook.dart';
 import 'package:read_on/eBook/nav_pages/library.dart';
 import 'package:read_on/eBook/nav_pages/my_book.dart';
 import 'package:read_on/public_variables/color_variable.dart';
-import '../ebook_widgets/custom_appbar.dart';
+import '../../widgets/custom_appbar.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);

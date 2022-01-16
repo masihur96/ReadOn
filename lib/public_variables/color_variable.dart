@@ -8,6 +8,8 @@ class CColor{
   static const Color greenColor = Color(0xff39A994);
   static const Color themeColorLite = Colors.red;
   static const Color greyColor = Color(0xffAFAFAF);
+  static const Color cardColor = Color(0xffFCE3E6);
+  static const Color cardColor2 = Color(0xffF3FDFC);
 
   static const Map<int, Color> themeColorMap = {
     50: Color.fromRGBO(236,26,59,.1),

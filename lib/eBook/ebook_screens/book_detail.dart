@@ -16,7 +16,7 @@ import 'package:read_on/widgets/custom_loading.dart';
 import 'category_wise_book_page.dart';
 import 'package:read_on/eBook/ebook_model_classes/product.dart';
 import 'package:read_on/eBook/ebook_widgets/book_front_preview.dart';
-import 'package:read_on/eBook/ebook_widgets/custom_appbar.dart';
+import '../../widgets/custom_appbar.dart';
 import 'my_cart_page.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/language_convert.dart';
@@ -47,12 +47,13 @@ class _BookDetailState extends State<BookDetail> {
   double averageRating = 0;
   int totalReview = 0;
   String reviewDate = '';
+  bool _loadingData = false;
 
-  void _customInit(EbookApiController ebookApiController,ReadingApiController readingApiController) async {
+  void _customInit(EbookApiController ebookApiController, ReadingApiController readingApiController) async {
     _count++;
+    setState(() => _loadingData = true);
     readingApiController.getChapterContent(widget.product.id!);
     readingApiController.updateBookName(widget.product.name!);
-
     setState(() {
       writterName = widget.product.wname!.length > 16
           ? widget.product.wname!.substring(0, 13) + '...'
@@ -60,6 +61,7 @@ class _BookDetailState extends State<BookDetail> {
       _writerBooksLoading = true;
       _publicationBooksLoading = true;
     });
+    await ebookApiController.getWriterDetails(widget.product.writerId!);
     await ebookApiController.getWriterWiseBookList(widget.product.writerId!);
     await ebookApiController
         .getPublicationWiseBookList(widget.product.publicationId!);
@@ -67,9 +69,8 @@ class _BookDetailState extends State<BookDetail> {
       _writerBooksLoading = false;
       _publicationBooksLoading = false;
     });
-    print('product name: ${widget.product.name}, product id: ${widget.product
-        .id}, writer: ${widget.product.wname}');
-
+    print(
+        'product name: ${widget.product.name}, product id: ${widget.product.id}, writer: ${widget.product.wname}');
 
     await ebookApiController.getReviewList(widget.product.id!).then((value) {
       if (ebookApiController.reviewList.isNotEmpty) {
@@ -85,6 +86,7 @@ class _BookDetailState extends State<BookDetail> {
       }
     });
     print('review list length = ${ebookApiController.reviewList.length}');
+    setState(() => _loadingData = false);
   }
 
   @override
@@ -93,10 +95,10 @@ class _BookDetailState extends State<BookDetail> {
     final EbookApiController ebookApiController = Get.find();
     final ReadingApiController readingApiController = Get.find();
     final UserController userController = Get.find();
-    double size = publicController.size.value;
-    if (_count == 0) _customInit(ebookApiController,readingApiController);
-    var dFormat =  DateFormat("yMMMd");
-    if(ebookApiController.reviewList.isNotEmpty) {
+    final double size = publicController.size.value;
+    if (_count == 0) _customInit(ebookApiController, readingApiController);
+    var dFormat = DateFormat("yMMMd");
+    if (ebookApiController.reviewList.isNotEmpty) {
       reviewDate = dFormat.format(ebookApiController.reviewList[0].createdAt!);
     }
     return SafeArea(
@@ -106,11 +108,12 @@ class _BookDetailState extends State<BookDetail> {
         appBar: PreferredSize(
             preferredSize: AppBar().preferredSize,
             child: _pageAppBar(size, publicController)),
-        body: Stack(
+        body: _loadingData? const Center(child: CupertinoActivityIndicator()) : Stack(
           children: [
-            _bodyUI(size, ebookApiController, userController,readingApiController),
+            _bodyUI(
+                size, ebookApiController, userController, readingApiController),
             Visibility(
-              visible: _addedToCart? true: false,
+              visible: _addedToCart ? true : false,
               child: Container(
                 width: Get.width,
                 height: Get.height,
@@ -124,8 +127,11 @@ class _BookDetailState extends State<BookDetail> {
     );
   }
 
-  Widget _bodyUI(double size, EbookApiController ebookApiController,
-      UserController userController,ReadingApiController readingApiController) =>
+  Widget _bodyUI(
+          double size,
+          EbookApiController ebookApiController,
+          UserController userController,
+          ReadingApiController readingApiController) =>
       ListView(
         children: [
           SizedBox(
@@ -144,15 +150,13 @@ class _BookDetailState extends State<BookDetail> {
                       image: DecorationImage(
                           fit: BoxFit.cover,
                           image: NetworkImage(
-                              "${ebookApiController
-                                  .domainName}/public//frontend/images/book_thumbnail/${widget
-                                  .product.bookThumbnail!}")),
+                              "${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${widget.product.bookThumbnail!}")),
                     ),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 0.0),
                       child: Container(
                         decoration:
-                        BoxDecoration(color: Colors.white.withOpacity(0.0)),
+                            BoxDecoration(color: Colors.white.withOpacity(0.0)),
                       ),
                     ),
                   ),
@@ -180,13 +184,11 @@ class _BookDetailState extends State<BookDetail> {
                             child: CachedNetworkImage(
                               fit: BoxFit.cover,
                               imageUrl:
-                              "${ebookApiController
-                                  .domainName}/public//frontend/images/book_thumbnail/${widget
-                                  .product.bookThumbnail!}",
+                                  "${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${widget.product.bookThumbnail!}",
                               placeholder: (context, url) =>
-                              const CupertinoActivityIndicator(),
+                                  const CupertinoActivityIndicator(),
                               errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                                  const Icon(Icons.error),
                             ),
                           ),
                         ),
@@ -195,11 +197,14 @@ class _BookDetailState extends State<BookDetail> {
                         bottom: 0,
                         right: 10,
                         child: InkWell(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (_)=>ReadingScreen()));
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const ReadingScreen()));
 
                             setState(() {
-                              readingApiController.ektuPorun==true;
+                              readingApiController.ektuPorun == true;
                             });
                           },
                           child: Container(
@@ -257,8 +262,10 @@ class _BookDetailState extends State<BookDetail> {
                           ),
                           Expanded(
                               child: Text(
-                                  '৳ ${enToBnNumberConvert(widget.product
-                                      .sellingPriceEbook!)}/-',
+                                  int.parse(widget.product.sellingPriceEbook!) >
+                                          0
+                                      ? '৳ ${enToBnNumberConvert(widget.product.sellingPriceEbook!)}/-'
+                                      : 'ফ্রি',
                                   textAlign: TextAlign.center,
                                   style: Style.bodyTextStyle(size * .045,
                                       Colors.white, FontWeight.w500))),
@@ -279,7 +286,8 @@ class _BookDetailState extends State<BookDetail> {
                           userController,
                           widget.product.sellingPriceHardcopy!,
                           ebookApiController,
-                          'hardCopy', 'false');
+                          'hardCopy',
+                          'false');
                       setState(() => _addedToCart = false);
                       showToast(
                           'এই বইটির হার্ড কপি আপনার কার্টলিস্টে যুক্ত হয়েছে।');
@@ -311,8 +319,7 @@ class _BookDetailState extends State<BookDetail> {
                           ),
                           Expanded(
                             child: Text(
-                                '৳ ${enToBnNumberConvert(widget.product
-                                    .sellingPriceHardcopy!)}/-',
+                                '৳ ${enToBnNumberConvert(widget.product.sellingPriceHardcopy!)}/-',
                                 textAlign: TextAlign.center,
                                 style: Style.bodyTextStyle(size * .045,
                                     Colors.white, FontWeight.w500)),
@@ -335,7 +342,6 @@ class _BookDetailState extends State<BookDetail> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-
                     /// book name
                     Expanded(
                         child: Text(widget.product.name!,
@@ -386,33 +392,42 @@ class _BookDetailState extends State<BookDetail> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-
-                        /// writer image
-                        Container(
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  color: CColor.greenColor,
-                                  width: size * .006)),
-                          child: CircleAvatar(
-                            backgroundImage: const NetworkImage(
-                              'https://m.media-amazon.com/images/M/MV5BNTM5YmQ5ZGYtMzRiMC00ZmVkLWIzMGItYjkwMTRkZWIyMTk1XkEyXkFqcGdeQXVyNDI3NjcxMDA@._V1_.jpg',
+                    SizedBox(
+                      width: size*.3,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          /// writer image
+                          Container(
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: CColor.greenColor,
+                                    width: size * .006)),
+                            child: CircleAvatar(
+                              backgroundImage:
+                                  ebookApiController.writerDetailModel[0].image != null
+                                      ? NetworkImage(
+                                          "${ebookApiController.domainName}/public//frontend/images/writerImage//${ebookApiController.writerDetailModel[0].image}",
+                                        )
+                                      : const AssetImage(
+                                              "assets/default_profile_image.png")
+                                          as ImageProvider,
+                              radius: size * .1,
                             ),
-                            radius: size * .1,
                           ),
-                        ),
-                        SizedBox(height: size * .03),
+                          SizedBox(height: size * .03),
 
-                        /// writer name
-                        Text(
-                          writterName,
-                          style: Style.bodyTextStyle(
-                              size * .04, CColor.greenColor, FontWeight.bold),
-                        )
-                      ],
+                          /// writer name
+                          Text(
+                            writterName,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            style: Style.bodyTextStyle(
+                                size * .04, CColor.greenColor, FontWeight.bold),
+                          )
+                        ],
+                      ),
                     ),
                     SizedBox(
                       width: size * .05,
@@ -423,29 +438,25 @@ class _BookDetailState extends State<BookDetail> {
                       child: _writerBooksLoading
                           ? const CupertinoActivityIndicator()
                           : ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          physics: const ClampingScrollPhysics(),
-                          itemCount:
-                          ebookApiController.writerWiseBookList.length,
-                          itemBuilder: (context, index) =>
-                              Padding(
-                                padding: EdgeInsets.only(right: size * .02),
-                                child: BookPreview(
-                                  bookImageWidth: size * .2,
-                                  bookImageHeight: size * .3,
-                                  bookImage:
-                                  '${ebookApiController
-                                      .domainName}/public//frontend/images/book_thumbnail/${ebookApiController
-                                      .writerWiseBookList[index]
-                                      .bookThumbnail!}',
-                                  bookName: ebookApiController
-                                      .writerWiseBookList[index].name!,
-                                  writerName: ebookApiController
-                                      .writerWiseBookList[index].wname!,
-                                  product: ebookApiController
-                                      .writerWiseBookList[index],
-                                ),
-                              )),
+                              scrollDirection: Axis.horizontal,
+                              physics: const ClampingScrollPhysics(),
+                              itemCount:
+                                  ebookApiController.writerWiseBookList.length,
+                              itemBuilder: (context, index) => Padding(
+                                    padding: EdgeInsets.only(right: size * .02),
+                                    child: BookPreview(
+                                      bookImageWidth: size * .2,
+                                      bookImageHeight: size * .3,
+                                      bookImage:
+                                          '${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${ebookApiController.writerWiseBookList[index].bookThumbnail!}',
+                                      bookName: ebookApiController
+                                          .writerWiseBookList[index].name!,
+                                      writerName: ebookApiController
+                                          .writerWiseBookList[index].wname!,
+                                      product: ebookApiController
+                                          .writerWiseBookList[index],
+                                    ),
+                                  )),
                     )
                   ],
                 ),
@@ -500,11 +511,12 @@ class _BookDetailState extends State<BookDetail> {
                 child: Row(
                   children: [
                     GestureDetector(
-                      onTap: (){
-                        showReviewListDialog(size, ebookApiController, userController);
+                      onTap: () {
+                        showReviewListDialog(
+                            size, ebookApiController, userController);
                       },
                       child: Padding(
-                        padding: EdgeInsets.all(size*.02),
+                        padding: EdgeInsets.all(size * .02),
                         child: Column(
                           children: [
                             Row(
@@ -555,7 +567,7 @@ class _BookDetailState extends State<BookDetail> {
                           autofocus: false,
                           decoration: InputDecoration(
                               contentPadding:
-                              EdgeInsets.symmetric(vertical: size * .035),
+                                  EdgeInsets.symmetric(vertical: size * .035),
                               fillColor: Colors.pink.shade50,
                               filled: true,
                               enabled: false,
@@ -596,89 +608,108 @@ class _BookDetailState extends State<BookDetail> {
               SizedBox(height: size * .05),
 
               /// Review section
-              totalReview == 0 ? const SizedBox() : Container(
-                width: size,
-                padding: EdgeInsets.symmetric(horizontal: size * .04),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-
-                    /// reviewer profile picture
-                    const CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnELq88FqJJ3fRj93adsIGYvhO-TiVlgimVQ&usqp=CAU'),),
-                    SizedBox(width: size * .04),
-                    Expanded(
-                      child: Column(
+              totalReview == 0
+                  ? const SizedBox()
+                  : Container(
+                      width: size,
+                      padding: EdgeInsets.symmetric(horizontal: size * .04),
+                      child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          RichText(
-                            text: TextSpan(children: [
-                              const TextSpan(text: 'by '),
-
-                              /// reviewer name
-                              TextSpan(
-                                  text: ebookApiController.reviewList[0]
-                                      .userName!,
-                                  style: const TextStyle(
-                                      color: CColor.greenColor)),
-                            ], style: const TextStyle(color: Colors.black)),
+                          /// reviewer profile picture
+                          const CircleAvatar(
+                            backgroundColor: Colors.white,
+                            backgroundImage: NetworkImage(
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnELq88FqJJ3fRj93adsIGYvhO-TiVlgimVQ&usqp=CAU'),
                           ),
-                          const SizedBox(height: 1.5),
+                          SizedBox(width: size * .04),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                      children: [
+                                        const TextSpan(text: 'by '),
 
-                          /// review point with stars
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              RatingBar(
-                                ignoreGestures: true,
-                                glowColor: CColor.greenColor,
-                                unratedColor: Colors.grey,
-                                initialRating: double.parse(ebookApiController.reviewList[0].ratting!),
-                                direction: Axis.horizontal,
-                                allowHalfRating: true,
-                                itemCount: 5,
-                                itemSize: size*.035,
-                                ratingWidget: RatingWidget(
-                                  full: const Icon(Icons.star, color: CColor.greenColor,),
-                                  half:  const Icon(Icons.star_half, color: CColor.greenColor,),
-                                  empty:  const Icon(Icons.star_outline, color: CColor.greenColor,),
-                                ), onRatingUpdate: (double value) {  },
-                              ),
-                              SizedBox(
-                                width: size * .02,
-                              ),
+                                        /// reviewer name
+                                        TextSpan(
+                                            text: ebookApiController
+                                                .reviewList[0].userName!,
+                                            style: const TextStyle(
+                                                color: CColor.greenColor)),
+                                      ],
+                                      style:
+                                          const TextStyle(color: Colors.black)),
+                                ),
+                                const SizedBox(height: 1.5),
 
-                              /// review date
-                              Text(
-                                reviewDate,
-                                style: TextStyle(
-                                    color: Colors.grey.shade600,
-                                    fontSize: size * .03),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 1.5),
+                                /// review point with stars
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    RatingBar(
+                                      ignoreGestures: true,
+                                      glowColor: CColor.greenColor,
+                                      unratedColor: Colors.grey,
+                                      initialRating: double.parse(
+                                          ebookApiController
+                                              .reviewList[0].ratting!),
+                                      direction: Axis.horizontal,
+                                      allowHalfRating: true,
+                                      itemCount: 5,
+                                      itemSize: size * .035,
+                                      ratingWidget: RatingWidget(
+                                        full: const Icon(
+                                          Icons.star,
+                                          color: CColor.greenColor,
+                                        ),
+                                        half: const Icon(
+                                          Icons.star_half,
+                                          color: CColor.greenColor,
+                                        ),
+                                        empty: const Icon(
+                                          Icons.star_outline,
+                                          color: CColor.greenColor,
+                                        ),
+                                      ),
+                                      onRatingUpdate: (double value) {},
+                                    ),
+                                    SizedBox(
+                                      width: size * .02,
+                                    ),
 
-                          /// review text
-                          Padding(
-                            padding: EdgeInsets.only(right: size * .2),
-                            child: ExpandableText(
-                              ebookApiController.reviewList[0].reviewDetails!,
-                              expandText: 'আরও পড়ুন',
-                              collapseText: 'অল্প পড়ুন',
-                              maxLines: 2,
-                              linkColor: CColor.greenColor,
-                              style: Style.bodyTextStyle(
-                                  size * .035, Colors.black, FontWeight.normal),
+                                    /// review date
+                                    Text(
+                                      reviewDate,
+                                      style: TextStyle(
+                                          color: Colors.grey.shade600,
+                                          fontSize: size * .03),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 1.5),
+
+                                /// review text
+                                Padding(
+                                  padding: EdgeInsets.only(right: size * .2),
+                                  child: ExpandableText(
+                                    ebookApiController
+                                        .reviewList[0].reviewDetails!,
+                                    expandText: 'আরও পড়ুন',
+                                    collapseText: 'অল্প পড়ুন',
+                                    maxLines: 2,
+                                    linkColor: CColor.greenColor,
+                                    style: Style.bodyTextStyle(size * .035,
+                                        Colors.black, FontWeight.normal),
+                                  ),
+                                )
+                              ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
               SizedBox(height: size * .05),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: size * .04),
@@ -694,29 +725,25 @@ class _BookDetailState extends State<BookDetail> {
                 child: _publicationBooksLoading
                     ? const CupertinoActivityIndicator()
                     : ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    physics: const ClampingScrollPhysics(),
-                    itemCount:
-                    ebookApiController.publicationWiseBookList.length,
-                    itemBuilder: (context, index) =>
-                        Padding(
-                          padding: EdgeInsets.only(right: size * .06),
-                          child: BookPreview(
-                            bookImageWidth: size * .26,
-                            bookImageHeight: size * .4,
-                            bookImage:
-                            '${ebookApiController
-                                .domainName}/public//frontend/images/book_thumbnail/${ebookApiController
-                                .publicationWiseBookList[index]
-                                .bookThumbnail!}',
-                            bookName: ebookApiController
-                                .publicationWiseBookList[index].name!,
-                            writerName: ebookApiController
-                                .publicationWiseBookList[index].wname!,
-                            product: ebookApiController
-                                .publicationWiseBookList[index],
-                          ),
-                        )),
+                        scrollDirection: Axis.horizontal,
+                        physics: const ClampingScrollPhysics(),
+                        itemCount:
+                            ebookApiController.publicationWiseBookList.length,
+                        itemBuilder: (context, index) => Padding(
+                              padding: EdgeInsets.only(right: size * .06),
+                              child: BookPreview(
+                                bookImageWidth: size * .26,
+                                bookImageHeight: size * .4,
+                                bookImage:
+                                    '${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${ebookApiController.publicationWiseBookList[index].bookThumbnail!}',
+                                bookName: ebookApiController
+                                    .publicationWiseBookList[index].name!,
+                                writerName: ebookApiController
+                                    .publicationWiseBookList[index].wname!,
+                                product: ebookApiController
+                                    .publicationWiseBookList[index],
+                              ),
+                            )),
               )
             ],
           ),
@@ -781,8 +808,7 @@ class _BookDetailState extends State<BookDetail> {
       );
 
   /// book detail option
-  Widget _bookDetailOption(double size, String title, String value) =>
-      Padding(
+  Widget _bookDetailOption(double size, String title, String value) => Padding(
         padding: EdgeInsets.symmetric(vertical: size * .005),
         child: Row(
           children: [
@@ -794,10 +820,9 @@ class _BookDetailState extends State<BookDetail> {
             Expanded(
               child: InkWell(
                 onTap: () {
-                  Get.to(() =>
-                      CategoryWiseBookPage(
-                          categoryName: widget.product.categoryName!,
-                          categoryId: widget.product.categoryId!));
+                  Get.to(() => CategoryWiseBookPage(
+                      categoryName: widget.product.categoryName!,
+                      categoryId: widget.product.categoryId!));
                 },
                 child: Text(
                   value,
@@ -822,149 +847,145 @@ class _BookDetailState extends State<BookDetail> {
       builder: (BuildContext context) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              return AlertDialog(
-                scrollable: true,
-                backgroundColor: Colors.pink.shade50.withOpacity(0.95),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'রিভিউ লিখুন',
-                      style: Style.bodyTextStyle(
-                          size * .04, Colors.black, FontWeight.w500),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(
-                        Icons.clear,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
+          return AlertDialog(
+            scrollable: true,
+            backgroundColor: Colors.pink.shade50.withOpacity(0.95),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'রিভিউ লিখুন',
+                  style: Style.bodyTextStyle(
+                      size * .04, Colors.black, FontWeight.w500),
                 ),
-                content: Column(
-                  children: [
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0),
-                      ),
-                      margin: EdgeInsets.zero,
-                      child: Container(
-                        width: size * .26,
-                        height: size * .4,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.0),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4.0),
-                          child: CachedNetworkImage(
-                            fit: BoxFit.cover,
-                            imageUrl:
-                            '${ebookApiController
-                                .domainName}/public//frontend/images/book_thumbnail/${widget
-                                .product.bookThumbnail!}',
-                            placeholder: (context, url) =>
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.clear,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            content: Column(
+              children: [
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  margin: EdgeInsets.zero,
+                  child: Container(
+                    width: size * .26,
+                    height: size * .4,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4.0),
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl:
+                            '${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${widget.product.bookThumbnail!}',
+                        placeholder: (context, url) =>
                             const CupertinoActivityIndicator(),
-                            errorWidget: (context, url, error) =>
+                        errorWidget: (context, url, error) =>
                             const Icon(Icons.error),
-                          ),
-                        ),
                       ),
                     ),
-                    SizedBox(
-                      height: size * .04,
-                    ),
-                    Text(
-                      widget.product.name!,
-                      style: Style.bodyTextStyle(
-                          size * .06, Colors.black, FontWeight.w500),
-                    ),
-                    SizedBox(
-                      height: size * .04,
-                    ),
-                    RatingBar.builder(
-                      initialRating: 0,
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemSize: size * .1,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                      itemBuilder: (context, _) =>
-                      const Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      onRatingUpdate: (value) {
-                        setState(() {
-                          rating = value;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: size * .04,
-                    ),
-                    TextFormField(
-                      maxLines: null,
-                      controller: _commentController,
-                      keyboardType: TextInputType.multiline,
-                      cursorColor: Colors.black,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                        hintText: 'আপনার মন্তব্য লিখুন',
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: CColor.themeColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: size * .04,
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      child: GradientButton(
-                          child: Text(
-                            'সাবমিট',
-                            style: Style.buttonTextStyle(
-                                size * .04, Colors.white, FontWeight.w500),
-                          ),
-                          onPressed: () async {
-                            if (_commentController.text.isEmpty) {
-                              showToast('রিভিউতে আপনার মন্তব্য লিখুন।');
-                              return;
-                            }
-                            Map reviewMap = {
-                              'user_id': userController.userId,
-                              'ratting': rating.toString(),
-                              'book_id': widget.product.id,
-                              'review_details': _commentController.text
-                            };
-                            await ebookApiController.postReviewOnBook(
-                                reviewMap);
-                            print(reviewMap);
-                          },
-                          borderRadius: size * .01,
-                          height: size * .1,
-                          width: size * .3,
-                          gradientColors: const [
-                            CColor.themeColor,
-                            CColor.themeColorLite
-                          ]),
-                    ),
-                  ],
+                  ),
                 ),
-              );
-            });
+                SizedBox(
+                  height: size * .04,
+                ),
+                Text(
+                  widget.product.name!,
+                  style: Style.bodyTextStyle(
+                      size * .06, Colors.black, FontWeight.w500),
+                ),
+                SizedBox(
+                  height: size * .04,
+                ),
+                RatingBar.builder(
+                  initialRating: 0,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: size * .1,
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  itemBuilder: (context, _) => const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (value) {
+                    setState(() {
+                      rating = value;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: size * .04,
+                ),
+                TextFormField(
+                  maxLines: null,
+                  controller: _commentController,
+                  keyboardType: TextInputType.multiline,
+                  cursorColor: Colors.black,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    hintText: 'আপনার মন্তব্য লিখুন',
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: CColor.themeColor,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: size * .04,
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  child: GradientButton(
+                      child: Text(
+                        'সাবমিট',
+                        style: Style.buttonTextStyle(
+                            size * .04, Colors.white, FontWeight.w500),
+                      ),
+                      onPressed: () async {
+                        if (_commentController.text.isEmpty) {
+                          showToast('রিভিউতে আপনার মন্তব্য লিখুন।');
+                          return;
+                        }
+                        Map reviewMap = {
+                          'user_id': userController.userId,
+                          'ratting': rating.toString(),
+                          'book_id': widget.product.id,
+                          'review_details': _commentController.text
+                        };
+                        await ebookApiController.postReviewOnBook(reviewMap);
+                        print(reviewMap);
+                      },
+                      borderRadius: size * .01,
+                      height: size * .1,
+                      width: size * .3,
+                      gradientColors: const [
+                        CColor.themeColor,
+                        CColor.themeColorLite
+                      ]),
+                ),
+              ],
+            ),
+          );
+        });
       },
     );
   }
@@ -977,35 +998,129 @@ class _BookDetailState extends State<BookDetail> {
       builder: (BuildContext context) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              return AlertDialog(
-                scrollable: true,
-                backgroundColor: Colors.pink.shade50.withOpacity(0.95),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+          return AlertDialog(
+            scrollable: true,
+            backgroundColor: Colors.pink.shade50.withOpacity(0.95),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'কার্ট',
+                  style: Style.bodyTextStyle(
+                      size * .04, Colors.black, FontWeight.w500),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.clear,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                      'কার্ট',
-                      style: Style.bodyTextStyle(
-                          size * .04, Colors.black, FontWeight.w500),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(
-                        Icons.clear,
-                        color: Colors.black,
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      margin: EdgeInsets.zero,
+                      child: Container(
+                        width: size * .16,
+                        height: size * .22,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4.0),
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl:
+                                '${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${widget.product.bookThumbnail!}',
+                            placeholder: (context, url) =>
+                                const CupertinoActivityIndicator(),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                          ),
+                        ),
                       ),
                     ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: size * .04),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.product.name!,
+                              style: Style.bodyTextStyle(
+                                  size * .04, Colors.black, FontWeight.w500),
+                            ),
+                            SizedBox(
+                              height: size * .01,
+                            ),
+                            Text(
+                              'ইবুক',
+                              style: Style.bodyTextStyle(
+                                  size * .04, Colors.black, FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: size * .01,
+                            ),
+                            Text(
+                              '৳ ${enToBnNumberConvert(widget.product.sellingPriceEbook!)}/-',
+                              style: Style.bodyTextStyle(
+                                  size * .04, Colors.black, FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    OutlinedButton(
+                      onPressed: () async {
+                        setState(() => _addedToCart = true);
+                        await addToCart(
+                            userController,
+                            widget.product.sellingPriceEbook!,
+                            ebookApiController,
+                            "ebook",
+                            'false');
+                        setState(() => _addedToCart = false);
+                        showToast('ইবুকটি আপনার কার্টলিস্টে যুক্ত হয়েছে।');
+                      },
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            side: const BorderSide(
+                                color: CColor.themeColor,
+                                width: 1,
+                                style: BorderStyle.solid),
+                            borderRadius: BorderRadius.circular(size * .01))),
+                      ),
+                      child: Text(
+                        "কিনুন",
+                        style: Style.bodyTextStyle(
+                            size * .04, CColor.themeColor, FontWeight.w500),
+                      ),
+                    )
                   ],
                 ),
-                content: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                SizedBox(
+                  height: size * .03,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    Stack(
+                      alignment: Alignment.center,
                       children: [
                         Card(
                           shape: RoundedRectangleBorder(
@@ -1023,189 +1138,104 @@ class _BookDetailState extends State<BookDetail> {
                               child: CachedNetworkImage(
                                 fit: BoxFit.cover,
                                 imageUrl:
-                                '${ebookApiController
-                                    .domainName}/public//frontend/images/book_thumbnail/${widget
-                                    .product.bookThumbnail!}',
+                                    '${ebookApiController.domainName}/public//frontend/images/book_thumbnail/${widget.product.bookThumbnail!}',
                                 placeholder: (context, url) =>
-                                const CupertinoActivityIndicator(),
+                                    const CupertinoActivityIndicator(),
                                 errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+                                    const Icon(Icons.error),
                               ),
                             ),
                           ),
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding:  EdgeInsets.only(left: size*.04),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.product.name!,
-                                  style: Style.bodyTextStyle(
-                                      size * .04, Colors.black, FontWeight.w500),
-                                ),
-                                SizedBox(
-                                  height: size * .01,
-                                ),
-                                Text(
-                                  'ইবুক',
-                                  style: Style.bodyTextStyle(
-                                      size * .04, Colors.black, FontWeight.bold),
-                                ),
-                                SizedBox(
-                                  height: size * .01,
-                                ),
-                                Text(
-                                  '৳ ${enToBnNumberConvert(
-                                      widget.product.sellingPriceEbook!)}/-',
-                                  style: Style.bodyTextStyle(
-                                      size * .04, Colors.black, FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        OutlinedButton(
-                          onPressed: () async {
-                            setState(() => _addedToCart = true);
-                            await addToCart(userController,
-                                widget.product.sellingPriceEbook!,
-                                ebookApiController, "ebook", 'false');
-                            setState(() => _addedToCart = false);
-                            showToast(
-                                'ইবুকটি আপনার কার্টলিস্টে যুক্ত হয়েছে।');
-                          },
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                        color: CColor.themeColor,
-                                        width: 1,
-                                        style: BorderStyle.solid
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                        size * .01))),
-                          ),
-                          child: Text("কিনুন", style: Style.bodyTextStyle(
-                              size * .04, CColor.themeColor, FontWeight.w500),),
+                        Icon(
+                          Icons.play_circle_fill,
+                          color: Colors.red.withOpacity(0.8),
+                          size: size * .07,
                         )
                       ],
                     ),
-                    SizedBox(height: size * .03,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Stack(
-                          alignment: Alignment.center,
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: size * .04),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4.0),
-                              ),
-                              margin: EdgeInsets.zero,
-                              child: Container(
-                                width: size * .16,
-                                height: size * .22,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4.0),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(4.0),
-                                  child: CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                    imageUrl:
-                                    '${ebookApiController
-                                        .domainName}/public//frontend/images/book_thumbnail/${widget
-                                        .product.bookThumbnail!}',
-                                    placeholder: (context, url) =>
-                                    const CupertinoActivityIndicator(),
-                                    errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                                  ),
-                                ),
-                              ),
+                            Text(
+                              widget.product.name!,
+                              style: Style.bodyTextStyle(
+                                  size * .04, Colors.black, FontWeight.w500),
                             ),
-                            Icon(Icons.play_circle_fill, color: Colors.red.withOpacity(0.8), size: size * .07,)
+                            SizedBox(
+                              height: size * .01,
+                            ),
+                            Text(
+                              'ইবুক + অডিও',
+                              style: Style.bodyTextStyle(
+                                  size * .04, Colors.black, FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: size * .01,
+                            ),
+                            Text(
+                              '৳ ${enToBnNumberConvert(widget.product.sellingPriceEbook!)}/-',
+                              style: Style.bodyTextStyle(
+                                  size * .04, Colors.black, FontWeight.w500),
+                            ),
                           ],
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: size*.04),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.product.name!,
-                                  style: Style.bodyTextStyle(
-                                      size * .04, Colors.black, FontWeight.w500),
-                                ),
-                                SizedBox(
-                                  height: size * .01,
-                                ),
-                                Text(
-                                  'ইবুক + অডিও',
-                                  style: Style.bodyTextStyle(
-                                      size * .04, Colors.black, FontWeight.bold),
-                                ),
-                                SizedBox(
-                                  height: size * .01,
-                                ),
-                                Text(
-                                  '৳ ${enToBnNumberConvert(
-                                      widget.product.sellingPriceEbook!)}/-',
-                                  style: Style.bodyTextStyle(
-                                      size * .04, Colors.black, FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        OutlinedButton(
-                          onPressed: () async {
-                            setState(() => _addedToCart = true);
-                            await addToCart(userController,
-                                widget.product.sellingPriceEbook!,
-                                ebookApiController, "ebook", 'true');
-                            setState(() => _addedToCart = false);
-                            showToast('ইবুকটি আপনার কার্টলিস্টে যুক্ত হয়েছে।');
-                          },
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                        color: CColor.themeColor,
-                                        width: 1,
-                                        style: BorderStyle.solid
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                        size * .01))),
-                          ),
-                          child: Text("কিনুন", style: Style.bodyTextStyle(
-                              size * .04, CColor.themeColor, FontWeight.w500),),
-                        )
-                      ],
+                      ),
                     ),
+                    OutlinedButton(
+                      onPressed: () async {
+                        setState(() => _addedToCart = true);
+                        await addToCart(
+                            userController,
+                            widget.product.sellingPriceEbook!,
+                            ebookApiController,
+                            "ebook",
+                            'true');
+                        setState(() => _addedToCart = false);
+                        showToast('ইবুকটি আপনার কার্টলিস্টে যুক্ত হয়েছে।');
+                      },
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            side: const BorderSide(
+                                color: CColor.themeColor,
+                                width: 1,
+                                style: BorderStyle.solid),
+                            borderRadius: BorderRadius.circular(size * .01))),
+                      ),
+                      child: Text(
+                        "কিনুন",
+                        style: Style.bodyTextStyle(
+                            size * .04, CColor.themeColor, FontWeight.w500),
+                      ),
+                    )
                   ],
                 ),
-              );
-            });
+              ],
+            ),
+          );
+        });
       },
     );
   }
 
   /// add to cart
-  Future<void> addToCart(UserController userController, String subPrice,
-      EbookApiController ebookApiController, String bookType, String audioStatus) async {
+  Future<void> addToCart(
+      UserController userController,
+      String subPrice,
+      EbookApiController ebookApiController,
+      String bookType,
+      String audioStatus) async {
     Map cartMap = {
       "user_id": userController.userId,
       "book_id": widget.product.id!,
       "quantity": "1",
       'book_type': bookType,
       "sub_total_price": subPrice,
-      'audio_status' : audioStatus
+      'audio_status': audioStatus
     };
     // ignore: avoid_print
     print(cartMap);
@@ -1220,123 +1250,140 @@ class _BookDetailState extends State<BookDetail> {
       builder: (BuildContext context) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              return AlertDialog(
-                scrollable: true,
-                backgroundColor: Colors.grey.shade50.withOpacity(0.95),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'রিভিউ',
-                      style: Style.bodyTextStyle(
-                          size * .04, Colors.black, FontWeight.w500),
+          return AlertDialog(
+              scrollable: true,
+              backgroundColor: Colors.grey.shade50.withOpacity(0.95),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'রিভিউ',
+                    style: Style.bodyTextStyle(
+                        size * .04, Colors.black, FontWeight.w500),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Icon(
+                      Icons.clear,
+                      color: Colors.black,
                     ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(
-                        Icons.clear,
-                        color: Colors.black,
+                  ),
+                ],
+              ),
+              content: ListView.builder(
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                itemCount: ebookApiController.reviewList.length,
+                itemBuilder: (context, index) {
+                  var dFormat = DateFormat("yMMMd");
+                  String dReviewDate = dFormat
+                      .format(ebookApiController.reviewList[index].createdAt!);
+                  return Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          /// reviewer profile picture
+                          const CircleAvatar(
+                            backgroundColor: Colors.white,
+                            backgroundImage: NetworkImage(
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnELq88FqJJ3fRj93adsIGYvhO-TiVlgimVQ&usqp=CAU'),
+                          ),
+                          SizedBox(width: size * .04),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                      children: [
+                                        const TextSpan(text: 'by '),
+
+                                        /// reviewer name
+                                        TextSpan(
+                                            text: ebookApiController
+                                                .reviewList[index].userName!,
+                                            style: const TextStyle(
+                                                color: CColor.greenColor)),
+                                      ],
+                                      style:
+                                          const TextStyle(color: Colors.black)),
+                                ),
+                                const SizedBox(height: 1.5),
+
+                                /// review point with stars
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    RatingBar(
+                                      ignoreGestures: true,
+                                      glowColor: CColor.greenColor,
+                                      unratedColor: Colors.grey,
+                                      initialRating: double.parse(
+                                          ebookApiController
+                                              .reviewList[index].ratting!),
+                                      direction: Axis.horizontal,
+                                      allowHalfRating: true,
+                                      itemCount: 5,
+                                      itemSize: size * .035,
+                                      ratingWidget: RatingWidget(
+                                        full: const Icon(
+                                          Icons.star,
+                                          color: CColor.greenColor,
+                                        ),
+                                        half: const Icon(
+                                          Icons.star_half,
+                                          color: CColor.greenColor,
+                                        ),
+                                        empty: const Icon(
+                                          Icons.star_outline,
+                                          color: CColor.greenColor,
+                                        ),
+                                      ),
+                                      onRatingUpdate: (double value) {},
+                                    ),
+                                    SizedBox(
+                                      width: size * .02,
+                                    ),
+
+                                    /// review date
+                                    Text(
+                                      dReviewDate,
+                                      style: TextStyle(
+                                          color: Colors.grey.shade600,
+                                          fontSize: size * .03),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 1.5),
+
+                                /// review text
+                                ExpandableText(
+                                  ebookApiController
+                                      .reviewList[index].reviewDetails!,
+                                  expandText: 'আরও পড়ুন',
+                                  collapseText: 'পূর্বের অবস্থা',
+                                  maxLines: 2,
+                                  linkColor: CColor.greenColor,
+                                  style: Style.bodyTextStyle(size * .035,
+                                      Colors.black, FontWeight.normal),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                content: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: ebookApiController.reviewList.length,
-                  itemBuilder: (context, index){
-                    var dFormat =  DateFormat("yMMMd");
-                    String dReviewDate = dFormat.format(ebookApiController.reviewList[index].createdAt!);
-                    return Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-
-                            /// reviewer profile picture
-                            const CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage: NetworkImage(
-                                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnELq88FqJJ3fRj93adsIGYvhO-TiVlgimVQ&usqp=CAU'),
-                            ),
-                            SizedBox(width: size * .04),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(children: [
-                                      const TextSpan(text: 'by '),
-
-                                      /// reviewer name
-                                      TextSpan(
-                                          text: ebookApiController.reviewList[index]
-                                              .userName!,
-                                          style: const TextStyle(
-                                              color: CColor.greenColor)),
-                                    ], style: const TextStyle(color: Colors.black)),
-                                  ),
-                                  const SizedBox(height: 1.5),
-
-                                  /// review point with stars
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      RatingBar(
-                                        ignoreGestures: true,
-                                        glowColor: CColor.greenColor,
-                                        unratedColor: Colors.grey,
-                                        initialRating: double.parse(ebookApiController.reviewList[index].ratting!),
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: true,
-                                        itemCount: 5,
-                                        itemSize: size*.035,
-                                        ratingWidget: RatingWidget(
-                                          full: const Icon(Icons.star, color: CColor.greenColor,),
-                                          half:  const Icon(Icons.star_half, color: CColor.greenColor,),
-                                          empty:  const Icon(Icons.star_outline, color: CColor.greenColor,),
-                                        ), onRatingUpdate: (double value) {  },
-                                      ),
-                                      SizedBox(
-                                        width: size * .02,
-                                      ),
-
-                                      /// review date
-                                      Text(
-                                        dReviewDate,
-                                        style: TextStyle(
-                                            color: Colors.grey.shade600,
-                                            fontSize: size * .03),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 1.5),
-
-                                  /// review text
-                                  ExpandableText(
-                                    ebookApiController.reviewList[index].reviewDetails!,
-                                    expandText: 'আরও পড়ুন',
-                                    collapseText: 'পূর্বের অবস্থা',
-                                    maxLines: 2,
-                                    linkColor: CColor.greenColor,
-                                    style: Style.bodyTextStyle(
-                                        size * .035, Colors.black, FontWeight.normal),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: size*.03,)
-                      ],
-                    );
-                  },
-                )
-              );
-            });
+                      SizedBox(
+                        height: size * .03,
+                      )
+                    ],
+                  );
+                },
+              ));
+        });
       },
     );
   }

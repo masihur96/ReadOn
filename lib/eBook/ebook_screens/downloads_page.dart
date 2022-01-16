@@ -10,7 +10,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/controller/sqlite_database_helper.dart';
 import 'package:read_on/eBook/ebook_model_classes/sqlite_database_models/my_book_info_model.dart';
-import 'package:read_on/eBook/ebook_widgets/custom_appbar.dart';
+import '../../widgets/custom_appbar.dart';
 
 class DownloadsPage extends StatefulWidget {
   const DownloadsPage({Key? key}) : super(key: key);

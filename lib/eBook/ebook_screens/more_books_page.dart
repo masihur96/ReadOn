@@ -5,7 +5,7 @@ import 'package:read_on/controller/ebook_api_controller.dart';
 import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/eBook/ebook_model_classes/product.dart';
 import 'package:read_on/eBook/ebook_widgets/book_front_preview.dart';
-import 'package:read_on/eBook/ebook_widgets/custom_appbar.dart';
+import '../../widgets/custom_appbar.dart';
 import 'package:read_on/eBook/ebook_widgets/custom_drawer.dart';
 import 'package:read_on/widgets/custom_loading.dart';
 
