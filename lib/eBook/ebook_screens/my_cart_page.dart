@@ -6,7 +6,7 @@ import 'package:read_on/eBook/ebook_widgets/ebook_cart_tab.dart';
 import 'package:read_on/eBook/ebook_widgets/hard_copy_cart_tab.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
-import '../ebook_widgets/custom_appbar.dart';
+import '../../widgets/custom_appbar.dart';
 
 class MyCartPage extends StatefulWidget {
   const MyCartPage({Key? key}) : super(key: key);

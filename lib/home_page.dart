@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:read_on/controller/sqlite_database_helper.dart';
 import 'package:read_on/controller/user_controller.dart';
+import 'package:read_on/quiz/screens/academic/academic_home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'eBook/ebook_screens/audio_book_detail.dart';
 import 'eBook/ebook_screens/audio_player_page.dart';
@@ -127,7 +128,9 @@ class _HomePageState extends State<HomePage> {
                         publicController.size.value * .05,
                         Colors.white,
                         FontWeight.w500)),
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => const QuizHomePage());
+                },
                 bgColor: CColor.themeColor),
           ],
         ),

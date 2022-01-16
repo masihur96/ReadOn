@@ -17,7 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:read_on/controller/ebook_api_controller.dart';
 import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/controller/user_controller.dart';
-import 'package:read_on/eBook/ebook_widgets/custom_appbar.dart';
+import '../../widgets/custom_appbar.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/language_convert.dart';
 import 'package:read_on/public_variables/style_variable.dart';

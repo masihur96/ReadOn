@@ -6,7 +6,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/ebook_api_controller.dart';
 import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/eBook/ebook_widgets/book_front_preview.dart';
-import 'package:read_on/eBook/ebook_widgets/custom_appbar.dart';
+import '../../widgets/custom_appbar.dart';
 import 'package:read_on/eBook/ebook_widgets/package_page.dart';
 import 'package:read_on/eBook/ebook_widgets/subscription_plan_page.dart';
 import 'package:read_on/public_variables/color_variable.dart';

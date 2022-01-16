@@ -7,7 +7,7 @@ import 'package:read_on/controller/ebook_api_controller.dart';
 import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/eBook/ebook_model_classes/writter_model.dart';
 import 'package:read_on/eBook/ebook_widgets/book_front_preview.dart';
-import 'package:read_on/eBook/ebook_widgets/custom_appbar.dart';
+import '../../widgets/custom_appbar.dart';
 import 'package:read_on/eBook/ebook_widgets/custom_drawer.dart';
 import 'my_cart_page.dart';
 import 'package:read_on/public_variables/color_variable.dart';

@@ -5,7 +5,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/controller/user_controller.dart';
 import 'package:read_on/eBook/ebook_screens/edit_profile.dart';
-import 'package:read_on/eBook/ebook_widgets/custom_appbar.dart';
+import '../../widgets/custom_appbar.dart';
 import 'package:read_on/model/user_model.dart';
 import 'package:read_on/public_variables/style_variable.dart';
 import 'package:shimmer/shimmer.dart';
