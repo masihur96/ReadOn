@@ -285,8 +285,7 @@ class _AmarBoiState extends State<AmarBoi> {
               InkWell(
                 onTap: () {
                   customPointedPopup!.dismiss();
-                  Get.to(
-                      StoryPreview(bookId: myBookList[index].bookdata![0].id!));
+                  Get.to(() => StoryPreview(bookId: "89"));
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
@@ -316,11 +315,9 @@ class _AmarBoiState extends State<AmarBoi> {
               ),
               InkWell(
                 onTap: () async {
-                  // ignore: avoid_print
                   print("deleting clicked!");
                   setState(() => _loading = true);
-                  await databaseHelper.deleteDownloadedBooks(
-                      myBookList[index].bookdata![0].id!, index);
+                  await databaseHelper.deleteDownloadedBooks("89", index);
                   setState(() => _loading = false);
                   customPointedPopup!.dismiss();
                 },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:read_on/controller/sqlite_database_helper.dart';
+import 'package:read_on/controller/sqlite_reading_helper.dart';
 import 'package:read_on/controller/user_controller.dart';
 import 'package:read_on/quiz/screens/academic/academic_home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,7 +23,8 @@ class _HomePageState extends State<HomePage> {
   int _count = 0;
   String deviceId = '';
 
-  void _customInit(UserController userController, PublicController publicController) async {
+  void _customInit(
+      UserController userController, PublicController publicController) async {
     _count++;
     SharedPreferences pref = await SharedPreferences.getInstance();
     await publicController.getMacAddress().then((value) {
@@ -36,19 +38,19 @@ class _HomePageState extends State<HomePage> {
     String? readOnUserEmail = pref.getString('readOnUserEmail');
     String? readOnUserPhone = pref.getString('readOnUserPhone');
     Map loginData = {};
-    if(readOnUserId != null){
-      if(readOnUserEmail != null){
+    if (readOnUserId != null) {
+      if (readOnUserEmail != null) {
         loginData = {
-          'email' : readOnUserEmail,
-          'password' : readOnUserPassword,
-          'device1' : deviceId
+          'email': readOnUserEmail,
+          'password': readOnUserPassword,
+          'device1': deviceId
         };
         print('valid email: $loginData');
-      }else{
+      } else {
         loginData = {
-          'phone' : readOnUserPhone,
-          'password' : readOnUserPassword,
-          'device1' : deviceId
+          'phone': readOnUserPhone,
+          'password': readOnUserPassword,
+          'device1': deviceId
         };
         print('valid phone: $loginData');
       }
@@ -62,7 +64,9 @@ class _HomePageState extends State<HomePage> {
     final PublicController publicController = Get.find();
     final UserController userController = Get.find();
     final DatabaseHelper databaseHelper = Get.put(DatabaseHelper());
-    if(_count == 0) _customInit(userController, publicController);
+    final ReadingDatabaseHelper databaseHelper2 =
+        Get.put(ReadingDatabaseHelper());
+    if (_count == 0) _customInit(userController, publicController);
     return Scaffold(
         backgroundColor: Colors.white, body: _bodyUI(publicController));
   }

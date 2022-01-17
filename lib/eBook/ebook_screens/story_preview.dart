@@ -6,7 +6,7 @@ import 'package:read_on/eBook/ebook_model_classes/sqlite_database_models/downloa
 class StoryPreview extends StatefulWidget {
   String bookId;
 
-  StoryPreview({required this.bookId});
+  StoryPreview({Key? key, required this.bookId}) : super(key: key);
 
   @override
   _StoryPreviewState createState() => _StoryPreviewState();
@@ -22,32 +22,33 @@ class _StoryPreviewState extends State<StoryPreview> {
     setState(() {
       lessonsList = databaseHelper.lessonsList;
     });
+    print("lesson list = ${lessonsList.length}");
   }
 
   @override
   Widget build(BuildContext context) {
     final DatabaseHelper databaseHelper = Get.find();
-    if(count == 0) _customInit(databaseHelper);
+    if (count == 0) _customInit(databaseHelper);
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView.builder(
-        shrinkWrap: true,
-        physics: ClampingScrollPhysics(),
-        itemCount: lessonsList.length,
+          shrinkWrap: true,
+          physics: ClampingScrollPhysics(),
+          itemCount: lessonsList.length,
           itemBuilder: (context, index) {
-        return Column(
-          children: [
-            Text(lessonsList[index].chapterName),
-            SizedBox(
-              height: 10,
-            ),
-            Text(lessonsList[index].story),
-            SizedBox(
-              height: 10,
-            ),
-          ],
-        );
-      }),
+            return Column(
+              children: [
+                Text(lessonsList[index].chapterName),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(lessonsList[index].story),
+                SizedBox(
+                  height: 10,
+                ),
+              ],
+            );
+          }),
     );
   }
 }

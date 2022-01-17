@@ -19,23 +19,16 @@ class SectionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // if(count == 0){
-    //   customInit(context);
-    // }
+    if (count == 0) {
+      customInit(context);
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView.builder(
         itemBuilder: (context, index) {
           final title = getSectionTitle(index, book);
           final fileName = book.sections[index].fileName;
-
-          return ListTile(
-            title: Text(title!),
-            onTap: () {
-              BlocProvider.of<SectionBloc>(context).add(
-                  SectionTapped(book: book, sectionIndex: index, title: ''));
-            },
-          );
+          return Container();
         },
         itemCount: book.sections.length,
       ),
