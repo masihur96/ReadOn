@@ -4,6 +4,7 @@ import 'package:read_on/controller/public_controller.dart';
 import 'package:read_on/eBook/ebook_widgets/custom_drawer.dart';
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/quiz/screens/academic/academic_subject_page.dart';
+import 'package:read_on/quiz/screens/bcs/bcs_home.dart';
 
 class QuizHomeNav extends StatefulWidget {
   const QuizHomeNav({Key? key}) : super(key: key);
@@ -124,6 +125,10 @@ class _QuizHomeNavState extends State<QuizHomeNav> {
     onTap: (){
       if(title == "একাডেমিক"){
         Get.to(() => AcademicSubjectPage());
+      }
+      if(title=='বিসিএস'){
+        Get.to(() => BCSHomePage());
+
       }
     },
     child: Column(

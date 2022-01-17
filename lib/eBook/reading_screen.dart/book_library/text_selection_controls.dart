@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:read_on/controller/reading_api_controller.dart';
+import 'package:read_on/eBook/reading_screen.dart/book_library/screens/reader/book_reader_screen.dart';
 
 import '../mina_reader.dart';
 import 'model/highlight_type.dart';
@@ -16,14 +18,14 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
   TextSelection currentTextSelection;
 
   double iconSize = 100.0;
+  // ReadingApiController readingApiController = ReadingApiController();
 
   static final List<Color> colors = [
-    Color(0xCCDF7270),
-    Color(0xCCDCD56D),
-    Color(0xCCC59462),
-    Color(0xCC5DB963),
-    Color(0xCC757CEA),
-
+    const Color(0xCCDF7270),
+    const Color(0xCCDCD56D),
+    const Color(0xCCC59462),
+    const Color(0xCC5DB963),
+    const Color(0xCC757CEA),
   ];
 
   static var defaultColorButtons = [
@@ -32,13 +34,14 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
     HighlightMenuButton(colorIntValue: colors[2].value, label: ""),
     HighlightMenuButton(colorIntValue: colors[3].value, label: ""),
     HighlightMenuButton(colorIntValue: colors[4].value, label: ""),
-
-
   ];
-  MyMaterialTextSelectionControls(
-      {required this.onTapped, required this.currentTextSelection});
+  MyMaterialTextSelectionControls({
+    required this.onTapped,
+    required this.currentTextSelection,
+  });
 
   /// Builder for material-style copy/paste text selection toolbar.
+
   @override
   Widget buildToolbar(
     BuildContext context,
@@ -51,9 +54,9 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
     Offset? lastSecondaryTapDownPosition,
   ) {
     print("menu");
-    print(endpoints);
+    print('endpoints');
 
-    if (endpoints.length == 1) return SizedBox.shrink();
+    if (endpoints.length == 1) return const SizedBox.shrink();
 
     final TextSelectionPoint startTextSelectionPoint = endpoints[0];
     final TextSelectionPoint endTextSelectionPoint =
@@ -71,8 +74,8 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
           kToolbarContentDistanceBelow,
     );
 
-    print("building againnn");
-    return buildTextSelectionToolbar(anchorAbove,anchorBelow);
+    print("building again");
+    return buildTextSelectionToolbar(anchorAbove, anchorBelow, 'note');
 
     // return MyTextSelectionToolbar(
     //   anchorAbove: anchorAbove,
@@ -101,7 +104,7 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
     // );
   }
 
-  buildMenuItems() {
+  buildMenuItems(String note) {
     return highlightButtons.map((c) {
       if (c.type == highlight_type.color) {
         return Padding(
@@ -109,6 +112,7 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
           child: InkWell(
             onTap: () {
               this.onTapped(c);
+
               // Get.back();
             },
             child: Container(
@@ -125,25 +129,42 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
       } else {
         if (c.type == highlight_type.bold) {
           return InkWell(
-              onTap: () {
-                this.onTapped(c);
-              },
-              child: Icon(
-                Icons.format_bold,
-                size: iconSize,
-              ),);
+            onTap: () {
+              this.onTapped(c);
+            },
+            child: Icon(
+              Icons.format_bold,
+              size: iconSize,
+            ),
+          );
         }
         if (c.type == highlight_type.italic) {
-          return InkWell(
-              onTap: () {
-               onTapped(c);
+          return Row(
+            children: [
+              InkWell(
+                  onTap: () {
+                    onTapped(c);
+                    ReadingApiController readingApiController =
+                        ReadingApiController();
+                    readingApiController.updateSaveValue('save');
+                  },
+                  child: Icon(
+                    Icons.save,
+                    size: iconSize * .7,
+                  )),
+              InkWell(
+                  onTap: () {
+                    onTapped(c);
+                    ReadingApiController readingApiController =
+                        ReadingApiController();
 
-               print(c);
-              },
-              child: Icon(
-                Icons.format_italic,
-                size: iconSize,
-              )
+                    readingApiController.updateSaveValue('note');
+                  },
+                  child: Icon(
+                    Icons.note_add_outlined,
+                    size: iconSize * .7,
+                  )),
+            ],
           );
         } else {
           return InkWell(
@@ -166,7 +187,8 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
     HighlightMenuButton(type: highlight_type.italic),
   ];
 
-  Widget buildTextSelectionToolbar(Offset anchorAbove, Offset anchorBelow) {
+  Widget buildTextSelectionToolbar(
+      Offset anchorAbove, Offset anchorBelow, String note) {
     return TextSelectionToolbar(
         anchorAbove: anchorAbove,
         anchorBelow: anchorBelow,
@@ -181,10 +203,7 @@ class MyMaterialTextSelectionControls extends MaterialTextSelectionControls {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      ...buildMenuItems(),
-
-
-
+                      ...buildMenuItems(note),
                     ],
                   ),
                   // Row(
