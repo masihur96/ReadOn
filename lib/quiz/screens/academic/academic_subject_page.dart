@@ -104,86 +104,91 @@ class _AcademicSubjectPageState extends State<AcademicSubjectPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  alignment: Alignment.center,
-                  height: size * .1,
-                  width: size * .3,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(size * .02),
-                    gradient: const LinearGradient(colors: [CColor.themeColor, CColor.themeColorLite]),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 2,
-                        offset: const Offset(0, 1), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      onChanged: (value) {},
-                      hint: const Text(
-                        'জেএসসি',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                    alignment: Alignment.center,
+                    height: size * .1,
+                    width: size * .3,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(size * .02),
+                      gradient: const LinearGradient(
+                          colors: [CColor.themeColor, CColor.themeColorLite]),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 2,
+                          offset:
+                              const Offset(0, 1), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        onChanged: (value) {},
+                        hint: const Text(
+                          'জেএসসি',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        items: _divisionList
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Container(
+                                    color: Colors.grey.shade300,
+                                    margin: EdgeInsets.only(bottom: size * .01),
+                                    width: double.infinity,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(
+                                            size * .02,
+                                          ),
+                                          child: Text(
+                                            item,
+                                            style: TextStyle(
+                                              fontSize: size * .04,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                        const Divider(
+                                          thickness: 2,
+                                          color: CColor.themeColor,
+                                          height: 1,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        iconSize: 24,
+                        iconEnabledColor: Colors.white,
+                        iconDisabledColor: Colors.white,
+                        buttonPadding:
+                            const EdgeInsets.only(left: 12, right: 12),
+                        buttonElevation: 2,
+                        dropdownMaxHeight: 400,
+                        dropdownPadding: EdgeInsets.zero,
+                        dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
                           color: Colors.white,
                         ),
-                        overflow: TextOverflow.ellipsis,
+                        dropdownElevation: 8,
+                        scrollbarRadius: const Radius.circular(40),
+                        scrollbarThickness: 6,
+                        scrollbarAlwaysShow: true,
+                        offset: const Offset(0, -8),
+                        itemPadding: EdgeInsets.zero,
                       ),
-                      items: _divisionList
-                          .map((item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Container(
-                          color: Colors.grey.shade300,
-                          margin: EdgeInsets.only(bottom: size*.01),
-                          width: double.infinity,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding:EdgeInsets.all(size*.02,),
-                                child: Text(
-                                  item,
-                                  style: TextStyle(
-                                    fontSize: size * .04,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              const Divider(
-                                thickness: 2,
-                                color: CColor.themeColor,
-                                height: 1,
-                              )
-                            ],
-                          ),
-                        ),
-                      ))
-                          .toList(),
-                      iconSize: 24,
-                      iconEnabledColor: Colors.white,
-                      iconDisabledColor: Colors.white,
-                      buttonPadding: const EdgeInsets.only(left: 12, right: 12),
-                      buttonElevation: 2,
-                      dropdownMaxHeight: 400,
-                      dropdownPadding: EdgeInsets.zero,
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2),
-                        color: Colors.white,
-                      ),
-                      dropdownElevation: 8,
-                      scrollbarRadius: const Radius.circular(40),
-                      scrollbarThickness: 6,
-                      scrollbarAlwaysShow: true,
-                      offset: const Offset(0, -8),
-                      itemPadding: EdgeInsets.zero,
-                    ),
-                  )
-                ),
+                    )),
                 Container(
                     alignment: Alignment.center,
                     height: size * .1,
@@ -220,14 +225,17 @@ class _AcademicSubjectPageState extends State<AcademicSubjectPage> {
                                   value: item,
                                   child: Container(
                                     color: Colors.grey.shade300,
-                                    margin: EdgeInsets.only(bottom: size*.01),
+                                    margin: EdgeInsets.only(bottom: size * .01),
                                     width: double.infinity,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Padding(
-                                          padding:EdgeInsets.all(size*.02,),
+                                          padding: EdgeInsets.all(
+                                            size * .02,
+                                          ),
                                           child: Text(
                                             item,
                                             style: TextStyle(
@@ -250,7 +258,8 @@ class _AcademicSubjectPageState extends State<AcademicSubjectPage> {
                         iconSize: 24,
                         iconEnabledColor: Colors.white,
                         iconDisabledColor: Colors.white,
-                        buttonPadding: const EdgeInsets.only(left: 12, right: 12),
+                        buttonPadding:
+                            const EdgeInsets.only(left: 12, right: 12),
                         buttonElevation: 2,
                         dropdownMaxHeight: 400,
                         dropdownPadding: EdgeInsets.zero,
@@ -267,88 +276,90 @@ class _AcademicSubjectPageState extends State<AcademicSubjectPage> {
                       ),
                     )),
                 Container(
-                  alignment: Alignment.center,
-                  height: size * .1,
-                  width: size * .3,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(size * .02),
-                    gradient: const LinearGradient(
-                        colors: [CColor.themeColor, CColor.themeColorLite]),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 2,
-                        offset:
-                            const Offset(0, 1), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      onChanged: (value) {},
-                      hint: const Text(
-                        'এইচএসসি',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                    alignment: Alignment.center,
+                    height: size * .1,
+                    width: size * .3,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(size * .02),
+                      gradient: const LinearGradient(
+                          colors: [CColor.themeColor, CColor.themeColorLite]),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 2,
+                          offset:
+                              const Offset(0, 1), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        onChanged: (value) {},
+                        hint: const Text(
+                          'এইচএসসি',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        items: _divisionList
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Container(
+                                    color: Colors.grey.shade300,
+                                    margin: EdgeInsets.only(bottom: size * .01),
+                                    width: double.infinity,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(
+                                            size * .02,
+                                          ),
+                                          child: Text(
+                                            item,
+                                            style: TextStyle(
+                                              fontSize: size * .04,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                        const Divider(
+                                          thickness: 2,
+                                          color: CColor.themeColor,
+                                          height: 1,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        iconSize: 24,
+                        iconEnabledColor: Colors.white,
+                        iconDisabledColor: Colors.white,
+                        buttonPadding: const EdgeInsets.only(left: 10, right: 10),
+                        buttonElevation: 2,
+                        dropdownMaxHeight: 400,
+                        dropdownPadding: EdgeInsets.zero,
+                        dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
                           color: Colors.white,
                         ),
-                        overflow: TextOverflow.ellipsis,
+                        dropdownElevation: 8,
+                        scrollbarRadius: const Radius.circular(40),
+                        scrollbarThickness: 6,
+                        scrollbarAlwaysShow: true,
+                        offset: const Offset(0, -8),
+                        itemPadding: EdgeInsets.zero,
                       ),
-                      items: _divisionList
-                          .map((item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Container(
-                          color: Colors.grey.shade300,
-                          margin: EdgeInsets.only(bottom: size*.01),
-                          width: double.infinity,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding:EdgeInsets.all(size*.02,),
-                                child: Text(
-                                  item,
-                                  style: TextStyle(
-                                    fontSize: size * .04,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              const Divider(
-                                thickness: 2,
-                                color: CColor.themeColor,
-                                height: 1,
-                              )
-                            ],
-                          ),
-                        ),
-                      ))
-                          .toList(),
-                      iconSize: 24,
-                      iconEnabledColor: Colors.white,
-                      iconDisabledColor: Colors.white,
-                      buttonPadding: const EdgeInsets.only(left: 10, right: 10),
-                      buttonElevation: 2,
-                      dropdownMaxHeight: 400,
-                      dropdownPadding: EdgeInsets.zero,
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2),
-                        color: Colors.white,
-                      ),
-                      dropdownElevation: 8,
-                      scrollbarRadius: const Radius.circular(40),
-                      scrollbarThickness: 6,
-                      scrollbarAlwaysShow: true,
-                      offset: const Offset(0, -8),
-                      itemPadding: EdgeInsets.zero,
-                    ),
-                  )
-                ),
+                    )),
               ],
             ),
             SizedBox(
@@ -381,26 +392,22 @@ class _AcademicSubjectPageState extends State<AcademicSubjectPage> {
       );
 
   /// subject option
-  Widget _customSubjectOption(
-          double size, String title, PublicController publicController) =>
+  Widget _customSubjectOption(double size, String title, PublicController publicController) =>
       InkWell(
         onTap: () {
           showQuizSubjectClickDialog(context, publicController, "ok");
         },
         child: Container(
           alignment: Alignment.center,
-          padding: EdgeInsets.symmetric(
-              horizontal: size * .04, vertical: size * .02),
+          padding: EdgeInsets.symmetric(horizontal: size * .04, vertical: size * .02),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(size * .03),
-            border: Border.all(color: Colors.grey, width: 2),
-          ),
+            border: Border.all(color: Colors.grey, width: 2)),
           child: Text(
             title,
             textAlign: TextAlign.center,
             maxLines: 2,
-            style:
-                Style.bodyTextStyle(size * .04, Colors.black, FontWeight.w500),
+            style: Style.bodyTextStyle(size * .04, Colors.black, FontWeight.w500),
           ),
         ),
       );

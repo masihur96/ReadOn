@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:read_on/controller/public_controller.dart';
 
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
+import 'package:read_on/quiz/quiz_widgets/answer_submit_dialog.dart';
+import 'package:read_on/quiz/quiz_widgets/exam_alert_dialog.dart';
+import 'package:read_on/quiz/quiz_widgets/question_rating_dialog.dart';
+import 'package:read_on/quiz/screens/bcs/exam_finishing_page.dart';
+import 'package:read_on/quiz/screens/bcs/result_page.dart';
+import 'package:read_on/quiz/screens/olympiad/olympiad_home_page.dart';
 import 'package:read_on/widgets/custom_appbar.dart';
 
 class LiveTestPage extends StatefulWidget {
@@ -16,6 +24,7 @@ class _LiveTestPageState extends State<LiveTestPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    final PublicController publicController = Get.find();
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -104,9 +113,9 @@ class _LiveTestPageState extends State<LiveTestPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  imageButton(size, 'assets/result_icon.png', 'ফলাফল'),
-                  imageButton(size, 'assets/archive_icon.png', 'আর্কাইভ'),
-                  imageButton(size, 'assets/routine_icon.png', 'রুটিন'),
+                  imageButton(size, 'assets/result_icon.png', 'ফলাফল', publicController),
+                  imageButton(size, 'assets/archive_icon.png', 'আর্কাইভ', publicController),
+                  imageButton(size, 'assets/routine_icon.png', 'রুটিন', publicController),
                 ],
               ),
             ),
@@ -123,10 +132,10 @@ class _LiveTestPageState extends State<LiveTestPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  imageButton(size, 'assets/syllabus_icon.png', 'সিলেবাস'),
+                  imageButton(size, 'assets/syllabus_icon.png', 'সিলেবাস',publicController ),
                   imageButton(
-                      size, 'assets/merit_list_icon.png', 'মেধা তালিকা'),
-                  imageButton(size, 'assets/statistic_icon.png', 'পরিসংখ্যান'),
+                      size, 'assets/merit_list_icon.png', 'মেধা তালিকা',publicController),
+                  imageButton(size, 'assets/statistic_icon.png', 'পরিসংখ্যান', publicController),
                 ],
               ),
             ),
@@ -136,25 +145,47 @@ class _LiveTestPageState extends State<LiveTestPage> {
     );
   }
 
-  Widget imageButton(Size size, String imgPath, String title) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset(
-          imgPath,
-          height: size.width * .1,
-          width: size.width * .1,
-        ),
-        SizedBox(
-          height: size.width * .01,
-        ),
-        Text(
-          title,
-          style: Style.bodyTextStyle(
-              size.width * .04, Colors.black, FontWeight.bold),
-        )
-      ],
+  Widget imageButton(Size size, String imgPath, String title, PublicController publicController) {
+    return GestureDetector(
+      onTap: (){
+        if(title == 'ফলাফল'){
+          showQuestionRatingDialog(context, publicController);
+        }
+        if(title == 'আর্কাইভ'){
+          showAnswerSubmitDialog(context, publicController);
+        }
+        if(title == 'রুটিন'){
+          showExamAlertDialog(context, publicController);
+        }
+        if(title == 'সিলেবাস'){
+          Get.to(() => const ExamFinishingPage());
+        }
+        if(title == 'মেধা তালিকা'){
+          Get.to(() => const OlympiadHomePage());
+        }
+        if(title == 'পরিসংখ্যান'){
+          Get.to(() =>  ResultPage());
+        }
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            imgPath,
+            height: size.width * .1,
+            width: size.width * .1,
+          ),
+          SizedBox(
+            height: size.width * .01,
+          ),
+          Text(
+            title,
+            style: Style.bodyTextStyle(
+                size.width * .04, Colors.black, FontWeight.bold),
+          )
+        ],
+      ),
     );
   }
 
