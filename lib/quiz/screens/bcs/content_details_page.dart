@@ -1,8 +1,10 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:read_on/controller/public_controller.dart';
 
 import 'package:read_on/public_variables/color_variable.dart';
 import 'package:read_on/public_variables/style_variable.dart';
@@ -34,7 +36,8 @@ class _ContentDetailsState extends State<ContentDetails> {
   String? dropDownVal;
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final PublicController publicController = Get.find();
+    double size = publicController.size.value;
     return SafeArea(
         child: Scaffold(
             backgroundColor: Colors.white,
@@ -59,15 +62,15 @@ class _ContentDetailsState extends State<ContentDetails> {
                 ),
               ),
               SizedBox(
-                height: size.width * .1,
+                height: size * .1,
               ),
               Visibility(
                 visible: widget.contentTitle != 'বাংলা ভাষা ও সাহিত্য',
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * .1),
+                  padding: EdgeInsets.symmetric(horizontal: size * .1),
                   child: Container(
-                    height: size.width * .1,
-                    width: size.width * .7,
+                    height: size * .1,
+                    width: size * .7,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       color: Colors.red,
@@ -80,7 +83,7 @@ class _ContentDetailsState extends State<ContentDetails> {
                         hint: Text(
                           'Select Unit',
                           style: TextStyle(
-                            fontSize: size.width * .05,
+                            fontSize: size * .05,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -91,8 +94,7 @@ class _ContentDetailsState extends State<ContentDetails> {
                                   value: item,
                                   child: Container(
                                     color: Colors.grey.shade300,
-                                    margin: EdgeInsets.only(
-                                        bottom: size.width * .01),
+                                    margin: EdgeInsets.only(bottom: size * .01),
                                     width: double.infinity,
                                     child: Column(
                                       crossAxisAlignment:
@@ -102,13 +104,13 @@ class _ContentDetailsState extends State<ContentDetails> {
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.all(
-                                            size.width * .00,
+                                            size * .00,
                                           ),
                                           child: Center(
                                             child: Text(
                                               item,
                                               style: TextStyle(
-                                                fontSize: size.width * .04,
+                                                fontSize: size * .04,
                                                 fontWeight: FontWeight.w500,
                                                 color: Colors.black,
                                               ),
@@ -156,17 +158,17 @@ class _ContentDetailsState extends State<ContentDetails> {
             ])));
   }
 
-  Widget whiteButton(Size size, String title) {
+  Widget whiteButton(double size, String title) {
     return Column(
       children: [
         SizedBox(
-          height: size.width * .04,
+          height: size * .04,
         ),
         InkWell(
           onTap: () {},
           child: Container(
-            height: size.width * .1,
-            width: size.width * .8,
+            height: size * .1,
+            width: size * .8,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 color: Colors.white,
@@ -175,7 +177,7 @@ class _ContentDetailsState extends State<ContentDetails> {
                 child: Text(
               title,
               style: Style.buttonTextStyle(
-                  size.width * .06, Colors.black, FontWeight.normal),
+                  size * .06, Colors.black, FontWeight.normal),
             )),
           ),
         ),
@@ -183,15 +185,15 @@ class _ContentDetailsState extends State<ContentDetails> {
     );
   }
 
-  Widget buttonWidget(Size size, String buttonTitle) {
+  Widget buttonWidget(double size, String buttonTitle) {
     return Column(
       children: [
         SizedBox(
-          height: size.width * .1,
+          height: size * .1,
         ),
         Container(
-          height: size.width * .1,
-          width: size.width * .4,
+          height: size * .1,
+          width: size * .4,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               border: Border.all(color: Colors.grey, width: 2)),
@@ -199,7 +201,7 @@ class _ContentDetailsState extends State<ContentDetails> {
               child: Text(
             buttonTitle,
             style: Style.buttonTextStyle(
-                size.width * .06, Colors.black, FontWeight.normal),
+                size * .06, Colors.black, FontWeight.normal),
           )),
         ),
       ],
@@ -207,14 +209,14 @@ class _ContentDetailsState extends State<ContentDetails> {
   }
 
   /// app bar
-  CustomAppBar _pageAppBar(Size size) => CustomAppBar(
+  CustomAppBar _pageAppBar(double size) => CustomAppBar(
         title: widget.contentTitle,
         iconData: LineAwesomeIcons.arrow_left,
         action: [
           Icon(
             Icons.menu_outlined,
             color: Colors.white,
-            size: size.width * .08,
+            size: size * .08,
           ),
         ],
         scaffoldKey: _scaffoldKey,

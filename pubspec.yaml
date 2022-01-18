@@ -35,6 +35,7 @@ dependencies:
   image_cropper: ^1.4.1
   uuid: ^3.0.5
   flutter_sslcommerz: ^2.1.0-nullsafety.0
+  quds_popup_menu:
 
 
 

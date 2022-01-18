@@ -9,6 +9,7 @@ import 'package:read_on/quiz/quiz_widgets/answer_submit_dialog.dart';
 import 'package:read_on/quiz/quiz_widgets/exam_alert_dialog.dart';
 import 'package:read_on/quiz/quiz_widgets/question_rating_dialog.dart';
 import 'package:read_on/quiz/screens/bcs/exam_finishing_page.dart';
+import 'package:read_on/quiz/screens/bcs/exam_screen.dart';
 import 'package:read_on/quiz/screens/bcs/result_page.dart';
 import 'package:read_on/quiz/screens/olympiad/olympiad_home_page.dart';
 import 'package:read_on/widgets/custom_appbar.dart';
@@ -69,7 +70,10 @@ class _LiveTestPageState extends State<LiveTestPage> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => ExamScreen()));
+                  },
                   child: Container(
                     height: size.width * .12,
                     decoration: BoxDecoration(
@@ -113,9 +117,12 @@ class _LiveTestPageState extends State<LiveTestPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  imageButton(size, 'assets/result_icon.png', 'ফলাফল', publicController),
-                  imageButton(size, 'assets/archive_icon.png', 'আর্কাইভ', publicController),
-                  imageButton(size, 'assets/routine_icon.png', 'রুটিন', publicController),
+                  imageButton(size, 'assets/result_icon.png', 'ফলাফল',
+                      publicController),
+                  imageButton(size, 'assets/archive_icon.png', 'আর্কাইভ',
+                      publicController),
+                  imageButton(size, 'assets/routine_icon.png', 'রুটিন',
+                      publicController),
                 ],
               ),
             ),
@@ -132,10 +139,12 @@ class _LiveTestPageState extends State<LiveTestPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  imageButton(size, 'assets/syllabus_icon.png', 'সিলেবাস',publicController ),
-                  imageButton(
-                      size, 'assets/merit_list_icon.png', 'মেধা তালিকা',publicController),
-                  imageButton(size, 'assets/statistic_icon.png', 'পরিসংখ্যান', publicController),
+                  imageButton(size, 'assets/syllabus_icon.png', 'সিলেবাস',
+                      publicController),
+                  imageButton(size, 'assets/merit_list_icon.png', 'মেধা তালিকা',
+                      publicController),
+                  imageButton(size, 'assets/statistic_icon.png', 'পরিসংখ্যান',
+                      publicController),
                 ],
               ),
             ),
@@ -145,26 +154,27 @@ class _LiveTestPageState extends State<LiveTestPage> {
     );
   }
 
-  Widget imageButton(Size size, String imgPath, String title, PublicController publicController) {
+  Widget imageButton(Size size, String imgPath, String title,
+      PublicController publicController) {
     return GestureDetector(
-      onTap: (){
-        if(title == 'ফলাফল'){
+      onTap: () {
+        if (title == 'ফলাফল') {
           showQuestionRatingDialog(context, publicController);
         }
-        if(title == 'আর্কাইভ'){
+        if (title == 'আর্কাইভ') {
           showAnswerSubmitDialog(context, publicController);
         }
-        if(title == 'রুটিন'){
+        if (title == 'রুটিন') {
           showExamAlertDialog(context, publicController);
         }
-        if(title == 'সিলেবাস'){
+        if (title == 'সিলেবাস') {
           Get.to(() => const ExamFinishingPage());
         }
-        if(title == 'মেধা তালিকা'){
+        if (title == 'মেধা তালিকা') {
           Get.to(() => const OlympiadHomePage());
         }
-        if(title == 'পরিসংখ্যান'){
-          Get.to(() =>  ResultPage());
+        if (title == 'পরিসংখ্যান') {
+          Get.to(() => ResultPage());
         }
       },
       child: Column(
