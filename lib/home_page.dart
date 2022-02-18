@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:read_on/controller/sqlite_database_helper.dart';
 import 'package:read_on/controller/sqlite_reading_helper.dart';
 import 'package:read_on/controller/user_controller.dart';
+import 'package:read_on/feature/feature_home_page.dart';
 import 'package:read_on/quiz/screens/academic/academic_home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'eBook/ebook_screens/audio_book_detail.dart';
@@ -64,8 +65,8 @@ class _HomePageState extends State<HomePage> {
     final PublicController publicController = Get.find();
     final UserController userController = Get.find();
     final DatabaseHelper databaseHelper = Get.put(DatabaseHelper());
-    final ReadingDatabaseHelper databaseHelper2 =
-        Get.put(ReadingDatabaseHelper());
+    // final ReadingDatabaseHelper databaseHelper2 =
+    //     Get.put(ReadingDatabaseHelper());
     if (_count == 0) _customInit(userController, publicController);
     return Scaffold(
         backgroundColor: Colors.white, body: _bodyUI(publicController));
@@ -117,7 +118,9 @@ class _HomePageState extends State<HomePage> {
                         publicController.size.value * .05,
                         Colors.white,
                         FontWeight.w500)),
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => const FeatureMyHomePage());
+                },
                 bgColor: CColor.themeColor),
             SizedBox(height: publicController.size.value * .04),
 

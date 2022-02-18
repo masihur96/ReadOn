@@ -47,6 +47,14 @@ dependencies:
   hive: ^2.0.4
   hive_flutter: ^1.0.0
 
+    #For Audio Feature
+  just_audio: ^0.9.18
+  flutter_riverpod: ^0.13.1+1
+  timeago: ^3.0.2
+  miniplayer:
+  just_audio_background:
+  audio_service:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

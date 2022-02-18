@@ -26,7 +26,7 @@ class _LiveTestPageState extends State<LiveTestPage> {
   @override
   Widget build(BuildContext context) {
     final PublicController publicController = Get.find();
-    Size size = MediaQuery.of(context).size;
+    double size = publicController.size.value;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -37,18 +37,18 @@ class _LiveTestPageState extends State<LiveTestPage> {
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: size.width * .1,
+              height: size * .1,
             ),
             Text(
               'পরবর্তী পরীক্ষা \n শুক্রবার , ১০ নভেম্বর ২০২১',
               textAlign: TextAlign.center,
               style: Style.bodyTextStyle(
-                  size.width * .07, Colors.black, FontWeight.bold),
+                  size * .07, Colors.black, FontWeight.bold),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: size.width * .1),
+              padding: EdgeInsets.symmetric(horizontal: size * .1),
               child: Divider(
-                height: size.width * .05,
+                height: size * .05,
                 color: Colors.black,
               ),
             ),
@@ -56,16 +56,16 @@ class _LiveTestPageState extends State<LiveTestPage> {
               '২৪ ঘণ্টার মধ্যে আপনি যে কোন সময় পরীক্ষাটি দিতে পারবেন। রুটিন,সিলেবাস ও আগের পরীক্ষার প্রশ্ন নিচে দেখুন',
               textAlign: TextAlign.center,
               style: Style.bodyTextStyle(
-                  size.width * .07, Colors.black, FontWeight.normal),
+                  size * .07, Colors.black, FontWeight.normal),
             ),
             SizedBox(
-              height: size.width * .07,
+              height: size * .07,
             ),
             Row(
               children: [
                 Expanded(
                   child: Container(
-                    height: size.width * .01,
+                    height: size * .01,
                     color: CColor.themeColor,
                   ),
                 ),
@@ -75,20 +75,19 @@ class _LiveTestPageState extends State<LiveTestPage> {
                         MaterialPageRoute(builder: (_) => ExamScreen()));
                   },
                   child: Container(
-                    height: size.width * .12,
+                    height: size * .12,
                     decoration: BoxDecoration(
                       color: CColor.themeColor,
                       borderRadius:
-                          BorderRadius.all(Radius.circular(size.width * .4)),
+                          BorderRadius.all(Radius.circular(size * .4)),
                     ),
                     child: Center(
                       child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: size.width * .1),
+                        padding: EdgeInsets.symmetric(horizontal: size * .1),
                         child: Text(
                           'পরীক্ষা দিন',
                           style: Style.bodyTextStyle(
-                              size.width * .07, Colors.white, FontWeight.bold),
+                              size * .07, Colors.white, FontWeight.bold),
                         ),
                       ),
                     ),
@@ -96,18 +95,18 @@ class _LiveTestPageState extends State<LiveTestPage> {
                 ),
                 Expanded(
                   child: Container(
-                    height: size.width * .01,
+                    height: size * .01,
                     color: CColor.themeColor,
                   ),
                 ),
               ],
             ),
             SizedBox(
-              height: size.width * .2,
+              height: size * .2,
             ),
             Container(
-              height: size.width * .3,
-              width: size.width,
+              height: size * .3,
+              width: size,
               decoration: const BoxDecoration(
                   gradient: LinearGradient(colors: [
                 CColor.cardColor2,
@@ -127,11 +126,11 @@ class _LiveTestPageState extends State<LiveTestPage> {
               ),
             ),
             SizedBox(
-              height: size.width * .1,
+              height: size * .1,
             ),
             Container(
-              height: size.width * .3,
-              width: size.width,
+              height: size * .3,
+              width: size,
               decoration: const BoxDecoration(
                   gradient: LinearGradient(
                       colors: [CColor.cardColor, CColor.cardColor2])),
@@ -154,7 +153,7 @@ class _LiveTestPageState extends State<LiveTestPage> {
     );
   }
 
-  Widget imageButton(Size size, String imgPath, String title,
+  Widget imageButton(double size, String imgPath, String title,
       PublicController publicController) {
     return GestureDetector(
       onTap: () {
@@ -183,16 +182,16 @@ class _LiveTestPageState extends State<LiveTestPage> {
         children: [
           Image.asset(
             imgPath,
-            height: size.width * .1,
-            width: size.width * .1,
+            height: size * .1,
+            width: size * .1,
           ),
           SizedBox(
-            height: size.width * .01,
+            height: size * .01,
           ),
           Text(
             title,
-            style: Style.bodyTextStyle(
-                size.width * .04, Colors.black, FontWeight.bold),
+            style:
+                Style.bodyTextStyle(size * .04, Colors.black, FontWeight.bold),
           )
         ],
       ),
@@ -200,14 +199,14 @@ class _LiveTestPageState extends State<LiveTestPage> {
   }
 
   /// app bar
-  CustomAppBar _pageAppBar(Size size) => CustomAppBar(
+  CustomAppBar _pageAppBar(double size) => CustomAppBar(
         title: 'লাইভ টেস্ট',
         iconData: LineAwesomeIcons.arrow_left,
         action: [
           Icon(
             Icons.menu_outlined,
             color: Colors.white,
-            size: size.width * .08,
+            size: size * .08,
           ),
         ],
         scaffoldKey: _scaffoldKey,

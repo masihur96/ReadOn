@@ -51,7 +51,7 @@ class ReadingApiController extends GetxController {
                 ElevatedButton(
                   child: const Text('CANCEL'),
                   onPressed: () {
-                    //  Navigator.pop(context);
+                    Navigator.pop(context);
                   },
                 ),
                 ElevatedButton(

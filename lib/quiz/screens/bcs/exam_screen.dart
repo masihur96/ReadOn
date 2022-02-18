@@ -140,7 +140,7 @@ class _ExamScreenState extends State<ExamScreen> {
             Row(
               children: [
                 Text(
-                  '$index',
+                  '${index + 1}',
                   style: Style.bodyTextStyle(
                       size * .04, Colors.black, FontWeight.normal),
                 ),
@@ -160,10 +160,11 @@ class _ExamScreenState extends State<ExamScreen> {
                   getCustomPointedPopup(context, size, 1)!.show(
                     widgetKey: widgetKey,
                   );
-
-                  print('POPUP');
                 },
-                child: Icon(Icons.more_vert_outlined))
+                child: Icon(
+                  Icons.more_vert_outlined,
+                  size: size * .05,
+                ))
           ],
         ),
         Row(

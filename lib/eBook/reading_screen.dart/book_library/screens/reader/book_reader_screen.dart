@@ -10,10 +10,8 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:read_on/controller/reading_api_controller.dart';
-import 'package:read_on/controller/sqlite_database_helper.dart';
 import 'package:read_on/controller/sqlite_reading_helper.dart';
 import 'package:read_on/eBook/ebook_model_classes/sqlite_database_models/book_marks_model.dart';
-import 'package:read_on/eBook/ebook_screens/book_detail.dart';
 import 'package:read_on/eBook/reading_screen.dart/book_library/components/loading.dart';
 import 'package:read_on/eBook/reading_screen.dart/book_library/components/scroll_speed_widget.dart';
 import 'package:read_on/eBook/reading_screen.dart/book_library/model/book.dart';
@@ -21,7 +19,6 @@ import 'package:read_on/eBook/reading_screen.dart/book_library/model/highlight.d
 import 'package:read_on/eBook/reading_screen.dart/book_library/model/menu_button.dart';
 import 'package:read_on/eBook/reading_screen.dart/book_library/screens/reader/bloc/reader_bloc.dart';
 import 'package:read_on/eBook/reading_screen.dart/book_library/text_selection_controls.dart';
-import 'package:read_on/public_variables/toast.dart';
 import 'highlight/highlight_helper.dart';
 
 // TODO: lugat icin suanki yontemde dosyalar cok yer kapliyor. ayni kelimeden birden cok kayit olusuyor.
@@ -122,6 +119,16 @@ class _BookReaderScreenState extends State<BookReaderScreen>
   }
 
   String note = '';
+
+  //alignment checked variable
+  bool leftAlignCheckValue = false;
+  bool centerCheckedValue = false;
+  bool rightAlignCheckValue = false;
+
+  //Line spacing checked variable
+  bool smallSpaceCheckValue = false;
+  bool mediumSpaceCheckedValue = false;
+  bool largeSpaceCheckValue = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -145,9 +152,9 @@ class _BookReaderScreenState extends State<BookReaderScreen>
               if (readingApiController.isScreenFit == true) {
                 readingApiController.updateScreenFitMode(false);
               } else {
-                Get.back();
-                Get.back();
-                Get.back();
+                // Get.back();
+                // Get.back();
+                // Get.back();
                 readingApiController.ContentList.clear();
               }
 
@@ -159,8 +166,24 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                   // ignore: unrelated_type_equality_checks
                   visible: readingApiController.isScreenFit == false,
                   child: BottomNavigationBar(
-                    backgroundColor: Colors.grey,
+                    backgroundColor: const Color(0xffF2F2F2),
                     items: <BottomNavigationBarItem>[
+                      BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              setState(() {
+                                readingApiController.updateScreenFitMode(true);
+                                // isScreenFit = true;
+                              });
+                            },
+                            child: Image.asset(
+                              'assets/zoom_icon.png',
+                              height: size.width * .07,
+                              width: size.width * .07,
+                            )),
+                        title: const Text(''),
+                        backgroundColor: const Color(0xffF2F2F2),
+                      ),
                       BottomNavigationBarItem(
                         icon: InkWell(
                             onTap: () {
@@ -180,8 +203,9 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                                 horizontal: 8.0),
                                             child: Row(
                                               children: [
-                                                const Icon(
-                                                  Icons.font_download_outlined,
+                                                Icon(
+                                                  Icons.font_download,
+                                                  size: size.width * .04,
                                                   color: Colors.red,
                                                 ),
                                                 Expanded(
@@ -193,9 +217,11 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                                           readingApiController
                                                               .redingFontSize
                                                               .value,
+                                                      activeColor: Colors.red,
+                                                      inactiveColor:
+                                                          Colors.grey,
                                                       max: 50.0,
                                                       min: 10.0,
-                                                      divisions: 5,
                                                       label:
                                                           '${readingApiController.redingFontSize.value.round()}',
                                                       onChanged:
@@ -211,8 +237,9 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                                     );
                                                   }),
                                                 ),
-                                                const Icon(
-                                                  Icons.font_download_outlined,
+                                                Icon(
+                                                  Icons.font_download,
+                                                  size: size.width * .06,
                                                   color: Colors.red,
                                                 ),
                                               ],
@@ -234,8 +261,10 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                                     return Slider(
                                                       value: _opecityVal,
                                                       max: 1.0,
-                                                      divisions: 5,
                                                       min: 0.2,
+                                                      activeColor: Colors.red,
+                                                      inactiveColor:
+                                                          Colors.grey,
                                                       // label: '${_opecityVal.round()}',
                                                       onChanged:
                                                           (double newValue) {
@@ -251,9 +280,10 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                                     );
                                                   }),
                                                 ),
-                                                const Icon(
-                                                  Icons.font_download_outlined,
-                                                  color: Colors.red,
+                                                Image.asset(
+                                                  'assets/heigh_opecity_icon.png',
+                                                  height: size.width * .08,
+                                                  width: size.width * .08,
                                                 ),
                                               ],
                                             ),
@@ -606,39 +636,26 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                 },
                               );
                             },
-                            child: const Icon(
-                              Icons.text_fields_outlined,
-                              color: Colors.black,
+                            child: Image.asset(
+                              'assets/font_icon_reding_page.png',
+                              height: size.width * .07,
+                              width: size.width * .07,
                             )),
                         title: const Text(''),
-                        backgroundColor: Colors.grey,
-                      ),
-                      BottomNavigationBarItem(
-                        icon: InkWell(
-                            onTap: () {
-                              setState(() {
-                                readingApiController.updateScreenFitMode(true);
-                                // isScreenFit = true;
-                              });
-                            },
-                            child: const Icon(
-                              Icons.fit_screen,
-                              color: Colors.black,
-                            )),
-                        title: const Text(''),
-                        backgroundColor: Colors.grey,
+                        backgroundColor: const Color(0xffF2F2F2),
                       ),
                       BottomNavigationBarItem(
                         icon: InkWell(
                             onTap: () {
                               _settingModalBottomSheet(context, databaseHelper);
                             },
-                            child: const Icon(
-                              Icons.save_outlined,
-                              color: Colors.black,
+                            child: Image.asset(
+                              'assets/save_icon_reading_page.png',
+                              height: size.width * .07,
+                              width: size.width * .07,
                             )),
                         title: const Text(''),
-                        backgroundColor: Colors.grey,
+                        backgroundColor: const Color(0xffF2F2F2),
                       ),
                       BottomNavigationBarItem(
                         icon: InkWell(
@@ -674,48 +691,35 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                                                     1);
                                                             //  readingApiController.updateColorMode(Colors.black);
                                                             bgColor =
-                                                                Colors.black87;
+                                                                const Color(
+                                                                    0xffB0B0B0);
                                                             fontColor =
-                                                                Colors.white70;
+                                                                Colors.black;
                                                           });
                                                           print(bgColor);
                                                         },
-                                                        child: Column(
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .symmetric(
-                                                                      vertical:
-                                                                          8.0),
-                                                              child: Container(
-                                                                height: 80,
-                                                                width: 80,
-                                                                decoration: BoxDecoration(
-                                                                    shape: BoxShape
-                                                                        .circle,
-                                                                    color: Colors
-                                                                        .black87,
-                                                                    border: Border.all(
-                                                                        color: readingApiController.bgCircleColor ==
-                                                                                1
-                                                                            ? Colors.red
-                                                                            : Colors.grey)),
-                                                              ),
-                                                            ),
-                                                            Center(
-                                                                child: Text(
-                                                              "ডিফল্ট",
-                                                              style: TextStyle(
-                                                                  color: readingApiController
-                                                                              .bgCircleColor ==
-                                                                          1
-                                                                      ? Colors
-                                                                          .red
-                                                                      : Colors
-                                                                          .black),
-                                                            ))
-                                                          ],
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical:
+                                                                      8.0),
+                                                          child: Container(
+                                                            height: 80,
+                                                            width: 80,
+                                                            decoration: BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color: Color(
+                                                                    0xffB0B0B0),
+                                                                border: Border.all(
+                                                                    color: readingApiController.bgCircleColor ==
+                                                                            1
+                                                                        ? Colors
+                                                                            .red
+                                                                        : Colors
+                                                                            .grey)),
+                                                          ),
                                                         ),
                                                       ),
                                                       Padding(
@@ -731,47 +735,35 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                                                   .updateColorMode(
                                                                       2);
                                                               bgColor =
-                                                                  Colors.white;
+                                                                  const Color(
+                                                                      0xff1E1E1E);
                                                               fontColor =
-                                                                  Colors.black;
+                                                                  Colors.white;
                                                             });
                                                             print(readingApiController
                                                                 .bgCircleColor);
                                                           },
-                                                          child: Column(
-                                                            children: [
-                                                              Padding(
-                                                                padding: const EdgeInsets
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
                                                                         .symmetric(
                                                                     vertical:
                                                                         8.0),
-                                                                child:
-                                                                    Container(
-                                                                  height: 80,
-                                                                  width: 80,
-                                                                  decoration: BoxDecoration(
-                                                                      shape: BoxShape
-                                                                          .circle,
-                                                                      color: Colors
-                                                                          .white,
-                                                                      border: Border.all(
-                                                                          color: readingApiController.bgCircleColor == 2
-                                                                              ? Colors.red
-                                                                              : Colors.grey)),
-                                                                ),
-                                                              ),
-                                                              Center(
-                                                                  child: Text(
-                                                                "উজ্জ্বল",
-                                                                style: TextStyle(
-                                                                    color: readingApiController.bgCircleColor ==
-                                                                            2
-                                                                        ? Colors
-                                                                            .red
-                                                                        : Colors
-                                                                            .black),
-                                                              ))
-                                                            ],
+                                                            child: Container(
+                                                              height: 80,
+                                                              width: 80,
+                                                              decoration: BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: const Color(
+                                                                      0xff1E1E1E),
+                                                                  border: Border.all(
+                                                                      color: readingApiController.bgCircleColor == 2
+                                                                          ? Colors
+                                                                              .red
+                                                                          : Colors
+                                                                              .grey)),
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -782,48 +774,35 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                                                 .updateColorMode(
                                                                     3);
                                                             bgColor =
-                                                                Colors.white70;
+                                                                const Color(
+                                                                    0xff6F6D5E);
                                                             fontColor =
-                                                                Colors.black87;
+                                                                Colors.white;
                                                           });
                                                           print(bgColor);
                                                         },
-                                                        child: Column(
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .symmetric(
-                                                                      vertical:
-                                                                          8.0),
-                                                              child: Container(
-                                                                height: 80,
-                                                                width: 80,
-                                                                decoration: BoxDecoration(
-                                                                    shape: BoxShape
-                                                                        .circle,
-                                                                    color: Colors
-                                                                        .white70,
-                                                                    border: Border.all(
-                                                                        color: readingApiController.bgCircleColor ==
-                                                                                3
-                                                                            ? Colors.red
-                                                                            : Colors.grey)),
-                                                              ),
-                                                            ),
-                                                            Center(
-                                                                child: Text(
-                                                              "পেপার",
-                                                              style: TextStyle(
-                                                                  color: readingApiController
-                                                                              .bgCircleColor ==
-                                                                          3
-                                                                      ? Colors
-                                                                          .red
-                                                                      : Colors
-                                                                          .black),
-                                                            ))
-                                                          ],
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical:
+                                                                      8.0),
+                                                          child: Container(
+                                                            height: 80,
+                                                            width: 80,
+                                                            decoration: BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color: const Color(
+                                                                    0xff6F6D5E),
+                                                                border: Border.all(
+                                                                    color: readingApiController.bgCircleColor ==
+                                                                            3
+                                                                        ? Colors
+                                                                            .red
+                                                                        : Colors
+                                                                            .grey)),
+                                                          ),
                                                         ),
                                                       ),
                                                       Padding(
@@ -840,47 +819,79 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                                                       4);
                                                               bgColor =
                                                                   const Color(
-                                                                      0xFF20222F);
+                                                                      0xff262C39);
                                                               fontColor = Colors
                                                                   .white54;
                                                             });
 
                                                             print(bgColor);
                                                           },
-                                                          child: Column(
-                                                            children: [
-                                                              Padding(
-                                                                padding: const EdgeInsets
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
                                                                         .symmetric(
                                                                     vertical:
                                                                         8.0),
-                                                                child:
-                                                                    Container(
-                                                                  height: 80,
-                                                                  width: 80,
-                                                                  decoration: BoxDecoration(
-                                                                      shape: BoxShape
-                                                                          .circle,
-                                                                      color: const Color(
-                                                                          0xFF20222F),
-                                                                      border: Border.all(
-                                                                          color: readingApiController.bgCircleColor == 4
-                                                                              ? Colors.red
-                                                                              : Colors.grey)),
-                                                                ),
-                                                              ),
-                                                              Center(
-                                                                  child: Text(
-                                                                "গাড় নীল",
-                                                                style: TextStyle(
-                                                                    color: readingApiController.bgCircleColor ==
-                                                                            4
-                                                                        ? Colors
-                                                                            .red
-                                                                        : Colors
-                                                                            .black),
-                                                              ))
-                                                            ],
+                                                            child: Container(
+                                                              height: 80,
+                                                              width: 80,
+                                                              decoration: BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: const Color(
+                                                                      0xff262C39),
+                                                                  border: Border.all(
+                                                                      color: readingApiController.bgCircleColor == 4
+                                                                          ? Colors
+                                                                              .red
+                                                                          : Colors
+                                                                              .grey)),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal:
+                                                                    8.0),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              readingApiController
+                                                                  .updateColorMode(
+                                                                      4);
+                                                              bgColor =
+                                                                  const Color(
+                                                                      0xff8D8D8D);
+                                                              fontColor =
+                                                                  Colors.black;
+                                                            });
+
+                                                            print(bgColor);
+                                                          },
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        8.0),
+                                                            child: Container(
+                                                              height: 80,
+                                                              width: 80,
+                                                              decoration: BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: Color(
+                                                                      0xff8D8D8D),
+                                                                  border: Border.all(
+                                                                      color: readingApiController.bgCircleColor == 4
+                                                                          ? Colors
+                                                                              .red
+                                                                          : Colors
+                                                                              .grey)),
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -897,12 +908,13 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                 },
                               );
                             },
-                            child: const Icon(
-                              Icons.settings_outlined,
-                              color: Colors.black,
+                            child: Image.asset(
+                              'assets/play_file_icon.png',
+                              height: size.width * .07,
+                              width: size.width * .07,
                             )),
                         title: const Text(''),
-                        backgroundColor: Colors.grey,
+                        backgroundColor: const Color(0xffF2F2F2),
                       ),
                     ],
                     type: BottomNavigationBarType.shifting,
@@ -921,22 +933,31 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                           : 0.0),
                   child: AppBar(
                     primary: true,
-                    backgroundColor: Colors.red,
+                    backgroundColor: Color(0xffF4D3D5),
                     automaticallyImplyLeading: false,
                     leading: Row(
                       children: [
+                        // InkWell(
+                        //     onTap: () async {
+                        //       await _readerBloc.toggleAutoScroll();
+                        //     },
+                        //     child: _readerBloc.isScrolling
+                        //         ? Image.asset(
+                        //             'assets/auto_scroll_play_icon.png')
+                        //         : Image.asset('assets/pause_icon.png')),
                         IconButton(
                           onPressed: () async {
                             await _readerBloc.toggleAutoScroll();
                             setState(() {});
                           },
                           icon: Icon(
-                            _readerBloc.isScrolling
-                                ? FontAwesomeIcons.pause
-                                : FontAwesomeIcons.play,
-                            size: size.width * .05, color: Colors.white,
-                            // color: Colors.white,
-                          ),
+                              _readerBloc.isScrolling
+                                  ? FontAwesomeIcons.pause
+                                  : FontAwesomeIcons.play,
+                              size: size.width * .05,
+                              color: Color(0xffB1002C)
+                              // color: Colors.white,
+                              ),
                         ),
                         IconButton(
                           onPressed: () {
@@ -948,7 +969,7 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                           icon: RotatedBox(
                             quarterTurns: 1,
                             child: Icon(Icons.settings_ethernet,
-                                size: size.width * .05, color: Colors.white
+                                size: size.width * .05, color: Color(0xffB1002C)
                                 // color: Colors.white,
                                 ),
                           ),
@@ -972,8 +993,8 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                 }
                               });
                             },
-                            icon: Icon(Icons.menu_sharp,
-                                size: size.width * .06, color: Colors.white)),
+                            icon: Image.asset(
+                                'assets/reading_appbar_right_drower_icon.png')),
                       ),
                       // IconButton(
                       //   onPressed: () async {
@@ -999,25 +1020,26 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                           },
                           icon: const Icon(
                             Icons.highlight_remove,
+                            color: Color(0xffB1002C),
                           ),
                         ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '${readingApiController.bookName}',
+                            'বই শিরোনাম',
                             style: TextStyle(
-                              fontSize: size.width * .04,
-                              color: Colors.white,
+                              fontSize: size.width * .045,
+                              color: Color(0xffB1002C),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Text(
-                              'অধ্যায় ঃ ১',
+                              '০১ অধ্যায়',
                               style: TextStyle(
-                                fontSize: size.width * .03,
-                                color: Colors.black,
+                                fontSize: size.width * .035,
+                                color: Color(0xffB1002C),
                               ),
                             ),
                           ),
@@ -1027,49 +1049,49 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                         padding:
                             EdgeInsets.symmetric(horizontal: size.width * .05),
                         child: Container(
-                          color: Colors.black54,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '0',
-                                style: TextStyle(
-                                    fontSize: size.width * .03,
-                                    color: Colors.grey),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Text(
-                                  '১',
+                          color: Color(0xffB1002C),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * .01),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '00',
                                   style: TextStyle(
-                                      fontSize: size.width * .035,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                      fontSize: size.width * .03,
+                                      color: Colors.grey),
                                 ),
-                              ),
-                              Text(
-                                '২',
-                                style: TextStyle(
-                                    fontSize: size.width * .03,
-                                    color: Colors.grey),
-                              ),
-                            ],
+                                Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Text(
+                                    '0১',
+                                    style: TextStyle(
+                                        fontSize: size.width * .035,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Text(
+                                  '0২',
+                                  style: TextStyle(
+                                      fontSize: size.width * .03,
+                                      color: Colors.grey),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                       IconButton(
-                        onPressed: () {
-                          _displayTextInputDialog(
-                              context, readingApiController, databaseHelper);
+                          onPressed: () {
+                            _displayTextInputDialog(
+                                context, readingApiController, databaseHelper);
 
-                          print(note);
-                        },
-                        icon: Icon(
-                          Icons.bookmark_border_outlined,
-                          size: size.width * .06,
-                          color: Colors.white,
-                        ),
-                      ),
+                            print(note);
+                          },
+                          icon:
+                              Image.asset('assets/reading_book_mark_icon.png')),
                       IconButton(
                           onPressed: () {
                             setState(() {
@@ -1083,11 +1105,8 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                               }
                             });
                           },
-                          icon: Icon(
-                            Icons.more_vert_outlined,
-                            size: size.width * .06,
-                            color: Colors.white,
-                          )),
+                          icon:
+                              Image.asset('assets/reading_three_dot_icon.png')),
                     ],
                   ),
                 ),
@@ -1206,13 +1225,17 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                   ),
                   endDrawer: Drawer(
                     child: Container(
-                      color: Colors.white,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(size.width * .1),
+                              bottomLeft: Radius.circular(size.width * .1))),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: ListView(
                           children: [
                             const Text(
-                              'Line Alignment',
+                              'টেক্সট এলাইনমেন্ট',
                               style: TextStyle(fontSize: 20),
                             ),
                             Padding(
@@ -1222,44 +1245,81 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        alignment = 'leftAlign';
-                                      });
-                                    },
-                                    icon: const Icon(
-                                      Icons.format_align_left,
-                                      size: 25.0,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Theme(
+                                        data: Theme.of(context).copyWith(
+                                          unselectedWidgetColor: Colors.red,
+                                        ),
+                                        child: Checkbox(
+                                            value: leftAlignCheckValue,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                leftAlignCheckValue = newValue!;
+                                                rightAlignCheckValue = false;
+                                                centerCheckedValue = false;
+                                                alignment = 'leftAlign';
+                                              });
+                                            }),
+                                      ),
+                                      Icon(
+                                        Icons.format_align_left,
+                                        size: 25.0,
+                                      ),
+                                    ],
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        alignment = 'center';
-                                      });
-                                    },
-                                    icon: const Icon(
-                                      Icons.format_align_center,
-                                      size: 25.0,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Theme(
+                                        data: Theme.of(context).copyWith(
+                                          unselectedWidgetColor: Colors.red,
+                                        ),
+                                        child: Checkbox(
+                                            value: centerCheckedValue,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                leftAlignCheckValue = false;
+                                                rightAlignCheckValue = false;
+                                                centerCheckedValue = newValue!;
+                                                alignment = 'center';
+                                              });
+                                            }),
+                                      ),
+                                      Icon(
+                                        Icons.format_align_center,
+                                        size: 25.0,
+                                      )
+                                    ],
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        alignment = 'justify';
-                                      });
-                                    },
-                                    icon: const Icon(
-                                      Icons.format_align_justify_outlined,
-                                      size: 25.0,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Theme(
+                                        data: Theme.of(context).copyWith(
+                                          unselectedWidgetColor: Colors.red,
+                                        ),
+                                        child: Checkbox(
+                                            value: rightAlignCheckValue,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                leftAlignCheckValue = false;
+                                                rightAlignCheckValue =
+                                                    newValue!;
+                                                centerCheckedValue = false;
+                                                alignment = 'justify';
+                                              });
+                                            }),
+                                      ),
+                                      Icon(
+                                        Icons.format_align_justify_outlined,
+                                        size: 25.0,
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
                             const Text(
-                              'Line space',
+                              'লাইন ব্যাবধান',
                               style: TextStyle(fontSize: 20),
                             ),
                             Padding(
@@ -1269,56 +1329,135 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        lineSpacing = 1.5;
-                                      });
-                                    },
-                                    icon: const Icon(
-                                        Icons.format_line_spacing_outlined,
-                                        size: 20),
+                                  Row(
+                                    children: [
+                                      Theme(
+                                        data: Theme.of(context).copyWith(
+                                          unselectedWidgetColor: Colors.red,
+                                        ),
+                                        child: Checkbox(
+                                            value: smallSpaceCheckValue,
+                                            checkColor: Colors.orange,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                smallSpaceCheckValue =
+                                                    newValue!;
+                                                mediumSpaceCheckedValue = false;
+                                                largeSpaceCheckValue = false;
+                                                lineSpacing = 1.5;
+                                              });
+                                            }),
+                                      ),
+                                      Icon(Icons.format_line_spacing_outlined,
+                                          size: 20),
+                                    ],
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        lineSpacing = 2.0;
-                                      });
-                                    },
-                                    icon: const Icon(
-                                        Icons.format_line_spacing_outlined,
-                                        size: 25),
+                                  Row(
+                                    children: [
+                                      Theme(
+                                        data: Theme.of(context).copyWith(
+                                          unselectedWidgetColor: Colors.red,
+                                        ),
+                                        child: Checkbox(
+                                            value: mediumSpaceCheckedValue,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                smallSpaceCheckValue = false;
+                                                mediumSpaceCheckedValue =
+                                                    newValue!;
+                                                largeSpaceCheckValue = false;
+                                                lineSpacing = 2.0;
+                                              });
+                                            }),
+                                      ),
+                                      Icon(Icons.format_line_spacing_outlined,
+                                          size: 25),
+                                    ],
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        lineSpacing = 2.5;
-                                      });
-                                    },
-                                    icon: const Icon(
-                                        Icons.format_line_spacing_outlined,
-                                        size: 25),
+                                  Row(
+                                    children: [
+                                      Theme(
+                                        data: Theme.of(context).copyWith(
+                                          unselectedWidgetColor: Colors.red,
+                                        ),
+                                        child: Checkbox(
+                                            value: largeSpaceCheckValue,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                smallSpaceCheckValue = false;
+                                                mediumSpaceCheckedValue = false;
+                                                largeSpaceCheckValue =
+                                                    newValue!;
+                                                lineSpacing = 2.5;
+                                              });
+                                            }),
+                                      ),
+                                      Icon(Icons.format_line_spacing_outlined,
+                                          size: 25),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.symmetric(vertical: 10.0),
-                              child: Text(
-                                'Review book',
-                                style: TextStyle(fontSize: 20),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/download_icon_reading_page.png',
+                                    height: size.width * .05,
+                                    width: size.width * .05,
+                                  ),
+                                  SizedBox(
+                                    width: size.width * .05,
+                                  ),
+                                  Text(
+                                    'ডাউনলোড করুন',
+                                    style:
+                                        TextStyle(fontSize: size.width * .045),
+                                  ),
+                                ],
                               ),
                             ),
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.symmetric(vertical: 10.0),
-                              child: Text(
-                                'Download book',
-                                style: TextStyle(fontSize: 20),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/review_icon_reading_page.png',
+                                    height: size.width * .05,
+                                    width: size.width * .05,
+                                  ),
+                                  SizedBox(
+                                    width: size.width * .05,
+                                  ),
+                                  Text(
+                                    'রিভিউ লিখুন',
+                                    style:
+                                        TextStyle(fontSize: size.width * .045),
+                                  ),
+                                ],
                               ),
                             ),
-                            const Text(
-                              'Share book',
-                              style: TextStyle(fontSize: 20),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10.0),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/book_share_icon.png',
+                                    height: size.width * .05,
+                                    width: size.width * .05,
+                                  ),
+                                  SizedBox(
+                                    width: size.width * .05,
+                                  ),
+                                  Text(
+                                    'বইটি শেয়ার করুন',
+                                    style:
+                                        TextStyle(fontSize: size.width * .045),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -1478,7 +1617,7 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                             Positioned(
                                 child: IconButton(
                                     onPressed: () {
-                                      Get.back();
+                                      Navigator.pop(context);
                                     },
                                     icon: const Icon(
                                       Icons.cancel,
@@ -1705,7 +1844,7 @@ class _BookReaderScreenState extends State<BookReaderScreen>
                   );
                   await databaseHelper.insertBookmarksData(bookMarksModel);
                   _textFieldController.clear();
-                  showToast("Successfully Bookmarked");
+                  // showToast("Successfully Bookmarked");
 
                   // codeDialog = valueText;
                   Navigator.pop(context);
